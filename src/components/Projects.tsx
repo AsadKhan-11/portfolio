@@ -62,13 +62,13 @@ const PROJECTS = [
 
 export default function Projects() {
   return (
-    <section id="projects" className="relative py-28 sm:py-36 overflow-hidden">
+    <section id="projects" className="relative py-32 sm:py-40 overflow-hidden">
       <div className="absolute top-0 left-0 right-0 section-divider" />
       <div className="absolute inset-0 mesh-gradient pointer-events-none" />
       <div className="absolute top-1/3 left-0 w-[500px] h-[500px] rounded-full bg-violet-500/3 blur-[150px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6">
-        <AnimatedSection className="text-center mb-16">
+      <div className="section-wrapper relative z-10">
+        <AnimatedSection className="text-center mb-20">
           <span className="section-label">
             <FiFolder className="text-sm" />
             Portfolio
@@ -80,14 +80,14 @@ export default function Projects() {
             Featured{" "}
             <span className="gradient-text">Projects</span>
           </h2>
-          <p className="mt-4 text-white/40 max-w-2xl mx-auto text-lg">
+          <p className="mt-5 text-white/40 max-w-2xl mx-auto text-lg leading-relaxed">
             A collection of projects that showcase my skills in building modern,
             responsive, and user-friendly web applications.
           </p>
         </AnimatedSection>
 
         <StaggerContainer
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 sm:gap-8"
           staggerDelay={0.1}
         >
           {PROJECTS.map((project) => (
@@ -141,17 +141,17 @@ export default function Projects() {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6 flex-1 flex flex-col">
+                  <div className="p-6 sm:p-7 flex-1 flex flex-col">
                     <h3
                       className="text-lg font-bold text-white"
                       style={{ fontFamily: "var(--font-heading)" }}
                     >
                       {project.title}
                     </h3>
-                    <p className="text-white/45 text-sm mt-2 leading-relaxed flex-1">
+                    <p className="text-white/45 text-sm mt-3 leading-relaxed flex-1">
                       {project.description}
                     </p>
-                    <div className="flex flex-wrap gap-2 mt-4">
+                    <div className="flex flex-wrap gap-2 mt-5">
                       {project.tags.map((tag) => (
                         <span
                           key={tag}

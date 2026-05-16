@@ -114,7 +114,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="home"
-      className="relative min-h-screen flex items-center overflow-hidden"
+      className="relative min-h-screen flex items-center overflow-hidden pt-24"
     >
       {/* Particles */}
       <canvas ref={canvasRef} className="particles-canvas" />
@@ -125,9 +125,9 @@ export default function Hero() {
 
       <motion.div
         style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
-        className="relative z-10 max-w-6xl mx-auto px-6 w-full"
+        className="section-wrapper relative z-10 w-full"
       >
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 items-center" style={{ gap: '4rem' }}>
           {/* Left – Text Content */}
           <div className="order-2 lg:order-1">
             {/* Tag */}
@@ -144,13 +144,13 @@ export default function Hero() {
 
             {/* Name */}
             <motion.div
-              className="mt-8"
+              className="mt-10"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
               <h1
-                className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight"
+                className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-[1.1] tracking-tight"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
                 <TextReveal text="Hi, I'm" delay={0.5} />
@@ -163,7 +163,8 @@ export default function Hero() {
 
             {/* Subtitle */}
             <motion.p
-              className="mt-6 text-lg sm:text-xl text-white/50 max-w-md leading-relaxed"
+              className="mt-7 text-base sm:text-lg text-white/50 leading-relaxed"
+              style={{ maxWidth: '480px' }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.2 }}
@@ -177,7 +178,8 @@ export default function Hero() {
 
             {/* Location */}
             <motion.div
-              className="mt-4 flex items-center gap-2 text-sm text-white/40"
+              className="flex items-center text-sm text-white/40"
+              style={{ marginTop: '12px', gap: '8px' }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.4 }}
@@ -188,7 +190,8 @@ export default function Hero() {
 
             {/* CTAs */}
             <motion.div
-              className="mt-10 flex flex-wrap items-center gap-4"
+              className="flex flex-wrap items-center"
+              style={{ marginTop: '2.5rem', gap: '1.25rem' }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.6 }}
@@ -209,7 +212,8 @@ export default function Hero() {
 
             {/* Social icons */}
             <motion.div
-              className="mt-10 flex items-center gap-3"
+              className="flex items-center"
+              style={{ marginTop: '2rem', gap: '1rem' }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.8 }}

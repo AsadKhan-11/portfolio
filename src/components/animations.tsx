@@ -15,6 +15,7 @@ interface AnimatedSectionProps {
   className?: string;
   delay?: number;
   direction?: "up" | "down" | "left" | "right";
+  style?: React.CSSProperties;
 }
 
 export function AnimatedSection({
@@ -22,6 +23,7 @@ export function AnimatedSection({
   className = "",
   delay = 0,
   direction = "up",
+  style,
 }: AnimatedSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
@@ -57,7 +59,7 @@ export function AnimatedSection({
         delay,
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
-      style={{ perspective: 1000 }}
+      style={{ perspective: 1000, ...style }}
     >
       {children}
     </motion.div>
@@ -69,12 +71,14 @@ interface StaggerContainerProps {
   children: ReactNode;
   className?: string;
   staggerDelay?: number;
+  style?: React.CSSProperties;
 }
 
 export function StaggerContainer({
   children,
   className = "",
   staggerDelay = 0.1,
+  style,
 }: StaggerContainerProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
@@ -93,6 +97,7 @@ export function StaggerContainer({
           },
         },
       }}
+      style={style}
     >
       {children}
     </motion.div>
@@ -139,12 +144,14 @@ interface TiltCardProps {
   children: ReactNode;
   className?: string;
   intensity?: number;
+  style?: React.CSSProperties;
 }
 
 export function TiltCard({
   children,
   className = "",
   intensity = 15,
+  style,
 }: TiltCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
@@ -179,7 +186,7 @@ export function TiltCard({
         scale: isHovered ? 1.02 : 1,
       }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      style={{ perspective: 1000, transformStyle: "preserve-3d" }}
+      style={{ perspective: 1000, transformStyle: "preserve-3d", ...style }}
     >
       {children}
     </motion.div>

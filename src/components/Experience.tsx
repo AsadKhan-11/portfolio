@@ -37,13 +37,13 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="relative py-28 sm:py-36 overflow-hidden"
+      className="relative py-32 sm:py-40 overflow-hidden"
     >
       <div className="absolute top-0 left-0 right-0 section-divider" />
       <div className="absolute top-1/2 right-0 w-[500px] h-[500px] rounded-full bg-rose-500/3 blur-[150px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6">
-        <AnimatedSection className="text-center mb-16">
+      <div className="section-wrapper relative z-10">
+        <AnimatedSection className="text-center mb-20">
           <span className="section-label">
             <FiBriefcase className="text-sm" />
             Career Path
@@ -55,17 +55,17 @@ export default function Experience() {
             My{" "}
             <span className="gradient-text">Experience</span>
           </h2>
-          <p className="mt-4 text-white/40 max-w-2xl mx-auto text-lg">
+          <p className="mt-5 text-white/40 max-w-2xl mx-auto text-lg leading-relaxed">
             My professional journey in web development, from learning the
             fundamentals to building production-ready applications.
           </p>
         </AnimatedSection>
 
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <StaggerContainer staggerDelay={0.2}>
             {EXPERIENCES.map((exp, index) => (
               <StaggerItem key={exp.title}>
-                <div className="relative pl-8 sm:pl-12 pb-12 last:pb-0">
+                <div className="relative pl-10 sm:pl-14 pb-14 last:pb-0">
                   {/* Timeline line */}
                   {index < EXPERIENCES.length - 1 && (
                     <div
@@ -87,8 +87,8 @@ export default function Experience() {
                   />
 
                   {/* Card */}
-                  <TiltCard className="glass-card p-6 sm:p-8" intensity={6}>
-                    <div className="flex items-start gap-4 mb-4">
+                  <TiltCard className="glass-card p-7 sm:p-10" intensity={6}>
+                    <div className="flex items-start gap-5 mb-5">
                       <div
                         className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
                         style={{ background: exp.bgColor }}
@@ -108,7 +108,7 @@ export default function Experience() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm text-indigo-400 mb-4">
+                    <div className="flex items-center gap-2 text-sm text-indigo-400 mb-5">
                       <FiCalendar size={14} />
                       {exp.period}
                     </div>
@@ -118,7 +118,7 @@ export default function Experience() {
                     </p>
 
                     {/* Skill tags */}
-                    <div className="flex flex-wrap gap-2 mt-5">
+                    <div className="flex flex-wrap gap-2.5 mt-6">
                       {exp.skills.map((skill) => (
                         <span
                           key={skill}

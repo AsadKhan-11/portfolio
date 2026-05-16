@@ -17,50 +17,99 @@ const STATS = [
 
 export default function About() {
   return (
-    <section id="about" className="relative py-28 sm:py-36 overflow-hidden">
+    <section
+      id="about"
+      style={{ paddingTop: "8rem", paddingBottom: "8rem", position: "relative", overflow: "hidden" }}
+    >
       {/* Background accents */}
       <div className="absolute top-0 left-0 right-0 section-divider" />
-      <div className="absolute top-1/3 right-0 w-[600px] h-[600px] rounded-full bg-indigo-500/3 blur-[150px] pointer-events-none" />
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: "33%",
+          right: 0,
+          width: 600,
+          height: 600,
+          borderRadius: "50%",
+          background: "rgba(99, 102, 241, 0.03)",
+          filter: "blur(150px)",
+        }}
+      />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6">
+      <div className="section-wrapper" style={{ position: "relative", zIndex: 10 }}>
         {/* Section header */}
-        <AnimatedSection className="text-center mb-16">
+        <AnimatedSection style={{ textAlign: "center", marginBottom: "4rem" }}>
           <span className="section-label">About Me</span>
           <h2
-            className="mt-6 text-4xl sm:text-5xl font-bold tracking-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
+            style={{
+              fontFamily: "var(--font-heading)",
+              marginTop: "1.5rem",
+              fontSize: "clamp(2rem, 5vw, 3rem)",
+              fontWeight: 700,
+              letterSpacing: "-0.02em",
+            }}
           >
-            Who{" "}
-            <span className="gradient-text">Am I</span>?
+            Who <span className="gradient-text">Am I</span>?
           </h2>
         </AnimatedSection>
 
-        <div className="grid lg:grid-cols-5 gap-12 items-start">
+        {/* Two column layout */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr",
+            gap: "3rem",
+          }}
+          className="about-grid"
+        >
           {/* Bio text */}
-          <AnimatedSection className="lg:col-span-3" delay={0.2}>
-            <div className="glass-card p-8 sm:p-10">
-              <p className="text-lg leading-relaxed text-white/70">
+          <AnimatedSection delay={0.2}>
+            <div
+              className="glass-card"
+              style={{ padding: "clamp(1.5rem, 4vw, 3rem)" }}
+            >
+              <p
+                style={{
+                  fontSize: "1.05rem",
+                  lineHeight: 1.8,
+                  color: "rgba(255,255,255,0.7)",
+                }}
+              >
                 Hello! I&apos;m{" "}
-                <span className="text-white font-semibold">Asad Khan</span>, a
+                <span style={{ color: "#fff", fontWeight: 600 }}>Asad Khan</span>, a
                 full stack web developer based in{" "}
-                <span className="text-indigo-400 font-medium">
+                <span style={{ color: "#818cf8", fontWeight: 500 }}>
                   Lahore, Pakistan
                 </span>
                 . With a passion for building complete web solutions, I
                 specialize in developing user-friendly and efficient digital
                 experiences from front-end to back-end.
               </p>
-              <p className="mt-5 text-lg leading-relaxed text-white/70">
+              <p
+                style={{
+                  marginTop: "1.5rem",
+                  fontSize: "1.05rem",
+                  lineHeight: 1.8,
+                  color: "rgba(255,255,255,0.7)",
+                }}
+              >
                 I&apos;m dedicated to delivering high-quality, scalable web
                 development services. As a freelance developer, I tailor
                 personalized solutions to your needs. My expertise spans across{" "}
-                <span className="text-cyan-400 font-medium">
+                <span style={{ color: "#22d3ee", fontWeight: 500 }}>
                   React, Next.js, Node.js, Express, and MongoDB
                 </span>
                 , ensuring your project is in capable hands from start to
                 finish.
               </p>
-              <p className="mt-5 text-lg leading-relaxed text-white/70">
+              <p
+                style={{
+                  marginTop: "1.5rem",
+                  fontSize: "1.05rem",
+                  lineHeight: 1.8,
+                  color: "rgba(255,255,255,0.7)",
+                }}
+              >
                 I turn design ideas into user-friendly interfaces and connect
                 them with powerful back-end functionality, ensuring everything
                 works smoothly across all devices. With attention to detail and a
@@ -71,34 +120,55 @@ export default function About() {
           </AnimatedSection>
 
           {/* Stats Grid */}
-          <div className="lg:col-span-2">
+          <AnimatedSection delay={0.4}>
             <StaggerContainer
-              className="grid grid-cols-2 gap-4"
-              staggerDelay={0.15}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(4, 1fr)",
+                gap: "1.25rem",
+              }}
+              className="stats-grid"
+              staggerDelay={0.12}
             >
               {STATS.map((stat) => (
                 <StaggerItem key={stat.label}>
-                  <TiltCard className="stat-card h-full" intensity={10}>
-                    <span className="text-2xl mb-2 block">{stat.icon}</span>
+                  <TiltCard className="stat-card" intensity={10} style={{ height: "100%" }}>
+                    <span style={{ fontSize: "1.75rem", marginBottom: "0.75rem", display: "block" }}>
+                      {stat.icon}
+                    </span>
                     <span
-                      className="text-3xl sm:text-4xl font-bold gradient-text block"
-                      style={{ fontFamily: "var(--font-heading)" }}
+                      className="gradient-text"
+                      style={{
+                        fontFamily: "var(--font-heading)",
+                        fontSize: "clamp(1.75rem, 3vw, 2.5rem)",
+                        fontWeight: 700,
+                        display: "block",
+                      }}
                     >
                       <AnimatedCounter
                         target={stat.value}
                         suffix={stat.suffix}
                       />
                     </span>
-                    <span className="text-sm text-white/40 mt-2 block">
+                    <span
+                      style={{
+                        fontSize: "0.85rem",
+                        color: "rgba(255,255,255,0.4)",
+                        marginTop: "0.5rem",
+                        display: "block",
+                      }}
+                    >
                       {stat.label}
                     </span>
                   </TiltCard>
                 </StaggerItem>
               ))}
             </StaggerContainer>
-          </div>
+          </AnimatedSection>
         </div>
       </div>
+
+
     </section>
   );
 }

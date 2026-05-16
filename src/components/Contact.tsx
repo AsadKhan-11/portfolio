@@ -76,14 +76,14 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-28 sm:py-36 overflow-hidden">
+    <section id="contact" className="relative py-32 sm:py-40 overflow-hidden">
       <div className="absolute top-0 left-0 right-0 section-divider" />
       <div className="absolute inset-0 dot-grid opacity-20" />
       <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] rounded-full bg-indigo-500/3 blur-[150px] pointer-events-none" />
       <div className="absolute top-1/3 left-0 w-[400px] h-[400px] rounded-full bg-cyan-500/3 blur-[120px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6">
-        <AnimatedSection className="text-center mb-16">
+      <div className="section-wrapper relative z-10">
+        <AnimatedSection className="text-center mb-20">
           <span className="section-label">
             <FiMail className="text-sm" />
             Contact
@@ -95,19 +95,19 @@ export default function Contact() {
             Get In{" "}
             <span className="gradient-text">Touch</span>
           </h2>
-          <p className="mt-4 text-white/40 max-w-2xl mx-auto text-lg">
+          <p className="mt-5 text-white/40 max-w-2xl mx-auto text-lg leading-relaxed">
             Have a project in mind or want to discuss an opportunity? I&apos;d
             love to hear from you. Let&apos;s build something great together.
           </p>
         </AnimatedSection>
 
-        <div className="grid lg:grid-cols-5 gap-8">
+        <div className="grid lg:grid-cols-5 gap-10 lg:gap-14">
           {/* Contact Info */}
           <AnimatedSection className="lg:col-span-2" direction="left" delay={0.2}>
-            <div className="space-y-6">
+            <div className="space-y-5">
               {CONTACT_INFO.map((info) => (
                 <TiltCard key={info.label} intensity={6}>
-                  <div className="glass-card p-5 flex items-center gap-4">
+                  <div className="glass-card p-6 flex items-center gap-5">
                     <div
                       className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
                       style={{
@@ -163,9 +163,9 @@ export default function Contact() {
           <AnimatedSection className="lg:col-span-3" direction="right" delay={0.3}>
             <form
               onSubmit={handleSubmit}
-              className="glass-card p-6 sm:p-8 space-y-5"
+              className="glass-card p-7 sm:p-10 space-y-6"
             >
-              <div className="grid sm:grid-cols-2 gap-5">
+              <div className="grid sm:grid-cols-2 gap-6">
                 <div>
                   <label
                     htmlFor="firstName"
@@ -203,7 +203,7 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-5">
+              <div className="grid sm:grid-cols-2 gap-6">
                 <div>
                   <label
                     htmlFor="email"

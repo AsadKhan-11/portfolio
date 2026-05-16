@@ -21,7 +21,7 @@ const SOCIALS = [
 export default function Footer() {
   return (
     <footer className="relative border-t border-white/5 bg-[#0a0a0f]">
-      <div className="max-w-6xl mx-auto px-6 py-12">
+      <div className="section-wrapper" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Logo */}
           <div className="flex flex-col items-center md:items-start gap-3">

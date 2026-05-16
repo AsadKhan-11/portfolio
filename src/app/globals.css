@@ -52,7 +52,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-padding-top: 100px;
 }
 
 body {
@@ -62,6 +62,29 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ───────── Section Container ───────── */
+.section-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1.5rem, 5vw, 5rem);
+  padding-right: clamp(1.5rem, 5vw, 5rem);
+}
+
+.nav-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1.5rem, 5vw, 5rem);
+  padding-right: clamp(1.5rem, 5vw, 5rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
 }
 
 /* ───────── Scrollbar ───────── */
@@ -227,7 +250,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 28px;
+  padding: 14px 32px;
   background: var(--gradient-primary);
   color: white;
   font-weight: 600;
@@ -263,7 +286,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 28px;
+  padding: 14px 32px;
   background: transparent;
   color: var(--accent-primary);
   font-weight: 600;
@@ -287,8 +310,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 24px 16px;
+  gap: 14px;
+  padding: 28px 20px;
   background: rgba(22, 22, 31, 0.5);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
@@ -353,7 +376,7 @@ body {
 /* ───────── Stat Card ───────── */
 .stat-card {
   position: relative;
-  padding: 32px 24px;
+  padding: 36px 28px;
   text-align: center;
   background: rgba(22, 22, 31, 0.4);
   border: 1px solid var(--border-subtle);
@@ -415,7 +438,7 @@ body {
 /* ───────── Contact Form ───────── */
 .form-input {
   width: 100%;
-  padding: 14px 18px;
+  padding: 16px 20px;
   background: rgba(22, 22, 31, 0.6);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -522,5 +545,34 @@ body {
 
   .stat-card {
     padding: 24px 16px;
+  }
+}
+
+/* ───────── About Section Grid ───────── */
+@media (min-width: 1024px) {
+  .about-grid {
+    grid-template-columns: 3fr 2fr !important;
+    gap: 3.5rem !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 639px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ───────── Skills Section Grid ───────── */
+@media (min-width: 768px) {
+  .skills-categories-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .skills-categories-grid > *:first-child {
+    grid-column: 1 / -1;
   }
 }
