@@ -576,3 +576,11 @@ body {
     grid-column: 1 / -1;
   }
 }
+
+/* ───────── Contact Section Grid ───────── */
+@media (min-width: 1024px) {
+  .contact-grid {
+    grid-template-columns: 2fr 3fr !important;
+    gap: 4rem !important;
+  }
+}

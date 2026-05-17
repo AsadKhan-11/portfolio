@@ -37,40 +37,70 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="relative py-32 sm:py-40 overflow-hidden"
+      style={{
+        position: "relative",
+        paddingTop: "10rem",
+        paddingBottom: "10rem",
+        overflow: "hidden",
+      }}
     >
       <div className="absolute top-0 left-0 right-0 section-divider" />
       <div className="absolute top-1/2 right-0 w-[500px] h-[500px] rounded-full bg-rose-500/3 blur-[150px] pointer-events-none" />
 
-      <div className="section-wrapper relative z-10">
-        <AnimatedSection className="text-center mb-20">
+      <div className="section-wrapper" style={{ position: "relative", zIndex: 10 }}>
+        <AnimatedSection style={{ textAlign: "center", marginBottom: "5rem" }}>
           <span className="section-label">
             <FiBriefcase className="text-sm" />
             Career Path
           </span>
           <h2
-            className="mt-6 text-4xl sm:text-5xl font-bold tracking-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
+            style={{
+              fontFamily: "var(--font-heading)",
+              marginTop: "2rem",
+              fontSize: "clamp(2rem, 5vw, 3rem)",
+              fontWeight: 700,
+              letterSpacing: "-0.02em",
+            }}
           >
             My{" "}
             <span className="gradient-text">Experience</span>
           </h2>
-          <p className="mt-5 text-white/40 max-w-2xl mx-auto text-lg leading-relaxed">
+          <p
+            style={{
+              marginTop: "1.5rem",
+              color: "rgba(255,255,255,0.4)",
+              maxWidth: "42rem",
+              marginLeft: "auto",
+              marginRight: "auto",
+              fontSize: "1.1rem",
+              lineHeight: 1.7,
+            }}
+          >
             My professional journey in web development, from learning the
             fundamentals to building production-ready applications.
           </p>
         </AnimatedSection>
 
-        <div className="max-w-4xl mx-auto">
+        <div style={{ maxWidth: "52rem", marginLeft: "auto", marginRight: "auto" }}>
           <StaggerContainer staggerDelay={0.2}>
             {EXPERIENCES.map((exp, index) => (
               <StaggerItem key={exp.title}>
-                <div className="relative pl-10 sm:pl-14 pb-14 last:pb-0">
+                <div
+                  style={{
+                    position: "relative",
+                    paddingLeft: "3.5rem",
+                    paddingBottom: index < EXPERIENCES.length - 1 ? "3rem" : 0,
+                  }}
+                >
                   {/* Timeline line */}
                   {index < EXPERIENCES.length - 1 && (
                     <div
-                      className="absolute left-[6px] sm:left-[22px] top-[28px] bottom-0 w-[2px]"
                       style={{
+                        position: "absolute",
+                        left: 22,
+                        top: 28,
+                        bottom: 0,
+                        width: 2,
                         background: `linear-gradient(180deg, ${exp.color}, transparent)`,
                       }}
                     />
@@ -78,54 +108,118 @@ export default function Experience() {
 
                   {/* Timeline dot */}
                   <div
-                    className="absolute left-0 sm:left-4 top-2 w-[14px] h-[14px] rounded-full border-[3px] z-10"
                     style={{
-                      borderColor: exp.color,
+                      position: "absolute",
+                      left: 16,
+                      top: 8,
+                      width: 14,
+                      height: 14,
+                      borderRadius: "50%",
+                      border: `3px solid ${exp.color}`,
                       background: "var(--bg-primary)",
                       boxShadow: `0 0 0 4px ${exp.bgColor}`,
+                      zIndex: 10,
                     }}
                   />
 
                   {/* Card */}
-                  <TiltCard className="glass-card p-7 sm:p-10" intensity={6}>
-                    <div className="flex items-start gap-5 mb-5">
+                  <TiltCard
+                    className="glass-card"
+                    intensity={6}
+                    style={{ padding: "clamp(2rem, 4vw, 3rem)" }}
+                  >
+                    {/* Header: icon + title */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: "1.25rem",
+                        marginBottom: "1.75rem",
+                      }}
+                    >
                       <div
-                        className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                        style={{ background: exp.bgColor }}
+                        style={{
+                          width: 52,
+                          height: 52,
+                          borderRadius: 14,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0,
+                          background: exp.bgColor,
+                        }}
                       >
-                        <exp.icon size={22} style={{ color: exp.color }} />
+                        <exp.icon size={24} style={{ color: exp.color }} />
                       </div>
                       <div>
                         <h3
-                          className="text-xl font-bold text-white"
-                          style={{ fontFamily: "var(--font-heading)" }}
+                          style={{
+                            fontFamily: "var(--font-heading)",
+                            fontSize: "1.3rem",
+                            fontWeight: 700,
+                            color: "#fff",
+                          }}
                         >
                           {exp.title}
                         </h3>
-                        <p className="text-white/50 text-sm mt-0.5">
+                        <p
+                          style={{
+                            color: "rgba(255,255,255,0.45)",
+                            fontSize: "0.9rem",
+                            marginTop: 6,
+                          }}
+                        >
                           {exp.company}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm text-indigo-400 mb-5">
+                    {/* Date */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                        fontSize: "0.875rem",
+                        color: exp.color,
+                        marginBottom: "1.5rem",
+                      }}
+                    >
                       <FiCalendar size={14} />
                       {exp.period}
                     </div>
 
-                    <p className="text-white/55 leading-relaxed">
+                    {/* Description */}
+                    <p
+                      style={{
+                        color: "rgba(255,255,255,0.55)",
+                        lineHeight: 1.8,
+                        fontSize: "0.95rem",
+                      }}
+                    >
                       {exp.description}
                     </p>
 
                     {/* Skill tags */}
-                    <div className="flex flex-wrap gap-2.5 mt-6">
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: "0.75rem",
+                        marginTop: "1.75rem",
+                      }}
+                    >
                       {exp.skills.map((skill) => (
                         <span
                           key={skill}
-                          className="px-3 py-1 text-xs font-medium rounded-full border"
                           style={{
+                            padding: "6px 14px",
+                            fontSize: "0.75rem",
+                            fontWeight: 500,
+                            borderRadius: 9999,
                             color: exp.color,
                             borderColor: `${exp.color}30`,
+                            border: `1px solid ${exp.color}30`,
                             background: `${exp.color}08`,
                           }}
                         >

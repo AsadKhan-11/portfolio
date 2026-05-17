@@ -84,8 +84,8 @@ export default function Skills() {
       id="skills"
       style={{
         position: "relative",
-        paddingTop: "8rem",
-        paddingBottom: "8rem",
+        paddingTop: "9rem",
+        paddingBottom: "9rem",
         overflow: "hidden",
       }}
     >
@@ -106,12 +106,12 @@ export default function Skills() {
 
       <div className="section-wrapper" style={{ position: "relative", zIndex: 10 }}>
         {/* Header */}
-        <AnimatedSection style={{ textAlign: "center", marginBottom: "4rem" }}>
+        <AnimatedSection style={{ textAlign: "center", marginBottom: "5rem" }}>
           <span className="section-label">Tech Stack</span>
           <h2
             style={{
               fontFamily: "var(--font-heading)",
-              marginTop: "1.5rem",
+              marginTop: "2rem",
               fontSize: "clamp(2rem, 5vw, 3rem)",
               fontWeight: 700,
               letterSpacing: "-0.02em",
@@ -121,7 +121,7 @@ export default function Skills() {
           </h2>
           <p
             style={{
-              marginTop: "1.25rem",
+              marginTop: "1.5rem",
               color: "rgba(255,255,255,0.4)",
               maxWidth: "36rem",
               marginLeft: "auto",
@@ -140,7 +140,7 @@ export default function Skills() {
           style={{
             display: "grid",
             gridTemplateColumns: "1fr",
-            gap: "1.75rem",
+            gap: "2.5rem",
           }}
           className="skills-categories-grid"
         >
@@ -154,7 +154,7 @@ export default function Skills() {
                 <div
                   className="glass-card"
                   style={{
-                    padding: "clamp(1.5rem, 3vw, 2.5rem)",
+                    padding: "clamp(2rem, 4vw, 3rem)",
                     borderColor: group.borderColor,
                   }}
                 >
@@ -163,8 +163,8 @@ export default function Skills() {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      gap: "1rem",
-                      marginBottom: "1.75rem",
+                      gap: "1.25rem",
+                      marginBottom: "2.5rem",
                     }}
                   >
                     <div
@@ -194,9 +194,9 @@ export default function Skills() {
                       </h3>
                       <p
                         style={{
-                          fontSize: "0.85rem",
+                          fontSize: "0.875rem",
                           color: "rgba(255,255,255,0.35)",
-                          marginTop: 2,
+                          marginTop: 4,
                         }}
                       >
                         {group.description}
@@ -209,7 +209,7 @@ export default function Skills() {
                     style={{
                       display: "flex",
                       flexWrap: "wrap",
-                      gap: "0.75rem",
+                      gap: "1rem",
                     }}
                   >
                     {group.skills.map((skill, i) => (
@@ -230,8 +230,8 @@ export default function Skills() {
                         style={{
                           display: "flex",
                           alignItems: "center",
-                          gap: "0.6rem",
-                          padding: "0.6rem 1.1rem",
+                          gap: "0.75rem",
+                          padding: "0.75rem 1.25rem",
                           background: "rgba(255,255,255,0.03)",
                           border: "1px solid rgba(255,255,255,0.06)",
                           borderRadius: 10,

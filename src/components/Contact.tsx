@@ -76,59 +76,118 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-32 sm:py-40 overflow-hidden">
+    <section
+      id="contact"
+      style={{
+        position: "relative",
+        paddingTop: "10rem",
+        paddingBottom: "10rem",
+        overflow: "hidden",
+      }}
+    >
       <div className="absolute top-0 left-0 right-0 section-divider" />
       <div className="absolute inset-0 dot-grid opacity-20" />
       <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] rounded-full bg-indigo-500/3 blur-[150px] pointer-events-none" />
       <div className="absolute top-1/3 left-0 w-[400px] h-[400px] rounded-full bg-cyan-500/3 blur-[120px] pointer-events-none" />
 
-      <div className="section-wrapper relative z-10">
-        <AnimatedSection className="text-center mb-20">
+      <div className="section-wrapper" style={{ position: "relative", zIndex: 10 }}>
+        <AnimatedSection style={{ textAlign: "center", marginBottom: "5rem" }}>
           <span className="section-label">
             <FiMail className="text-sm" />
             Contact
           </span>
           <h2
-            className="mt-6 text-4xl sm:text-5xl font-bold tracking-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
+            style={{
+              fontFamily: "var(--font-heading)",
+              marginTop: "2rem",
+              fontSize: "clamp(2rem, 5vw, 3rem)",
+              fontWeight: 700,
+              letterSpacing: "-0.02em",
+            }}
           >
             Get In{" "}
             <span className="gradient-text">Touch</span>
           </h2>
-          <p className="mt-5 text-white/40 max-w-2xl mx-auto text-lg leading-relaxed">
+          <p
+            style={{
+              marginTop: "1.5rem",
+              color: "rgba(255,255,255,0.4)",
+              maxWidth: "42rem",
+              marginLeft: "auto",
+              marginRight: "auto",
+              fontSize: "1.1rem",
+              lineHeight: 1.7,
+            }}
+          >
             Have a project in mind or want to discuss an opportunity? I&apos;d
             love to hear from you. Let&apos;s build something great together.
           </p>
         </AnimatedSection>
 
-        <div className="grid lg:grid-cols-5 gap-10 lg:gap-14">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr",
+            gap: "3rem",
+          }}
+          className="contact-grid"
+        >
           {/* Contact Info */}
-          <AnimatedSection className="lg:col-span-2" direction="left" delay={0.2}>
-            <div className="space-y-5">
+          <AnimatedSection direction="left" delay={0.2}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
               {CONTACT_INFO.map((info) => (
                 <TiltCard key={info.label} intensity={6}>
-                  <div className="glass-card p-6 flex items-center gap-5">
+                  <div
+                    className="glass-card"
+                    style={{
+                      padding: "1.75rem 2rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "1.5rem",
+                    }}
+                  >
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
                       style={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: 14,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
                         background: `${info.color}12`,
                       }}
                     >
-                      <info.icon size={20} style={{ color: info.color }} />
+                      <info.icon size={22} style={{ color: info.color }} />
                     </div>
                     <div>
-                      <p className="text-xs text-white/40 uppercase tracking-wider font-medium">
+                      <p
+                        style={{
+                          fontSize: "0.7rem",
+                          color: "rgba(255,255,255,0.4)",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.1em",
+                          fontWeight: 600,
+                          marginBottom: 8,
+                        }}
+                      >
                         {info.label}
                       </p>
                       {info.href ? (
                         <a
                           href={info.href}
-                          className="text-sm text-white/70 hover:text-white transition-colors"
+                          style={{
+                            fontSize: "0.95rem",
+                            color: "rgba(255,255,255,0.7)",
+                            textDecoration: "none",
+                          }}
                         >
                           {info.value}
                         </a>
                       ) : (
-                        <p className="text-sm text-white/70">{info.value}</p>
+                        <p style={{ fontSize: "0.95rem", color: "rgba(255,255,255,0.7)" }}>
+                          {info.value}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -136,11 +195,20 @@ export default function Contact() {
               ))}
 
               {/* Social links */}
-              <div className="pt-4">
-                <p className="text-xs text-white/30 uppercase tracking-wider font-medium mb-4">
+              <div style={{ paddingTop: "1.5rem" }}>
+                <p
+                  style={{
+                    fontSize: "0.7rem",
+                    color: "rgba(255,255,255,0.3)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                    fontWeight: 600,
+                    marginBottom: "1.25rem",
+                  }}
+                >
                   Follow Me
                 </p>
-                <div className="flex gap-3">
+                <div style={{ display: "flex", gap: "1rem" }}>
                   {SOCIALS.map((social) => (
                     <motion.a
                       key={social.label}
@@ -160,16 +228,32 @@ export default function Contact() {
           </AnimatedSection>
 
           {/* Contact Form */}
-          <AnimatedSection className="lg:col-span-3" direction="right" delay={0.3}>
+          <AnimatedSection direction="right" delay={0.3}>
             <form
               onSubmit={handleSubmit}
-              className="glass-card p-7 sm:p-10 space-y-6"
+              className="glass-card"
+              style={{ padding: "clamp(2rem, 4vw, 3rem)" }}
             >
-              <div className="grid sm:grid-cols-2 gap-6">
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "1.5rem",
+                  marginBottom: "1.5rem",
+                }}
+              >
                 <div>
                   <label
                     htmlFor="firstName"
-                    className="block text-xs text-white/40 uppercase tracking-wider font-medium mb-2"
+                    style={{
+                      display: "block",
+                      fontSize: "0.7rem",
+                      color: "rgba(255,255,255,0.4)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      fontWeight: 600,
+                      marginBottom: 12,
+                    }}
                   >
                     First Name
                   </label>
@@ -187,7 +271,15 @@ export default function Contact() {
                 <div>
                   <label
                     htmlFor="lastName"
-                    className="block text-xs text-white/40 uppercase tracking-wider font-medium mb-2"
+                    style={{
+                      display: "block",
+                      fontSize: "0.7rem",
+                      color: "rgba(255,255,255,0.4)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      fontWeight: 600,
+                      marginBottom: 12,
+                    }}
                   >
                     Last Name
                   </label>
@@ -203,11 +295,26 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-6">
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "1.5rem",
+                  marginBottom: "1.5rem",
+                }}
+              >
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-xs text-white/40 uppercase tracking-wider font-medium mb-2"
+                    style={{
+                      display: "block",
+                      fontSize: "0.7rem",
+                      color: "rgba(255,255,255,0.4)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      fontWeight: 600,
+                      marginBottom: 12,
+                    }}
                   >
                     Email
                   </label>
@@ -225,7 +332,15 @@ export default function Contact() {
                 <div>
                   <label
                     htmlFor="phone"
-                    className="block text-xs text-white/40 uppercase tracking-wider font-medium mb-2"
+                    style={{
+                      display: "block",
+                      fontSize: "0.7rem",
+                      color: "rgba(255,255,255,0.4)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.1em",
+                      fontWeight: 600,
+                      marginBottom: 12,
+                    }}
                   >
                     Phone Number
                   </label>
@@ -241,10 +356,18 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div>
+              <div style={{ marginBottom: "1.75rem" }}>
                 <label
                   htmlFor="message"
-                  className="block text-xs text-white/40 uppercase tracking-wider font-medium mb-2"
+                  style={{
+                    display: "block",
+                    fontSize: "0.7rem",
+                    color: "rgba(255,255,255,0.4)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                    fontWeight: 600,
+                    marginBottom: 12,
+                  }}
                 >
                   Message
                 </label>
@@ -253,18 +376,24 @@ export default function Contact() {
                   name="message"
                   value={formState.message}
                   onChange={handleChange}
-                  className="form-input resize-none"
+                  className="form-input"
                   rows={5}
                   placeholder="Tell me about your project..."
                   required
+                  style={{ resize: "none" }}
                 />
               </div>
 
               <motion.button
                 type="submit"
-                className="btn-primary w-full justify-center !py-3.5"
+                className="btn-primary"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                style={{
+                  width: "100%",
+                  justifyContent: "center",
+                  padding: "16px 32px",
+                }}
               >
                 <FiSend />
                 Send Message

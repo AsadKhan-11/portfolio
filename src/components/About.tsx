@@ -19,7 +19,7 @@ export default function About() {
   return (
     <section
       id="about"
-      style={{ paddingTop: "8rem", paddingBottom: "8rem", position: "relative", overflow: "hidden" }}
+      style={{ paddingTop: "9rem", paddingBottom: "9rem", position: "relative", overflow: "hidden" }}
     >
       {/* Background accents */}
       <div className="absolute top-0 left-0 right-0 section-divider" />
@@ -38,12 +38,12 @@ export default function About() {
 
       <div className="section-wrapper" style={{ position: "relative", zIndex: 10 }}>
         {/* Section header */}
-        <AnimatedSection style={{ textAlign: "center", marginBottom: "4rem" }}>
+        <AnimatedSection style={{ textAlign: "center", marginBottom: "5rem" }}>
           <span className="section-label">About Me</span>
           <h2
             style={{
               fontFamily: "var(--font-heading)",
-              marginTop: "1.5rem",
+              marginTop: "2rem",
               fontSize: "clamp(2rem, 5vw, 3rem)",
               fontWeight: 700,
               letterSpacing: "-0.02em",
@@ -58,7 +58,7 @@ export default function About() {
           style={{
             display: "grid",
             gridTemplateColumns: "1fr",
-            gap: "3rem",
+            gap: "3.5rem",
           }}
           className="about-grid"
         >
@@ -66,7 +66,7 @@ export default function About() {
           <AnimatedSection delay={0.2}>
             <div
               className="glass-card"
-              style={{ padding: "clamp(1.5rem, 4vw, 3rem)" }}
+              style={{ padding: "clamp(2rem, 4vw, 3.5rem)" }}
             >
               <p
                 style={{
@@ -87,7 +87,7 @@ export default function About() {
               </p>
               <p
                 style={{
-                  marginTop: "1.5rem",
+                  marginTop: "1.75rem",
                   fontSize: "1.05rem",
                   lineHeight: 1.8,
                   color: "rgba(255,255,255,0.7)",
@@ -104,7 +104,7 @@ export default function About() {
               </p>
               <p
                 style={{
-                  marginTop: "1.5rem",
+                  marginTop: "1.75rem",
                   fontSize: "1.05rem",
                   lineHeight: 1.8,
                   color: "rgba(255,255,255,0.7)",
@@ -125,7 +125,7 @@ export default function About() {
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(4, 1fr)",
-                gap: "1.25rem",
+                gap: "1.5rem",
               }}
               className="stats-grid"
               staggerDelay={0.12}

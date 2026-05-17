@@ -62,38 +62,73 @@ const PROJECTS = [
 
 export default function Projects() {
   return (
-    <section id="projects" className="relative py-32 sm:py-40 overflow-hidden">
+    <section
+      id="projects"
+      style={{
+        position: "relative",
+        paddingTop: "10rem",
+        paddingBottom: "10rem",
+        overflow: "hidden",
+      }}
+    >
       <div className="absolute top-0 left-0 right-0 section-divider" />
       <div className="absolute inset-0 mesh-gradient pointer-events-none" />
       <div className="absolute top-1/3 left-0 w-[500px] h-[500px] rounded-full bg-violet-500/3 blur-[150px] pointer-events-none" />
 
-      <div className="section-wrapper relative z-10">
-        <AnimatedSection className="text-center mb-20">
+      <div className="section-wrapper" style={{ position: "relative", zIndex: 10 }}>
+        <AnimatedSection style={{ textAlign: "center", marginBottom: "5rem" }}>
           <span className="section-label">
             <FiFolder className="text-sm" />
             Portfolio
           </span>
           <h2
-            className="mt-6 text-4xl sm:text-5xl font-bold tracking-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
+            style={{
+              fontFamily: "var(--font-heading)",
+              marginTop: "2rem",
+              fontSize: "clamp(2rem, 5vw, 3rem)",
+              fontWeight: 700,
+              letterSpacing: "-0.02em",
+            }}
           >
             Featured{" "}
             <span className="gradient-text">Projects</span>
           </h2>
-          <p className="mt-5 text-white/40 max-w-2xl mx-auto text-lg leading-relaxed">
+          <p
+            style={{
+              marginTop: "1.5rem",
+              color: "rgba(255,255,255,0.4)",
+              maxWidth: "42rem",
+              marginLeft: "auto",
+              marginRight: "auto",
+              fontSize: "1.1rem",
+              lineHeight: 1.7,
+            }}
+          >
             A collection of projects that showcase my skills in building modern,
             responsive, and user-friendly web applications.
           </p>
         </AnimatedSection>
 
         <StaggerContainer
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7 sm:gap-8"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: "2rem",
+          }}
           staggerDelay={0.1}
         >
           {PROJECTS.map((project) => (
             <StaggerItem key={project.title}>
               <TiltCard intensity={8}>
-                <div className="glass-card overflow-hidden group cursor-pointer h-full flex flex-col">
+                <div
+                  className="glass-card group cursor-pointer"
+                  style={{
+                    overflow: "hidden",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
                   {/* Colored placeholder */}
                   <div
                     className={`relative aspect-[16/10] bg-gradient-to-br ${project.gradient} overflow-hidden`}
@@ -141,22 +176,51 @@ export default function Projects() {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6 sm:p-7 flex-1 flex flex-col">
+                  <div
+                    style={{
+                      padding: "clamp(1.5rem, 3vw, 2.25rem)",
+                      flex: 1,
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
                     <h3
-                      className="text-lg font-bold text-white"
-                      style={{ fontFamily: "var(--font-heading)" }}
+                      style={{
+                        fontFamily: "var(--font-heading)",
+                        fontSize: "1.15rem",
+                        fontWeight: 700,
+                        color: "#fff",
+                      }}
                     >
                       {project.title}
                     </h3>
-                    <p className="text-white/45 text-sm mt-3 leading-relaxed flex-1">
+                    <p
+                      style={{
+                        color: "rgba(255,255,255,0.45)",
+                        fontSize: "0.9rem",
+                        marginTop: "0.85rem",
+                        lineHeight: 1.7,
+                        flex: 1,
+                      }}
+                    >
                       {project.description}
                     </p>
-                    <div className="flex flex-wrap gap-2 mt-5">
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: "0.6rem",
+                        marginTop: "1.25rem",
+                      }}
+                    >
                       {project.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="text-xs font-medium px-2.5 py-1 rounded-full"
                           style={{
+                            fontSize: "0.75rem",
+                            fontWeight: 500,
+                            padding: "5px 12px",
+                            borderRadius: 9999,
                             color: project.accentColor,
                             background: `${project.accentColor}12`,
                             border: `1px solid ${project.accentColor}25`,
