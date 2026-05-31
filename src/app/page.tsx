@@ -9,12 +9,14 @@ import Process from "@/components/Process";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import FloatingBackground from "@/components/FloatingBackground";
 
 export default function Home() {
   return (
     <>
+      <FloatingBackground />
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 relative z-[1]">
         <Hero />
         <About />
         <Services />

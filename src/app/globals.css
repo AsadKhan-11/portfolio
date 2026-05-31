@@ -500,12 +500,261 @@ body {
   transition: opacity 0.3s;
 }
 
-/* ───────── Particle Canvas ───────── */
-.particles-canvas {
-  position: absolute;
+/* ───────── Floating Background ───────── */
+.floating-bg {
+  position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  overflow: hidden;
+}
+
+.floating-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: blobDrift ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes blobDrift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -40px) scale(1.05);
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+  75% {
+    transform: translate(15px, 30px) scale(1.03);
+  }
+}
+
+.floating-shape {
+  pointer-events: none;
+  will-change: transform;
+}
+
+.floating-bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 90% 80% at 50% 50%,
+    transparent 30%,
+    var(--bg-primary) 100%
+  );
+}
+
+/* ───────── Hero Layout ───────── */
+.hero-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .hero-layout {
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
+}
+
+.hero-text {
+  order: 2;
+}
+
+@media (min-width: 1024px) {
+  .hero-text {
+    order: 1;
+  }
+}
+
+/* ───────── Hero Image ───────── */
+.hero-image-wrapper {
+  order: 1;
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 1024px) {
+  .hero-image-wrapper {
+    order: 2;
+    justify-content: flex-end;
+  }
+}
+
+.hero-image-container {
+  position: relative;
+  width: 280px;
+}
+
+@media (min-width: 640px) {
+  .hero-image-container {
+    width: 320px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-image-container {
+    width: 360px;
+  }
+}
+
+.hero-image-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(34, 211, 238, 0.04) 40%,
+    transparent 70%
+  );
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+.hero-image-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(99, 102, 241, 0.12);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 20px 60px -20px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(99, 102, 241, 0.06);
+}
+
+.hero-image-fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(10, 10, 15, 0.4) 75%,
+    rgba(10, 10, 15, 0.95) 100%
+  );
+}
+
+.hero-image-inner-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 0 60px rgba(10, 10, 15, 0.3);
+}
+
+/* Corner accents */
+.hero-corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+}
+
+.hero-corner::before,
+.hero-corner::after {
+  content: "";
+  position: absolute;
+  background: rgba(99, 102, 241, 0.3);
+}
+
+.hero-corner-tl {
+  top: -6px;
+  left: -6px;
+}
+
+.hero-corner-tl::before {
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 1.5px;
+}
+
+.hero-corner-tl::after {
+  top: 0;
+  left: 0;
+  width: 1.5px;
+  height: 24px;
+}
+
+.hero-corner-br {
+  bottom: -6px;
+  right: -6px;
+}
+
+.hero-corner-br::before {
+  bottom: 0;
+  right: 0;
+  width: 24px;
+  height: 1.5px;
+}
+
+.hero-corner-br::after {
+  bottom: 0;
+  right: 0;
+  width: 1.5px;
+  height: 24px;
+}
+
+/* Floating badges */
+.hero-badge {
+  position: absolute;
+  background: rgba(22, 22, 31, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 10px 16px;
+  z-index: 5;
+}
+
+.hero-badge-exp {
+  bottom: 40px;
+  right: -24px;
+}
+
+.hero-badge-tech {
+  top: 40px;
+  left: -16px;
+}
+
+.hero-badge-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #818cf8, #22d3ee);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 639px) {
+  .hero-badge-exp {
+    right: -8px;
+    bottom: 30px;
+  }
+
+  .hero-badge-tech {
+    left: -4px;
+    top: 30px;
+  }
 }
 
 /* ───────── Nav ───────── */
