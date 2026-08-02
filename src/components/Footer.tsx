@@ -1,87 +1,133 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { FiGithub, FiLinkedin, FiInstagram, FiFacebook, FiHeart } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { FiArrowUp, FiFacebook, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
+import { Magnetic, Marquee } from "./animations";
 
-const FOOTER_LINKS = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
+const LINKS = [
+  { label: "Profile", href: "#about" },
   { label: "Services", href: "#services" },
-  { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
+  { label: "Stack", href: "#skills" },
+  { label: "Work", href: "#work" },
   { label: "Contact", href: "#contact" },
 ];
 
 const SOCIALS = [
-  { icon: FiGithub, href: "https://github.com/AsadKhan-11", label: "GitHub" },
-  { icon: FiLinkedin, href: "https://linkedin.com", label: "LinkedIn" },
-  { icon: FiInstagram, href: "https://instagram.com", label: "Instagram" },
-  { icon: FiFacebook, href: "https://facebook.com", label: "Facebook" },
+  { I: FiGithub, href: "https://github.com/AsadKhan-11", l: "GitHub" },
+  { I: FiLinkedin, href: "https://linkedin.com", l: "LinkedIn" },
+  { I: FiInstagram, href: "https://instagram.com", l: "Instagram" },
+  { I: FiFacebook, href: "https://facebook.com", l: "Facebook" },
 ];
 
 export default function Footer() {
-  return (
-    <footer className="relative border-t border-white/5 bg-[#0a0a0f]">
-      <div className="section-wrapper" style={{ paddingTop: '5rem', paddingBottom: '5rem' }}>
-        <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-          {/* Logo */}
-          <div className="flex flex-col items-center md:items-start gap-3">
-            <a
-              href="#home"
-              className="text-2xl font-bold tracking-tight"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              <span className="gradient-text">AK</span>
-              <span className="text-white/40 ml-1 font-light">.</span>
-            </a>
-            <p className="text-sm text-white/30">
-              Building the web, one pixel at a time.
-            </p>
-          </div>
+  const [clock, setClock] = useState("");
+  const year = new Date().getFullYear();
 
-          {/* Links */}
-          <nav className="flex flex-wrap items-center justify-center gap-8">
-            {FOOTER_LINKS.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="text-sm text-white/40 hover:text-white/80 transition-colors"
-              >
-                {link.label}
+  useEffect(() => {
+    const tick = () =>
+      setClock(
+        new Intl.DateTimeFormat("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone: "Asia/Karachi",
+          hour12: false,
+        }).format(new Date())
+      );
+    tick();
+    const id = setInterval(tick, 30_000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <footer
+      style={{
+        position: "relative",
+        zIndex: 2,
+        borderTop: "1px solid var(--rule)",
+        background: "rgba(8,8,10,0.72)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+      }}
+    >
+      {/* Scrolling availability banner */}
+      <div
+        style={{
+          borderBottom: "1px solid var(--rule)",
+          paddingBlock: "1.5rem",
+          overflow: "hidden",
+        }}
+      >
+        <Marquee speed={30}>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <span
+              key={i}
+              className="marquee-item"
+              style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.75rem)" }}
+            >
+              Available for work
+              <span
+                style={{
+                  width: 9,
+                  height: 9,
+                  borderRadius: "50%",
+                  background: "#4ade80",
+                  flexShrink: 0,
+                }}
+              />
+            </span>
+          ))}
+        </Marquee>
+      </div>
+
+      <div className="shell" style={{ paddingBlock: "clamp(3rem, 8vh, 5rem)" }}>
+        <div className="footer-top">
+          <nav className="footer-links">
+            {LINKS.map((l) => (
+              <a key={l.label} href={l.href} className="link-sweep">
+                {l.label}
               </a>
             ))}
           </nav>
 
-          {/* Social */}
-          <div className="flex items-center gap-3">
-            {SOCIALS.map((social) => (
-              <motion.a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon !w-9 !h-9 text-base"
-                whileHover={{ y: -3 }}
-                aria-label={social.label}
-              >
-                <social.icon size={16} />
-              </motion.a>
+          <div style={{ display: "flex", gap: "0.7rem" }}>
+            {SOCIALS.map(({ I, href, l }) => (
+              <Magnetic key={l} strength={0.4}>
+                <a
+                  href={href}
+                  className="social"
+                  aria-label={l}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <I size={16} />
+                </a>
+              </Magnetic>
             ))}
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="section-divider mt-10 mb-8" />
+        {/* Oversized outlined wordmark */}
+        <a
+          href="#home"
+          aria-label="Back to top"
+          style={{ display: "block", textDecoration: "none" }}
+        >
+          <p className="footer-mark" style={{ marginBlock: "clamp(2rem, 6vh, 3.5rem)" }}>
+            Asad Khan
+          </p>
+        </a>
 
-        {/* Bottom */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-5 text-xs text-white/25">
-          <p>
-            &copy; {new Date().getFullYear()} Asad Khan. All rights reserved.
-          </p>
-          <p className="flex items-center gap-1">
-            Made with <FiHeart className="text-rose-400 text-xs" /> using
-            Next.js &amp; Tailwind CSS
-          </p>
+        <div className="footer-bottom">
+          <span className="mono-label">© {year} Asad Khan</span>
+          <span className="mono-label" suppressHydrationWarning>
+            Lahore, PK — {clock}
+          </span>
+          <span className="mono-label">Next.js · Three.js · Framer Motion</span>
+          <Magnetic strength={0.3}>
+            <a href="#home" className="social" aria-label="Back to top">
+              <FiArrowUp size={16} />
+            </a>
+          </Magnetic>
         </div>
       </div>
     </footer>

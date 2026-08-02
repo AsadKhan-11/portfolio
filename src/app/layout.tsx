@@ -1,17 +1,38 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter } from "next/font/google";
+import { Syne, Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import Cursor from "@/components/Cursor";
+import MotionProvider from "@/components/MotionProvider";
+import Preloader from "@/components/Preloader";
+import ShaderField from "@/components/ShaderField";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+/* Display — geometric, characterful. Carries every headline. */
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "600", "700", "800"],
+  display: "swap",
+});
+
+/* Editorial italic for emphasis words inside display type. */
+const instrument = Instrument_Serif({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["italic"],
+  display: "swap",
 });
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -30,8 +51,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Asad Khan" }],
   openGraph: {
     title: "Asad Khan — Full Stack Developer",
-    description:
-      "Full Stack MERN Developer crafting modern web experiences.",
+    description: "Full Stack MERN Developer crafting modern web experiences.",
     type: "website",
   },
 };
@@ -44,11 +64,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
+      className={`${syne.variable} ${instrument.variable} ${inter.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <div className="noise-overlay" aria-hidden="true" />
-        {children}
+        <MotionProvider>
+          <Preloader />
+          <ShaderField />
+          <div className="vignette" aria-hidden="true" />
+          <div className="grain" aria-hidden="true" />
+          <Cursor />
+          {children}
+        </MotionProvider>
       </body>
     </html>
   );

@@ -1,176 +1,209 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { Magnetic } from "./animations";
 
 const NAV_ITEMS = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
+  { label: "Index", href: "#home" },
+  { label: "Profile", href: "#about" },
   { label: "Services", href: "#services" },
-  { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#experience" },
-  { label: "Projects", href: "#projects" },
+  { label: "Stack", href: "#skills" },
+  { label: "Work", href: "#work" },
+  { label: "Path", href: "#experience" },
   { label: "Contact", href: "#contact" },
 ];
 
+const EASE = [0.76, 0, 0.24, 1] as const;
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState("Home");
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [clock, setClock] = useState("");
+  const { scrollYProgress } = useScroll();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-
-      // Determine active section
-      const sections = NAV_ITEMS.map((item) => ({
-        id: item.href.replace("#", ""),
-        label: item.label,
-      }));
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i].id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 120) {
-            setActive(sections[i].label);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Live Lahore time — a small signal that the site is actually alive.
+  useEffect(() => {
+    const tick = () => {
+      setClock(
+        new Intl.DateTimeFormat("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          timeZone: "Asia/Karachi",
+          hour12: false,
+        }).format(new Date())
+      );
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  /*
+    Lock scroll behind the overlay, and let Escape close it. Only runs
+    while the menu is actually open — otherwise mounting the navbar would
+    clear a scroll lock owned by someone else (the intro panel).
+  */
+  useEffect(() => {
+    if (!open) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -100 }}
+      <motion.header
+        className="nav-bar"
+        data-scrolled={scrolled}
+        initial={{ y: -90 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled ? "nav-blur border-b border-white/5" : ""
-        }`}
+        transition={{ duration: 1, delay: 0.2, ease: EASE }}
       >
-        <div className="nav-wrapper">
-          {/* Logo */}
-          <Magnetic strength={0.2}>
+        <div className="nav-inner">
+          <Magnetic strength={0.25}>
             <a
               href="#home"
-              className="text-xl font-bold tracking-tight"
-              style={{ fontFamily: "var(--font-heading)" }}
+              onClick={() => setOpen(false)}
+              style={{
+                fontFamily: "var(--f-display)",
+                fontWeight: 800,
+                fontSize: "clamp(0.9rem, 3vw, 1.05rem)",
+                letterSpacing: "-0.02em",
+                textTransform: "uppercase",
+                textDecoration: "none",
+                color: "var(--bone)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                whiteSpace: "nowrap",
+              }}
             >
-              <span className="gradient-text">AK</span>
-              <span className="text-white/40 ml-1 font-light">.</span>
+              Asad Khan
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "var(--flame)",
+                }}
+              />
             </a>
           </Magnetic>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center" style={{ gap: '6px' }}>
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                onClick={() => setActive(item.label)}
-                className={`relative text-sm font-medium rounded-full transition-colors duration-300 ${
-                  active === item.label
-                    ? "text-white"
-                    : "text-white/50 hover:text-white/80"
-                }`}
-                style={{ padding: '8px 18px' }}
+          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+            <span
+              className="mono-label"
+              style={{ letterSpacing: "0.18em" }}
+              suppressHydrationWarning
+            >
+              <span className="hidden sm:inline">LHR </span>
+              {clock}
+            </span>
+
+            <Magnetic strength={0.2}>
+              <button
+                className="burger"
+                onClick={() => setOpen((v) => !v)}
+                aria-label={open ? "Close menu" : "Open menu"}
+                aria-expanded={open}
               >
-                {active === item.label && (
-                  <motion.span
-                    layoutId="nav-pill"
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      background: "rgba(99, 102, 241, 0.12)",
-                      border: "1px solid rgba(99, 102, 241, 0.2)",
-                    }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{item.label}</span>
-              </a>
-            ))}
-          </div>
-
-          {/* CTA + Mobile Toggle */}
-          <div className="flex items-center gap-3">
-            <a
-              href="#contact"
-              className="hidden md:inline-flex btn-primary text-sm !py-2.5 !px-5"
-            >
-              Let&apos;s Talk
-            </a>
-
-            {/* Mobile hamburger */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden flex flex-col items-center justify-center w-10 h-10 gap-1.5"
-              aria-label="Toggle menu"
-            >
-              <motion.span
-                animate={mobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-                className="block w-6 h-[2px] bg-white/70 rounded-full"
-              />
-              <motion.span
-                animate={mobileOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-                className="block w-6 h-[2px] bg-white/70 rounded-full"
-              />
-              <motion.span
-                animate={mobileOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-                className="block w-6 h-[2px] bg-white/70 rounded-full"
-              />
-            </button>
+                <span
+                  style={{
+                    transform: open
+                      ? "translateY(3.75px) rotate(45deg)"
+                      : "none",
+                  }}
+                />
+                <span
+                  style={{
+                    transform: open
+                      ? "translateY(-3.75px) rotate(-45deg)"
+                      : "none",
+                  }}
+                />
+              </button>
+            </Magnetic>
           </div>
         </div>
-      </motion.nav>
 
-      {/* Mobile Menu */}
+        <motion.div
+          className="nav-progress"
+          style={{ scaleX: scrollYProgress, width: "100%" }}
+        />
+      </motion.header>
+
       <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 pt-[80px] md:hidden"
+        {open && (
+          <motion.nav
+            className="menu-overlay"
+            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            animate={{ clipPath: "inset(0 0 0% 0)" }}
+            exit={{ clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.85, ease: EASE }}
           >
-            <div
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-              onClick={() => setMobileOpen(false)}
-            />
-            <motion.div className="relative bg-[#12121a] border-b border-white/5 p-6 flex flex-col gap-2">
+            <div style={{ maxWidth: "var(--measure)", margin: "0 auto", width: "100%" }}>
               {NAV_ITEMS.map((item, i) => (
-                <motion.a
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors ${
-                    active === item.label
-                      ? "text-white bg-white/5"
-                      : "text-white/50"
-                  }`}
-                >
-                  {item.label}
-                </motion.a>
+                <span key={item.label} style={{ display: "block", overflow: "hidden" }}>
+                  <motion.a
+                    href={item.href}
+                    className="menu-link"
+                    onClick={() => setOpen(false)}
+                    initial={{ y: "110%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "110%" }}
+                    transition={{
+                      duration: 0.8,
+                      delay: 0.15 + i * 0.055,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
+                    <span className="menu-index">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    {item.label}
+                  </motion.a>
+                </span>
               ))}
-              <a
-                href="#contact"
-                onClick={() => setMobileOpen(false)}
-                className="btn-primary text-center mt-3 justify-center"
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 0.55, duration: 0.5 }}
+                style={{
+                  marginTop: "clamp(2.5rem, 6vh, 4rem)",
+                  paddingTop: "1.75rem",
+                  borderTop: "1px solid var(--rule)",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "2rem",
+                  justifyContent: "space-between",
+                }}
               >
-                Let&apos;s Talk
-              </a>
-            </motion.div>
-          </motion.div>
+                <a
+                  href="mailto:masad0108khan@gmail.com"
+                  className="link-sweep mono-label"
+                  style={{ color: "var(--bone-70)" }}
+                >
+                  masad0108khan@gmail.com
+                </a>
+                <span className="mono-label">Lahore, Pakistan — {clock}</span>
+              </motion.div>
+            </div>
+          </motion.nav>
         )}
       </AnimatePresence>
     </>

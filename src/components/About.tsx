@@ -1,174 +1,162 @@
 "use client";
 
-import {
-  AnimatedSection,
-  AnimatedCounter,
-  TiltCard,
-  StaggerContainer,
-  StaggerItem,
-} from "./animations";
+import { Counter, Reveal, SplitText, Stagger, StaggerItem } from "./animations";
+import ImageSlot from "./ImageSlot";
 
 const STATS = [
-  { value: 10, suffix: "+", label: "Projects Completed", icon: "🚀" },
-  { value: 1, suffix: "+", label: "Years Experience", icon: "⏳" },
-  { value: 20, suffix: "+", label: "Happy Clients", icon: "😊" },
-  { value: 100, suffix: "%", label: "Client Satisfaction", icon: "⭐" },
+  { n: 10, s: "+", label: "Projects shipped" },
+  { n: 20, s: "+", label: "Clients served" },
+  { n: 1, s: "+", label: "Years building" },
+  { n: 100, s: "%", label: "Satisfaction" },
 ];
 
 export default function About() {
   return (
-    <section
-      id="about"
-      style={{ paddingTop: "9rem", paddingBottom: "9rem", position: "relative", overflow: "hidden" }}
-    >
-      {/* Background accents */}
-      <div className="absolute top-0 left-0 right-0 section-divider" />
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          top: "33%",
-          right: 0,
-          width: 600,
-          height: 600,
-          borderRadius: "50%",
-          background: "rgba(99, 102, 241, 0.03)",
-          filter: "blur(150px)",
-        }}
-      />
-
-      <div className="section-wrapper" style={{ position: "relative", zIndex: 10 }}>
-        {/* Section header */}
-        <AnimatedSection style={{ textAlign: "center", marginBottom: "5rem" }}>
-          <span className="section-label">About Me</span>
-          <h2
-            style={{
-              fontFamily: "var(--font-heading)",
-              marginTop: "2rem",
-              fontSize: "clamp(2rem, 5vw, 3rem)",
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Who <span className="gradient-text">Am I</span>?
-          </h2>
-        </AnimatedSection>
-
-        {/* Two column layout */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "3.5rem",
-          }}
-          className="about-grid"
-        >
-          {/* Bio text */}
-          <AnimatedSection delay={0.2}>
-            <div
-              className="glass-card"
-              style={{ padding: "clamp(2rem, 4vw, 3.5rem)" }}
+    <section id="about" className="section">
+      <div className="rule-top" />
+      <div className="shell">
+        {/* Two-column editorial spread: sticky label, flowing text */}
+        <div className="split-spread">
+          <div className="split-aside">
+            <p className="eyebrow">01 — Profile</p>
+            <h2
+              className="section-title"
+              style={{ marginTop: "1.75rem" }}
             >
-              <p
-                style={{
-                  fontSize: "1.05rem",
-                  lineHeight: 1.8,
-                  color: "rgba(255,255,255,0.7)",
-                }}
-              >
-                Hello! I&apos;m{" "}
-                <span style={{ color: "#fff", fontWeight: 600 }}>Asad Khan</span>, a
-                full stack web developer based in{" "}
-                <span style={{ color: "#818cf8", fontWeight: 500 }}>
-                  Lahore, Pakistan
-                </span>
-                . With a passion for building complete web solutions, I
-                specialize in developing user-friendly and efficient digital
-                experiences from front-end to back-end.
-              </p>
-              <p
-                style={{
-                  marginTop: "1.75rem",
-                  fontSize: "1.05rem",
-                  lineHeight: 1.8,
-                  color: "rgba(255,255,255,0.7)",
-                }}
-              >
-                I&apos;m dedicated to delivering high-quality, scalable web
-                development services. As a freelance developer, I tailor
-                personalized solutions to your needs. My expertise spans across{" "}
-                <span style={{ color: "#22d3ee", fontWeight: 500 }}>
-                  React, Next.js, Node.js, Express, and MongoDB
-                </span>
-                , ensuring your project is in capable hands from start to
-                finish.
-              </p>
-              <p
-                style={{
-                  marginTop: "1.75rem",
-                  fontSize: "1.05rem",
-                  lineHeight: 1.8,
-                  color: "rgba(255,255,255,0.7)",
-                }}
-              >
-                I turn design ideas into user-friendly interfaces and connect
-                them with powerful back-end functionality, ensuring everything
-                works smoothly across all devices. With attention to detail and a
-                passion for modern web trends, I strive to build solutions that
-                not only look great but perform flawlessly.
-              </p>
-            </div>
-          </AnimatedSection>
+              <SplitText text="Who" />
+              <br />
+              <span className="serif-em" style={{ color: "var(--flame)" }}>
+                <SplitText text="I am" delay={0.1} />
+              </span>
+            </h2>
+          </div>
 
-          {/* Stats Grid */}
-          <AnimatedSection delay={0.4}>
-            <StaggerContainer
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
-                gap: "1.5rem",
-              }}
-              className="stats-grid"
-              staggerDelay={0.12}
-            >
-              {STATS.map((stat) => (
-                <StaggerItem key={stat.label}>
-                  <TiltCard className="stat-card" intensity={10} style={{ height: "100%" }}>
-                    <span style={{ fontSize: "1.75rem", marginBottom: "0.75rem", display: "block" }}>
-                      {stat.icon}
-                    </span>
-                    <span
-                      className="gradient-text"
-                      style={{
-                        fontFamily: "var(--font-heading)",
-                        fontSize: "clamp(1.75rem, 3vw, 2.5rem)",
-                        fontWeight: 700,
-                        display: "block",
-                      }}
-                    >
-                      <AnimatedCounter
-                        target={stat.value}
-                        suffix={stat.suffix}
-                      />
-                    </span>
-                    <span
-                      style={{
-                        fontSize: "0.85rem",
-                        color: "rgba(255,255,255,0.4)",
-                        marginTop: "0.5rem",
-                        display: "block",
-                      }}
-                    >
-                      {stat.label}
-                    </span>
-                  </TiltCard>
+          <div className="split-main">
+            <Reveal>
+              <p
+                style={{
+                  fontFamily: "var(--f-display)",
+                  fontWeight: 600,
+                  fontSize: "clamp(1.15rem, 2.1vw, 1.65rem)",
+                  lineHeight: 1.4,
+                  letterSpacing: "-0.02em",
+                  color: "var(--bone)",
+                }}
+              >
+                I build complete web products — from the first pixel of an
+                interface to the last line of the API behind it.
+              </p>
+            </Reveal>
+
+            <Reveal delay={0.1}>
+              <p
+                style={{
+                  marginTop: "2rem",
+                  fontSize: "1.02rem",
+                  lineHeight: 1.85,
+                  color: "var(--bone-45)",
+                  maxWidth: "58ch",
+                }}
+              >
+                Based in Lahore, Pakistan, I work as a freelance full stack
+                developer specialising in the MERN stack. My focus is on
+                interfaces that feel considered and backends that hold up under
+                real traffic — no shortcuts hidden behind a nice landing page.
+              </p>
+            </Reveal>
+
+            <Reveal delay={0.16}>
+              <p
+                style={{
+                  marginTop: "1.5rem",
+                  fontSize: "1.02rem",
+                  lineHeight: 1.85,
+                  color: "var(--bone-45)",
+                  maxWidth: "58ch",
+                }}
+              >
+                I turn design ideas into responsive, accessible interfaces and
+                wire them to solid server-side logic. Attention to detail,
+                honest timelines, and code the next developer can actually read.
+              </p>
+            </Reveal>
+
+          </div>
+        </div>
+
+        {/*
+          Portrait and figures share a row so the tall image has something
+          to sit beside — on its own it left a dead column the height of
+          the photograph.
+        */}
+        <div className="about-showcase">
+          <Reveal>
+            <figure>
+              <ImageSlot
+                src="/about/workspace.jpg"
+                alt="Asad Khan working at his desk in Lahore"
+                slot="/about/workspace.jpg"
+                ratio="4 / 5"
+                duotone
+                sizes="(max-width: 900px) 90vw, 38vw"
+                fallback={
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background:
+                        "linear-gradient(165deg, rgba(255,92,53,.22), rgba(8,8,10,.9) 55%, rgba(79,240,255,.14))",
+                    }}
+                  />
+                }
+              />
+              <figcaption
+                className="mono-label"
+                style={{ marginTop: "0.85rem", display: "block" }}
+              >
+                02 — The desk in Lahore
+              </figcaption>
+            </figure>
+          </Reveal>
+
+          {/* Figures and stack share the column so it fills the photo's
+              height with content rather than padding. */}
+          <div className="about-figures">
+            <Stagger className="stat-quad" gap={0.1}>
+              {STATS.map((s) => (
+                <StaggerItem key={s.label}>
+                  <p className="stat-num">
+                    <Counter to={s.n} suffix={s.s} />
+                  </p>
+                  <p className="mono-label">{s.label}</p>
                 </StaggerItem>
               ))}
-            </StaggerContainer>
-          </AnimatedSection>
+            </Stagger>
+
+            <Reveal delay={0.2}>
+              <p className="mono-label" style={{ marginBottom: "1rem" }}>
+                Working with
+              </p>
+              <div className="about-tags" style={{ marginTop: 0 }}>
+                {[
+                  "React",
+                  "Next.js",
+                  "Node.js",
+                  "Express",
+                  "MongoDB",
+                  "TypeScript",
+                  "Tailwind",
+                  "Figma",
+                ].map((t) => (
+                  <span key={t} className="tag">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </Reveal>
+          </div>
         </div>
       </div>
-
-
     </section>
   );
 }

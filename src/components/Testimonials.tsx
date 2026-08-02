@@ -1,118 +1,169 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { AnimatedSection } from "./animations";
-import { FiStar, FiMessageCircle } from "react-icons/fi";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { FiStar } from "react-icons/fi";
+import { Reveal, SplitText } from "./animations";
 
 const TESTIMONIALS = [
   {
     name: "Sarah Mitchell",
     role: "CEO, TechStart Inc.",
-    content: "Asad delivered an outstanding e-commerce platform that exceeded our expectations. His attention to detail and modern design approach transformed our online presence completely.",
-    rating: 5,
-    color: "#818cf8",
+    quote:
+      "Asad delivered an e-commerce platform that exceeded what we scoped. His attention to detail and design sense reshaped our whole online presence.",
   },
   {
     name: "James Rodriguez",
     role: "Founder, CreativeHQ",
-    content: "Working with Asad was a game-changer for our startup. He built a blazing-fast React application with beautiful animations that our users absolutely love.",
-    rating: 5,
-    color: "#22d3ee",
+    quote:
+      "A game-changer for our startup. He built a genuinely fast React application with animation work our users comment on unprompted.",
   },
   {
     name: "Emily Chen",
     role: "Marketing Director, BrandUp",
-    content: "The portfolio website Asad created for us is simply stunning. The 3D effects and smooth transitions make it stand out from every competitor in our industry.",
-    rating: 5,
-    color: "#34d399",
+    quote:
+      "The site Asad built for us is stunning. The motion and transitions put us visibly ahead of every competitor in our category.",
   },
   {
     name: "Michael Foster",
     role: "CTO, DataVerse",
-    content: "Asad's full-stack expertise is remarkable. He built our entire dashboard from scratch with clean API design, real-time data, and a UI that makes complex data simple.",
-    rating: 5,
-    color: "#fb7185",
+    quote:
+      "His full-stack range is real. He built our dashboard end to end — clean API design, live data, and a UI that makes complex data legible.",
   },
   {
     name: "Priya Sharma",
     role: "Product Manager, NextWave",
-    content: "Incredibly talented developer. Asad turned our Figma mockups into a pixel-perfect responsive website in record time. Communication was excellent throughout.",
-    rating: 5,
-    color: "#fbbf24",
+    quote:
+      "Turned our Figma files into a pixel-accurate responsive site in record time. Communication was excellent from kickoff to handover.",
   },
   {
     name: "David Kim",
     role: "Entrepreneur",
-    content: "I've worked with many freelancers, but Asad is on another level. His code is clean, well-documented, and he proactively suggests improvements. Highly recommended!",
-    rating: 5,
-    color: "#a78bfa",
+    quote:
+      "I've hired a lot of freelancers. Asad is a level above — clean code, documented, and he proactively flags improvements instead of waiting.",
   },
 ];
 
-function TestimonialCard({ t, i }: { t: (typeof TESTIMONIALS)[0]; i: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40, rotateX: 15 }}
-      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay: i * 0.1 }}
-      whileHover={{ y: -8, rotateY: 3, rotateX: -2, transition: { duration: 0.3 } }}
-      style={{ perspective: 1000, transformStyle: "preserve-3d", minWidth: 340, maxWidth: 400, flexShrink: 0 }}
-    >
-      <div className="glass-card" style={{ padding: "clamp(1.75rem, 3vw, 2.5rem)", height: "100%", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: 20, right: 24, fontSize: "4rem", lineHeight: 1, color: `${t.color}10`, fontFamily: "Georgia, serif", fontWeight: 700, pointerEvents: "none" }}>&ldquo;</div>
-        <div style={{ display: "flex", gap: "0.25rem", marginBottom: "1.25rem" }}>
-          {Array.from({ length: t.rating }).map((_, j) => (
-            <FiStar key={j} size={16} style={{ color: "#fbbf24", fill: "#fbbf24" }} />
-          ))}
-        </div>
-        <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", lineHeight: 1.8, flex: 1, marginBottom: "1.75rem", position: "relative", zIndex: 1 }}>
-          &ldquo;{t.content}&rdquo;
-        </p>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: `${t.color}15`, border: `1px solid ${t.color}25`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "1rem", color: t.color }}>
-            {t.name.split(" ").map((n) => n[0]).join("")}
-          </div>
-          <div>
-            <p style={{ fontWeight: 600, fontSize: "0.9rem", color: "#fff" }}>{t.name}</p>
-            <p style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.35)", marginTop: 3 }}>{t.role}</p>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function Testimonials() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const x1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
-  const x2 = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [drag, setDrag] = useState(0);
+
+  useEffect(() => {
+    const measure = () => {
+      const el = trackRef.current;
+      if (!el) return;
+      setDrag(Math.max(0, el.scrollWidth - el.offsetWidth));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   return (
-    <section ref={ref} style={{ position: "relative", paddingTop: "10rem", paddingBottom: "10rem", overflow: "hidden" }}>
-      <div className="absolute top-0 left-0 right-0 section-divider" />
-      <div className="absolute inset-0 dot-grid" style={{ opacity: 0.15 }} />
-
-      <div className="section-wrapper" style={{ position: "relative", zIndex: 10 }}>
-        <AnimatedSection style={{ textAlign: "center", marginBottom: "5rem" }}>
-          <span className="section-label"><FiMessageCircle style={{ fontSize: "0.85rem" }} /> Testimonials</span>
-          <h2 style={{ fontFamily: "var(--font-heading)", marginTop: "2rem", fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 700, letterSpacing: "-0.02em" }}>
-            What Clients <span className="gradient-text">Say</span>
-          </h2>
-          <p style={{ marginTop: "1.5rem", color: "rgba(255,255,255,0.4)", maxWidth: "42rem", marginLeft: "auto", marginRight: "auto", fontSize: "1.1rem", lineHeight: 1.7 }}>
-            Don&apos;t just take my word for it — here&apos;s what my clients have to say about working together.
-          </p>
-        </AnimatedSection>
+    <section className="section" style={{ overflow: "hidden" }}>
+      <div className="rule-top" />
+      <div className="shell">
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">07 — Words</p>
+            <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
+              <SplitText text="Client" />
+              <br />
+              <span className="serif-em" style={{ color: "var(--flame)" }}>
+                <SplitText text="feedback" delay={0.1} />
+              </span>
+            </h2>
+          </div>
+          <Reveal delay={0.15}>
+            <p className="lede">
+              Drag to read through. What people said after the invoice was
+              settled, which is the only review that counts.
+            </p>
+          </Reveal>
+        </div>
       </div>
 
-      <motion.div style={{ x: x1, display: "flex", gap: "2rem", paddingLeft: "clamp(1.5rem, 5vw, 5rem)", paddingRight: "2rem", marginBottom: "2rem" }}>
-        {TESTIMONIALS.slice(0, 3).map((t, i) => <TestimonialCard key={t.name} t={t} i={i} />)}
-      </motion.div>
-      <motion.div style={{ x: x2, display: "flex", gap: "2rem", paddingLeft: "clamp(1.5rem, 5vw, 5rem)", paddingRight: "2rem" }}>
-        {TESTIMONIALS.slice(3, 6).map((t, i) => <TestimonialCard key={t.name} t={t} i={i + 3} />)}
-      </motion.div>
+      <Reveal delay={0.1}>
+        <motion.div
+          ref={trackRef}
+          drag="x"
+          dragConstraints={{ left: -drag, right: 0 }}
+          dragElastic={0.08}
+          whileDrag={{ cursor: "grabbing" }}
+          data-cursor="Drag"
+          style={{
+            display: "flex",
+            gap: "clamp(1rem, 2vw, 1.75rem)",
+            paddingInline: "var(--gutter)",
+            marginTop: "clamp(2.5rem, 6vh, 4rem)",
+            cursor: "grab",
+          }}
+        >
+          {TESTIMONIALS.map((t) => (
+            <div key={t.name} className="quote-card panel tick">
+              <div style={{ display: "flex", gap: 3, marginBottom: "1.5rem" }}>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <FiStar
+                    key={i}
+                    size={13}
+                    style={{ color: "var(--flame)", fill: "var(--flame)" }}
+                  />
+                ))}
+              </div>
+
+              <p
+                style={{
+                  flex: 1,
+                  fontFamily: "var(--f-display)",
+                  fontWeight: 400,
+                  fontSize: "1.02rem",
+                  lineHeight: 1.65,
+                  color: "var(--bone-70)",
+                }}
+              >
+                “{t.quote}”
+              </p>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.9rem",
+                  marginTop: "2rem",
+                  paddingTop: "1.25rem",
+                  borderTop: "1px solid var(--rule)",
+                }}
+              >
+                <span
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    border: "1px solid var(--flame-line)",
+                    color: "var(--flame)",
+                    display: "grid",
+                    placeItems: "center",
+                    fontFamily: "var(--f-mono)",
+                    fontSize: "0.72rem",
+                    flexShrink: 0,
+                  }}
+                >
+                  {t.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </span>
+                <div>
+                  <p style={{ fontSize: "0.9rem", fontWeight: 600 }}>{t.name}</p>
+                  <p className="mono-label" style={{ marginTop: 3 }}>
+                    {t.role}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </Reveal>
     </section>
   );
 }

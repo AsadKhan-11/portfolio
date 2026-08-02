@@ -1,295 +1,157 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { AnimatedSection, StaggerContainer, StaggerItem } from "./animations";
-import {
-  FiCode,
-  FiLayout,
-  FiSmartphone,
-  FiDatabase,
-  FiZap,
-  FiLayers,
-} from "react-icons/fi";
+import { AnimatePresence, motion } from "framer-motion";
+import { FiArrowUpRight } from "react-icons/fi";
+import { Reveal, SplitText } from "./animations";
 
 const SERVICES = [
   {
-    icon: FiLayout,
-    title: "UI/UX Design",
-    description:
-      "Crafting intuitive, beautiful interfaces that users love. From wireframes to pixel-perfect designs with a focus on user experience and conversion.",
-    features: ["Figma Prototyping", "Responsive Design", "Design Systems"],
-    color: "#818cf8",
-    gradient: "linear-gradient(135deg, #818cf8, #6366f1)",
+    n: "01",
+    title: "Frontend Engineering",
+    copy: "Performant, accessible interfaces in React and Next.js. Clean component architecture, real animation craft, and a build that stays fast as the product grows.",
+    tags: ["React / Next.js", "TypeScript", "Framer Motion"],
   },
   {
-    icon: FiCode,
-    title: "Frontend Development",
-    description:
-      "Building performant, accessible web applications using React, Next.js, and modern JavaScript. Clean code architecture with smooth animations.",
-    features: ["React / Next.js", "TypeScript", "Framer Motion"],
-    color: "#22d3ee",
-    gradient: "linear-gradient(135deg, #22d3ee, #06b6d4)",
+    n: "02",
+    title: "Backend & APIs",
+    copy: "REST APIs and server logic on Node and Express, backed by MongoDB. Secure auth, sensible data modelling, and endpoints documented well enough to hand over.",
+    tags: ["Node / Express", "MongoDB", "REST APIs"],
   },
   {
-    icon: FiDatabase,
-    title: "Backend Development",
-    description:
-      "Designing robust REST APIs and server-side logic with Node.js, Express, and MongoDB. Secure authentication and database architecture.",
-    features: ["Node.js / Express", "MongoDB", "REST APIs"],
-    color: "#34d399",
-    gradient: "linear-gradient(135deg, #34d399, #10b981)",
+    n: "03",
+    title: "UI / UX Design",
+    copy: "Wireframes through to pixel-level design systems in Figma. Interfaces designed around what users are actually trying to do, not around what looks good in a mockup.",
+    tags: ["Figma", "Design Systems", "Prototyping"],
   },
   {
-    icon: FiSmartphone,
+    n: "04",
     title: "Responsive Web Apps",
-    description:
-      "Ensuring every application looks and performs flawlessly across all devices — from mobile phones to ultra-wide desktop monitors.",
-    features: ["Mobile-First", "Cross-Browser", "PWA Ready"],
-    color: "#fb7185",
-    gradient: "linear-gradient(135deg, #fb7185, #e11d48)",
+    copy: "Layouts that hold together from a 320px phone to an ultrawide monitor. Mobile-first, cross-browser tested, and progressive-web-app ready when it helps.",
+    tags: ["Mobile-First", "Cross-Browser", "PWA"],
   },
   {
-    icon: FiZap,
-    title: "Performance Optimization",
-    description:
-      "Speed matters. I optimize load times, code splitting, image delivery, and Core Web Vitals to ensure your site ranks and converts.",
-    features: ["Lazy Loading", "SEO", "Core Web Vitals"],
-    color: "#fbbf24",
-    gradient: "linear-gradient(135deg, #fbbf24, #f59e0b)",
+    n: "05",
+    title: "Performance & SEO",
+    copy: "Speed is a feature. Code splitting, image delivery, and Core Web Vitals work that moves both search ranking and conversion in the right direction.",
+    tags: ["Core Web Vitals", "Lazy Loading", "SEO"],
   },
   {
-    icon: FiLayers,
-    title: "Full-Stack Solutions",
-    description:
-      "End-to-end development — from concept to deployment. I handle the complete stack so you get a cohesive, production-ready product.",
-    features: ["MERN Stack", "Deployment", "Maintenance"],
-    color: "#a78bfa",
-    gradient: "linear-gradient(135deg, #a78bfa, #8b5cf6)",
+    n: "06",
+    title: "Full-Stack Delivery",
+    copy: "Concept to deployment as a single point of contact. One cohesive product rather than a frontend and backend that were never introduced to each other.",
+    tags: ["MERN", "Deployment", "Maintenance"],
   },
 ];
 
 export default function Services() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [active, setActive] = useState<number | null>(null);
 
   return (
-    <section
-      id="services"
-      style={{
-        position: "relative",
-        paddingTop: "10rem",
-        paddingBottom: "10rem",
-        overflow: "hidden",
-      }}
-    >
-      <div className="absolute top-0 left-0 right-0 section-divider" />
-      <div className="absolute inset-0 mesh-gradient pointer-events-none" />
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          top: "20%",
-          right: 0,
-          width: 500,
-          height: 500,
-          borderRadius: "50%",
-          background: "rgba(129, 140, 248, 0.04)",
-          filter: "blur(150px)",
-        }}
-      />
+    <section id="services" className="section">
+      <div className="rule-top" />
+      <div className="shell">
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">02 — Services</p>
+            <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
+              <SplitText text="What I" />
+              <br />
+              <span className="serif-em" style={{ color: "var(--flame)" }}>
+                <SplitText text="do best" delay={0.1} />
+              </span>
+            </h2>
+          </div>
+          <Reveal delay={0.15}>
+            <p className="lede">
+              Six things I get hired for. Most projects use several of them at
+              once — which is rather the point of hiring one person for the whole
+              stack.
+            </p>
+          </Reveal>
+        </div>
 
-      <div className="section-wrapper" style={{ position: "relative", zIndex: 10 }}>
-        <AnimatedSection style={{ textAlign: "center", marginBottom: "5rem" }}>
-          <span className="section-label">
-            <FiZap style={{ fontSize: "0.85rem" }} />
-            What I Do
-          </span>
-          <h2
-            style={{
-              fontFamily: "var(--font-heading)",
-              marginTop: "2rem",
-              fontSize: "clamp(2rem, 5vw, 3rem)",
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            My{" "}
-            <span className="gradient-text">Services</span>
-          </h2>
-          <p
-            style={{
-              marginTop: "1.5rem",
-              color: "rgba(255,255,255,0.4)",
-              maxWidth: "42rem",
-              marginLeft: "auto",
-              marginRight: "auto",
-              fontSize: "1.1rem",
-              lineHeight: 1.7,
-            }}
-          >
-            Comprehensive web development services tailored to bring your vision
-            to life with cutting-edge technology and best practices.
-          </p>
-        </AnimatedSection>
-
-        <StaggerContainer
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-            gap: "2rem",
-          }}
-          staggerDelay={0.1}
-        >
-          {SERVICES.map((service, index) => (
-            <StaggerItem key={service.title}>
-              <motion.div
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                style={{
-                  position: "relative",
-                  height: "100%",
-                  perspective: 1000,
-                }}
+        <div style={{ marginTop: "clamp(3rem, 8vh, 5rem)" }}>
+          {SERVICES.map((s, i) => (
+            <Reveal key={s.n} delay={i * 0.05}>
+              <div
+                className="row-item"
+                onMouseEnter={() => setActive(i)}
+                onMouseLeave={() => setActive(null)}
+                onFocus={() => setActive(i)}
+                onBlur={() => setActive(null)}
+                onClick={() => setActive((v) => (v === i ? null : i))}
+                tabIndex={0}
+                role="button"
+                aria-expanded={active === i}
               >
-                <motion.div
-                  className="glass-card"
+                <span
+                  className="mono-label"
                   style={{
-                    padding: "clamp(2rem, 3vw, 2.75rem)",
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
-                    overflow: "hidden",
-                    transformStyle: "preserve-3d",
+                    color: active === i ? "var(--flame)" : undefined,
+                    transition: "color .4s",
                   }}
-                  animate={{
-                    rotateX: hoveredIndex === index ? 2 : 0,
-                    rotateY: hoveredIndex === index ? -3 : 0,
-                    scale: hoveredIndex === index ? 1.03 : 1,
-                  }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 >
-                  {/* Gradient accent line at top */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: 3,
-                      background: service.gradient,
-                      opacity: hoveredIndex === index ? 1 : 0,
-                      transition: "opacity 0.4s",
-                    }}
-                  />
+                  {s.n}
+                </span>
 
-                  {/* Glow effect on hover */}
-                  <AnimatePresence>
-                    {hoveredIndex === index && (
+                <div>
+                  <h3 className="row-title">{s.title}</h3>
+
+                  <AnimatePresence initial={false}>
+                    {active === i && (
                       <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        style={{
-                          position: "absolute",
-                          top: -100,
-                          right: -100,
-                          width: 250,
-                          height: 250,
-                          borderRadius: "50%",
-                          background: `${service.color}08`,
-                          filter: "blur(60px)",
-                          pointerEvents: "none",
-                        }}
-                      />
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                        style={{ overflow: "hidden" }}
+                      >
+                        <p
+                          style={{
+                            marginTop: "1.1rem",
+                            maxWidth: "62ch",
+                            fontSize: "0.98rem",
+                            lineHeight: 1.8,
+                            color: "var(--bone-45)",
+                          }}
+                        >
+                          {s.copy}
+                        </p>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: "0.6rem",
+                            marginTop: "1.1rem",
+                          }}
+                        >
+                          {s.tags.map((t) => (
+                            <span key={t} className="tag">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </motion.div>
                     )}
                   </AnimatePresence>
+                </div>
 
-                  {/* Icon */}
-                  <motion.div
-                    style={{
-                      width: 60,
-                      height: 60,
-                      borderRadius: 16,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      background: `${service.color}10`,
-                      border: `1px solid ${service.color}20`,
-                      marginBottom: "1.75rem",
-                      position: "relative",
-                      zIndex: 1,
-                    }}
-                    animate={{
-                      rotateY: hoveredIndex === index ? 360 : 0,
-                    }}
-                    transition={{ duration: 0.8, ease: "easeInOut" }}
-                  >
-                    <service.icon size={26} style={{ color: service.color }} />
-                  </motion.div>
-
-                  {/* Title */}
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-heading)",
-                      fontSize: "1.25rem",
-                      fontWeight: 700,
-                      color: "#fff",
-                      marginBottom: "1rem",
-                      position: "relative",
-                      zIndex: 1,
-                    }}
-                  >
-                    {service.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p
-                    style={{
-                      color: "rgba(255,255,255,0.5)",
-                      fontSize: "0.9rem",
-                      lineHeight: 1.7,
-                      marginBottom: "1.75rem",
-                      flex: 1,
-                      position: "relative",
-                      zIndex: 1,
-                    }}
-                  >
-                    {service.description}
-                  </p>
-
-                  {/* Features */}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: "0.6rem",
-                      position: "relative",
-                      zIndex: 1,
-                    }}
-                  >
-                    {service.features.map((feature) => (
-                      <span
-                        key={feature}
-                        style={{
-                          fontSize: "0.7rem",
-                          fontWeight: 500,
-                          padding: "5px 12px",
-                          borderRadius: 9999,
-                          color: service.color,
-                          background: `${service.color}08`,
-                          border: `1px solid ${service.color}20`,
-                          letterSpacing: "0.02em",
-                        }}
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
-              </motion.div>
-            </StaggerItem>
+                <motion.span
+                  animate={{
+                    rotate: active === i ? 45 : 0,
+                    color:
+                      active === i ? "var(--flame)" : "rgba(244,241,234,0.3)",
+                  }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ display: "grid", placeItems: "center" }}
+                >
+                  <FiArrowUpRight size={26} />
+                </motion.span>
+              </div>
+            </Reveal>
           ))}
-        </StaggerContainer>
+        </div>
       </div>
     </section>
   );

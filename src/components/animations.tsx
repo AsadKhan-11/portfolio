@@ -1,327 +1,329 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import {
   motion,
   useInView,
+  useMotionValue,
   useScroll,
+  useSpring,
   useTransform,
-  type Variant,
 } from "framer-motion";
 
-/* ─── Fade-in with 3D rotation on scroll ─── */
-interface AnimatedSectionProps {
+const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
+
+/* ─────────────────────────────────────────────
+   SplitText — word-by-word mask reveal.
+   Each word sits in an overflow-hidden box and
+   slides up from below. Reads as typeset motion
+   rather than a fade.
+   ───────────────────────────────────────────── */
+interface SplitTextProps {
+  text: string;
+  className?: string;
+  delay?: number;
+  stagger?: number;
+  style?: CSSProperties;
+  as?: "span" | "div";
+}
+
+export function SplitText({
+  text,
+  className = "",
+  delay = 0,
+  stagger = 0.055,
+  style,
+  as = "span",
+}: SplitTextProps) {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-12%" });
+  const Tag = motion[as];
+
+  return (
+    <Tag
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ref={ref as any}
+      className={className}
+      style={{ display: "inline-block", ...style }}
+      aria-label={text}
+    >
+      {text.split(" ").map((word, i) => (
+        <span
+          key={`${word}-${i}`}
+          style={{
+            display: "inline-block",
+            overflow: "hidden",
+            verticalAlign: "bottom",
+            paddingBottom: "0.08em",
+          }}
+          aria-hidden="true"
+        >
+          <motion.span
+            style={{ display: "inline-block", willChange: "transform" }}
+            initial={{ y: "115%" }}
+            animate={inView ? { y: 0 } : { y: "115%" }}
+            transition={{
+              duration: 0.9,
+              delay: delay + i * stagger,
+              ease: EASE_OUT_EXPO,
+            }}
+          >
+            {word}
+            {i < text.split(" ").length - 1 ? " " : ""}
+          </motion.span>
+        </span>
+      ))}
+    </Tag>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Reveal — single mask slide for any block.
+   ───────────────────────────────────────────── */
+interface RevealProps {
   children: ReactNode;
   className?: string;
   delay?: number;
-  direction?: "up" | "down" | "left" | "right";
-  style?: React.CSSProperties;
+  y?: number;
+  style?: CSSProperties;
+  once?: boolean;
 }
 
-export function AnimatedSection({
+export function Reveal({
   children,
   className = "",
   delay = 0,
-  direction = "up",
+  y = 28,
   style,
-}: AnimatedSectionProps) {
+  once = true,
+}: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-
-  const dirMap: Record<string, { x: number; y: number; rotateX: number; rotateY: number }> = {
-    up: { x: 0, y: 60, rotateX: 8, rotateY: 0 },
-    down: { x: 0, y: -60, rotateX: -8, rotateY: 0 },
-    left: { x: 60, y: 0, rotateX: 0, rotateY: 8 },
-    right: { x: -60, y: 0, rotateX: 0, rotateY: -8 },
-  };
-
-  const d = dirMap[direction];
+  const inView = useInView(ref, { once, margin: "-8%" });
 
   return (
     <motion.div
       ref={ref}
       className={className}
-      initial={{
-        opacity: 0,
-        x: d.x,
-        y: d.y,
-        rotateX: d.rotateX,
-        rotateY: d.rotateY,
-        scale: 0.95,
-      }}
-      animate={
-        isInView
-          ? { opacity: 1, x: 0, y: 0, rotateX: 0, rotateY: 0, scale: 1 }
-          : {}
-      }
-      transition={{
-        duration: 0.8,
-        delay,
-        ease: [0.25, 0.46, 0.45, 0.94],
-      }}
-      style={{ perspective: 1000, ...style }}
+      style={style}
+      initial={{ opacity: 0, y }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
+      transition={{ duration: 0.95, delay, ease: EASE_OUT_EXPO }}
     >
       {children}
     </motion.div>
   );
 }
 
-/* ─── Stagger children ─── */
-interface StaggerContainerProps {
-  children: ReactNode;
-  className?: string;
-  staggerDelay?: number;
-  style?: React.CSSProperties;
-}
-
-export function StaggerContainer({
+/* ─────────────────────────────────────────────
+   Stagger helpers
+   ───────────────────────────────────────────── */
+export function Stagger({
   children,
   className = "",
-  staggerDelay = 0.1,
+  gap = 0.09,
   style,
-}: StaggerContainerProps) {
+}: {
+  children: ReactNode;
+  className?: string;
+  gap?: number;
+  style?: CSSProperties;
+}) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px" });
+  const inView = useInView(ref, { once: true, margin: "-6%" });
 
   return (
     <motion.div
       ref={ref}
       className={className}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={{
-        hidden: {},
-        visible: {
-          transition: {
-            staggerChildren: staggerDelay,
-          },
-        },
-      }}
       style={style}
+      initial="hide"
+      animate={inView ? "show" : "hide"}
+      variants={{ hide: {}, show: { transition: { staggerChildren: gap } } }}
     >
       {children}
     </motion.div>
   );
 }
 
-/* ─── Single stagger child ─── */
-interface StaggerItemProps {
+export function StaggerItem({
+  children,
+  className = "",
+  style,
+}: {
   children: ReactNode;
   className?: string;
-}
-
-export function StaggerItem({ children, className = "" }: StaggerItemProps) {
+  style?: CSSProperties;
+}) {
   return (
     <motion.div
       className={className}
+      style={style}
       variants={{
-        hidden: {
-          opacity: 0,
-          y: 40,
-          rotateX: 15,
-          scale: 0.9,
-        },
-        visible: {
+        hide: { opacity: 0, y: 34 },
+        show: {
           opacity: 1,
           y: 0,
-          rotateX: 0,
-          scale: 1,
-          transition: {
-            duration: 0.6,
-            ease: [0.25, 0.46, 0.45, 0.94],
-          },
+          transition: { duration: 0.9, ease: EASE_OUT_EXPO },
         },
       }}
-      style={{ perspective: 800 }}
     >
       {children}
     </motion.div>
   );
 }
 
-/* ─── 3D Tilt Card ─── */
-interface TiltCardProps {
-  children: ReactNode;
-  className?: string;
-  intensity?: number;
-  style?: React.CSSProperties;
-}
-
-export function TiltCard({
+/* ─────────────────────────────────────────────
+   Magnetic — element leans toward the cursor and
+   springs back on exit.
+   ───────────────────────────────────────────── */
+export function Magnetic({
   children,
   className = "",
-  intensity = 15,
+  strength = 0.35,
   style,
-}: TiltCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
+}: {
+  children: ReactNode;
+  className?: string;
+  strength?: number;
+  style?: CSSProperties;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 260, damping: 18, mass: 0.6 });
+  const sy = useSpring(y, { stiffness: 260, damping: 18, mass: 0.6 });
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setRotation({
-      x: -y * intensity,
-      y: x * intensity,
-    });
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    x.set((e.clientX - r.left - r.width / 2) * strength);
+    y.set((e.clientY - r.top - r.height / 2) * strength);
   };
 
-  const handleMouseLeave = () => {
-    setRotation({ x: 0, y: 0 });
-    setIsHovered(false);
+  const reset = () => {
+    x.set(0);
+    y.set(0);
   };
 
   return (
     <motion.div
-      ref={cardRef}
+      ref={ref}
       className={className}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={handleMouseLeave}
-      animate={{
-        rotateX: rotation.x,
-        rotateY: rotation.y,
-        scale: isHovered ? 1.02 : 1,
-      }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      style={{ perspective: 1000, transformStyle: "preserve-3d", ...style }}
+      onMouseMove={onMove}
+      onMouseLeave={reset}
+      style={{ x: sx, y: sy, display: "inline-block", ...style }}
     >
       {children}
     </motion.div>
   );
 }
 
-/* ─── Parallax element ─── */
-interface ParallaxProps {
+/* ─────────────────────────────────────────────
+   Parallax — drifts with scroll.
+   ───────────────────────────────────────────── */
+export function Parallax({
+  children,
+  className = "",
+  speed = 0.3,
+  style,
+}: {
   children: ReactNode;
   className?: string;
   speed?: number;
-}
-
-export function Parallax({ children, className = "", speed = 0.5 }: ParallaxProps) {
+  style?: CSSProperties;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-
-  const y = useTransform(scrollYProgress, [0, 1], [100 * speed, -100 * speed]);
+  const raw = useTransform(scrollYProgress, [0, 1], [120 * speed, -120 * speed]);
+  const y = useSpring(raw, { stiffness: 120, damping: 30, mass: 0.5 });
 
   return (
-    <motion.div ref={ref} className={className} style={{ y }}>
+    <motion.div ref={ref} className={className} style={{ y, ...style }}>
       {children}
     </motion.div>
   );
 }
 
-/* ─── Magnetic Hover Effect ─── */
-interface MagneticProps {
-  children: ReactNode;
-  className?: string;
-  strength?: number;
-}
-
-export function Magnetic({ children, className = "", strength = 0.3 }: MagneticProps) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    ref.current.style.transform = `translate(${x * strength}px, ${y * strength}px)`;
-  };
-
-  const handleMouseLeave = () => {
-    if (!ref.current) return;
-    ref.current.style.transform = "translate(0, 0)";
-  };
-
-  return (
-    <div
-      ref={ref}
-      className={`magnetic-hover ${className}`}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      {children}
-    </div>
-  );
-}
-
-/* ─── Text reveal char by char ─── */
-interface TextRevealProps {
-  text: string;
-  className?: string;
-  delay?: number;
-}
-
-export function TextReveal({ text, className = "", delay = 0 }: TextRevealProps) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true });
-
-  return (
-    <span ref={ref} className={className}>
-      {text.split("").map((char, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{
-            duration: 0.4,
-            delay: delay + i * 0.03,
-            ease: [0.25, 0.46, 0.45, 0.94],
-          }}
-          style={{ display: "inline-block" }}
-        >
-          {char === " " ? "\u00A0" : char}
-        </motion.span>
-      ))}
-    </span>
-  );
-}
-
-/* ─── Counter animation ─── */
-interface AnimatedCounterProps {
-  target: number;
-  suffix?: string;
-  className?: string;
-  duration?: number;
-}
-
-export function AnimatedCounter({
-  target,
+/* ─────────────────────────────────────────────
+   Counter — counts up once in view.
+   ───────────────────────────────────────────── */
+export function Counter({
+  to,
   suffix = "",
+  duration = 1.8,
   className = "",
-  duration = 2,
-}: AnimatedCounterProps) {
+}: {
+  to: number;
+  suffix?: string;
+  duration?: number;
+  className?: string;
+}) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true });
-  const [count, setCount] = useState(0);
+  const inView = useInView(ref, { once: true, margin: "-10%" });
+  const [n, setN] = useState(0);
 
   useEffect(() => {
-    if (!isInView) return;
-    let start = 0;
-    const startTime = performance.now();
+    if (!inView) return;
+    const t0 = performance.now();
+    let raf = 0;
 
-    const animate = (currentTime: number) => {
-      const elapsed = (currentTime - startTime) / 1000;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(eased * target);
-      setCount(current);
-      if (progress < 1) requestAnimationFrame(animate);
+    const tick = (now: number) => {
+      const p = Math.min((now - t0) / (duration * 1000), 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setN(Math.round(eased * to));
+      if (p < 1) raf = requestAnimationFrame(tick);
     };
-
-    requestAnimationFrame(animate);
-  }, [isInView, target, duration]);
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, to, duration]);
 
   return (
     <span ref={ref} className={className}>
-      {count}
+      {n}
       {suffix}
     </span>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Marquee — seamless infinite ticker. Duplicates
+   its children and translates by exactly 50%.
+   ───────────────────────────────────────────── */
+export function Marquee({
+  children,
+  speed = 38,
+  reverse = false,
+  className = "",
+}: {
+  children: ReactNode;
+  speed?: number;
+  reverse?: boolean;
+  className?: string;
+}) {
+  return (
+    <div
+      className={className}
+      style={{ overflow: "hidden", width: "100%" }}
+      aria-hidden="true"
+    >
+      <motion.div
+        className="marquee"
+        animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
+        transition={{ duration: speed, repeat: Infinity, ease: "linear" }}
+      >
+        <div style={{ display: "flex", flexShrink: 0 }}>{children}</div>
+        <div style={{ display: "flex", flexShrink: 0 }}>{children}</div>
+      </motion.div>
+    </div>
   );
 }

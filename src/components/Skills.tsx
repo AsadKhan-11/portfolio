@@ -1,275 +1,165 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import {
-  AnimatedSection,
-  StaggerContainer,
-  StaggerItem,
-  TiltCard,
-} from "./animations";
-import {
-  FaHtml5,
-  FaCss3Alt,
-  FaJs,
-  FaReact,
-  FaNodeJs,
-  FaGitAlt,
   FaBootstrap,
+  FaCss3Alt,
   FaFigma,
+  FaGitAlt,
+  FaHtml5,
+  FaJs,
+  FaNodeJs,
   FaNpm,
+  FaReact,
 } from "react-icons/fa";
 import {
-  SiNextdotjs,
-  SiMongodb,
   SiExpress,
+  SiFirebase,
+  SiMongodb,
+  SiNextdotjs,
+  SiRedux,
   SiTailwindcss,
   SiTypescript,
-  SiFirebase,
-  SiRedux,
 } from "react-icons/si";
-import { FiLayout, FiServer, FiTool } from "react-icons/fi";
+import type { IconType } from "react-icons";
+import { Reveal, SplitText } from "./animations";
 
-const SKILL_GROUPS = [
+const GROUPS = [
   {
-    category: "Frontend",
-    description: "Building beautiful, responsive interfaces",
-    icon: FiLayout,
-    color: "#818cf8",
-    bgColor: "rgba(129, 140, 248, 0.06)",
-    borderColor: "rgba(129, 140, 248, 0.12)",
+    label: "Frontend",
     skills: [
-      { name: "HTML5", icon: FaHtml5, color: "#E44D26" },
-      { name: "CSS3", icon: FaCss3Alt, color: "#1572B6" },
-      { name: "JavaScript", icon: FaJs, color: "#F7DF1E" },
-      { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
-      { name: "React", icon: FaReact, color: "#61DAFB" },
-      { name: "Next.js", icon: SiNextdotjs, color: "#fff" },
-      { name: "Redux", icon: SiRedux, color: "#764ABC" },
-      { name: "Tailwind", icon: SiTailwindcss, color: "#06B6D4" },
-      { name: "Bootstrap", icon: FaBootstrap, color: "#7952B3" },
+      { name: "React", icon: FaReact, level: 92 },
+      { name: "Next.js", icon: SiNextdotjs, level: 88 },
+      { name: "JavaScript", icon: FaJs, level: 93 },
+      { name: "TypeScript", icon: SiTypescript, level: 82 },
+      { name: "Tailwind CSS", icon: SiTailwindcss, level: 90 },
+      { name: "HTML5", icon: FaHtml5, level: 95 },
+      { name: "CSS3", icon: FaCss3Alt, level: 92 },
+      { name: "Redux", icon: SiRedux, level: 78 },
+      { name: "Bootstrap", icon: FaBootstrap, level: 85 },
     ],
   },
   {
-    category: "Backend",
-    description: "Powering applications with robust APIs",
-    icon: FiServer,
-    color: "#22d3ee",
-    bgColor: "rgba(34, 211, 238, 0.06)",
-    borderColor: "rgba(34, 211, 238, 0.12)",
+    label: "Backend",
     skills: [
-      { name: "Node.js", icon: FaNodeJs, color: "#339933" },
-      { name: "Express", icon: SiExpress, color: "#fff" },
-      { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
-      { name: "Firebase", icon: SiFirebase, color: "#FFCA28" },
+      { name: "Node.js", icon: FaNodeJs, level: 86 },
+      { name: "Express", icon: SiExpress, level: 84 },
+      { name: "MongoDB", icon: SiMongodb, level: 83 },
+      { name: "Firebase", icon: SiFirebase, level: 74 },
     ],
   },
   {
-    category: "Tools",
-    description: "Streamlining the development workflow",
-    icon: FiTool,
-    color: "#fb7185",
-    bgColor: "rgba(251, 113, 133, 0.06)",
-    borderColor: "rgba(251, 113, 133, 0.12)",
+    label: "Tooling",
     skills: [
-      { name: "Git", icon: FaGitAlt, color: "#F05032" },
-      { name: "NPM", icon: FaNpm, color: "#CB3837" },
-      { name: "Figma", icon: FaFigma, color: "#F24E1E" },
+      { name: "Git", icon: FaGitAlt, level: 88 },
+      { name: "NPM", icon: FaNpm, level: 86 },
+      { name: "Figma", icon: FaFigma, level: 80 },
     ],
   },
 ];
 
+function SkillRow({
+  skill,
+  delay,
+}: {
+  skill: { name: string; icon: IconType; level: number };
+  delay: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-8%" });
+  const Icon = skill.icon;
+
+  return (
+    <div ref={ref} className="skill-row">
+      <div className="skill-row-head">
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.7rem",
+            fontSize: "0.92rem",
+            color: "var(--bone-70)",
+          }}
+        >
+          <Icon size={17} style={{ flexShrink: 0 }} />
+          {skill.name}
+        </span>
+        <span
+          className="mono-label"
+          style={{ fontSize: "0.62rem", letterSpacing: "0.12em" }}
+        >
+          {skill.level}
+        </span>
+      </div>
+
+      <div className="meter">
+        <motion.div
+          className="meter-fill"
+          initial={{ scaleX: 0 }}
+          animate={inView ? { scaleX: skill.level / 100 } : { scaleX: 0 }}
+          transition={{ duration: 1.1, delay, ease: [0.16, 1, 0.3, 1] }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function Skills() {
   return (
-    <section
-      id="skills"
-      style={{
-        position: "relative",
-        paddingTop: "9rem",
-        paddingBottom: "9rem",
-        overflow: "hidden",
-      }}
-    >
-      <div className="absolute top-0 left-0 right-0 section-divider" />
-      <div className="absolute inset-0 dot-grid" style={{ opacity: 0.2 }} />
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          bottom: "25%",
-          left: 0,
-          width: 500,
-          height: 500,
-          borderRadius: "50%",
-          background: "rgba(34, 211, 238, 0.03)",
-          filter: "blur(150px)",
-        }}
-      />
+    <section id="skills" className="section">
+      <div className="rule-top" />
+      <div className="shell">
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">03 — Stack</p>
+            <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
+              <SplitText text="The" />
+              <br />
+              <span className="serif-em" style={{ color: "var(--flame)" }}>
+                <SplitText text="toolkit" delay={0.1} />
+              </span>
+            </h2>
+          </div>
+          <Reveal delay={0.15}>
+            <p className="lede">
+              What I reach for, and how confidently. These numbers are my own
+              honest read — not a marketing exercise.
+            </p>
+          </Reveal>
+        </div>
 
-      <div className="section-wrapper" style={{ position: "relative", zIndex: 10 }}>
-        {/* Header */}
-        <AnimatedSection style={{ textAlign: "center", marginBottom: "5rem" }}>
-          <span className="section-label">Tech Stack</span>
-          <h2
-            style={{
-              fontFamily: "var(--font-heading)",
-              marginTop: "2rem",
-              fontSize: "clamp(2rem, 5vw, 3rem)",
-              fontWeight: 700,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            My <span className="gradient-text">Skills</span>
-          </h2>
-          <p
-            style={{
-              marginTop: "1.5rem",
-              color: "rgba(255,255,255,0.4)",
-              maxWidth: "36rem",
-              marginLeft: "auto",
-              marginRight: "auto",
-              fontSize: "1.05rem",
-              lineHeight: 1.7,
-            }}
-          >
-            Technologies and tools I use to bring ideas to life and build
-            exceptional digital experiences.
-          </p>
-        </AnimatedSection>
-
-        {/* Category Cards */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "2.5rem",
-          }}
-          className="skills-categories-grid"
-        >
-          {SKILL_GROUPS.map((group, groupIdx) => (
-            <AnimatedSection
-              key={group.category}
-              delay={groupIdx * 0.15}
-              direction={groupIdx % 2 === 0 ? "left" : "right"}
-            >
-              <TiltCard intensity={4}>
-                <div
-                  className="glass-card"
-                  style={{
-                    padding: "clamp(2rem, 4vw, 3rem)",
-                    borderColor: group.borderColor,
-                  }}
-                >
-                  {/* Category Header */}
-                  <div
+        <div className="skills-grid">
+          {GROUPS.map((g, gi) => (
+            <Reveal key={g.label} delay={gi * 0.1}>
+              <div>
+                <div className="skills-col-head">
+                  <span className="mono-label" style={{ color: "var(--flame)" }}>
+                    {String(gi + 1).padStart(2, "0")}
+                  </span>
+                  <h3
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1.25rem",
-                      marginBottom: "2.5rem",
+                      fontFamily: "var(--f-display)",
+                      fontWeight: 700,
+                      fontSize: "1.1rem",
+                      textTransform: "uppercase",
+                      letterSpacing: "-0.01em",
                     }}
                   >
-                    <div
-                      style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: 12,
-                        background: group.bgColor,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                      }}
-                    >
-                      <group.icon size={22} style={{ color: group.color }} />
-                    </div>
-                    <div>
-                      <h3
-                        style={{
-                          fontFamily: "var(--font-heading)",
-                          fontSize: "1.2rem",
-                          fontWeight: 700,
-                          color: "#fff",
-                        }}
-                      >
-                        {group.category}
-                      </h3>
-                      <p
-                        style={{
-                          fontSize: "0.875rem",
-                          color: "rgba(255,255,255,0.35)",
-                          marginTop: 4,
-                        }}
-                      >
-                        {group.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Skill Badges */}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: "1rem",
-                    }}
-                  >
-                    {group.skills.map((skill, i) => (
-                      <motion.div
-                        key={skill.name}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{
-                          delay: groupIdx * 0.1 + i * 0.05,
-                          duration: 0.4,
-                        }}
-                        whileHover={{
-                          scale: 1.08,
-                          y: -4,
-                          transition: { duration: 0.2 },
-                        }}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "0.75rem",
-                          padding: "0.75rem 1.25rem",
-                          background: "rgba(255,255,255,0.03)",
-                          border: "1px solid rgba(255,255,255,0.06)",
-                          borderRadius: 10,
-                          cursor: "default",
-                          transition: "border-color 0.3s, background 0.3s, box-shadow 0.3s",
-                        }}
-                        onMouseEnter={(e) => {
-                          const el = e.currentTarget as HTMLElement;
-                          el.style.borderColor = `${group.color}40`;
-                          el.style.background = `${group.color}08`;
-                          el.style.boxShadow = `0 8px 24px -8px ${group.color}20`;
-                        }}
-                        onMouseLeave={(e) => {
-                          const el = e.currentTarget as HTMLElement;
-                          el.style.borderColor = "rgba(255,255,255,0.06)";
-                          el.style.background = "rgba(255,255,255,0.03)";
-                          el.style.boxShadow = "none";
-                        }}
-                      >
-                        <skill.icon
-                          style={{ color: skill.color, fontSize: 20, flexShrink: 0 }}
-                        />
-                        <span
-                          style={{
-                            fontSize: "0.875rem",
-                            fontWeight: 500,
-                            color: "rgba(255,255,255,0.7)",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {skill.name}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
+                    {g.label}
+                  </h3>
+                  <span className="mono-label" style={{ marginLeft: "auto" }}>
+                    {g.skills.length}
+                  </span>
                 </div>
-              </TiltCard>
-            </AnimatedSection>
+
+                <div>
+                  {g.skills.map((s, i) => (
+                    <SkillRow key={s.name} skill={s} delay={i * 0.06} />
+                  ))}
+                </div>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>
