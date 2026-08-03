@@ -194,11 +194,11 @@ export default function Navbar() {
                 }}
               >
                 <a
-                  href="mailto:masad0108khan@gmail.com"
+                  href="mailto:mrasad10khan@gmail.com"
                   className="link-sweep mono-label"
                   style={{ color: "var(--bone-70)" }}
                 >
-                  masad0108khan@gmail.com
+                  mrasad10khan@gmail.com
                 </a>
                 <span className="mono-label">Lahore, Pakistan — {clock}</span>
               </motion.div>

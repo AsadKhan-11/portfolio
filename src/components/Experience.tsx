@@ -1,21 +1,39 @@
 "use client";
 
-import { Reveal, SplitText } from "./animations";
+import type { IconType } from "react-icons";
+import { FiCode, FiMonitor } from "react-icons/fi";
+import { Reveal, SplitText, Stagger, StaggerItem } from "./animations";
 
-const ROLES = [
+type Role = {
+  year: string;
+  period: string;
+  title: string;
+  org: string;
+  copy: string;
+  stack: string[];
+  Icon: IconType;
+  current?: boolean;
+};
+
+const ROLES: Role[] = [
   {
+    year: "24",
     period: "2024 — Present",
     title: "Freelance Web Developer",
     org: "Self-employed",
-    copy: "Building custom web products for clients worldwide. Full-stack MERN applications, responsive design systems, and 10+ delivered projects across e-commerce, SaaS and business sites.",
+    copy: "Building custom web products for clients worldwide. Full-stack MERN applications, AI-assisted features, and 10+ delivered projects across e-commerce, SaaS and business sites.",
     stack: ["React", "Next.js", "Node.js", "MongoDB", "Tailwind"],
+    Icon: FiCode,
+    current: true,
   },
   {
+    year: "23",
     period: "2023 — 2024",
     title: "Front-End Developer",
     org: "Project-based",
     copy: "Interactive, responsive interfaces in React and modern CSS. Focused on performance budgets, accessibility, and a component architecture that survived handover.",
     stack: ["HTML5", "CSS3", "JavaScript", "React", "Bootstrap"],
+    Icon: FiMonitor,
   },
 ];
 
@@ -43,72 +61,40 @@ export default function Experience() {
           </Reveal>
         </div>
 
-        <div style={{ marginTop: "clamp(3rem, 8vh, 5rem)" }}>
-          {ROLES.map((r, i) => (
-            <Reveal key={r.title} delay={i * 0.1}>
-              <div className="exp-row">
-                <div className="exp-period">
-                  <span
-                    style={{
-                      width: 7,
-                      height: 7,
-                      borderRadius: "50%",
-                      background: "var(--flame)",
-                      flexShrink: 0,
-                    }}
-                  />
-                  <span className="mono-label">{r.period}</span>
+        <Stagger className="path-grid" gap={0.1}>
+          {ROLES.map(({ year, period, title, org, copy, stack, Icon, current }) => (
+            <StaggerItem key={period}>
+              <article className="path-card tick">
+                {/* Year doubles as the card's texture */}
+                <span className="path-ghost" aria-hidden="true">
+                  &apos;{year}
+                </span>
+
+                <div className="path-card-top">
+                  <span className="path-icon" aria-hidden="true">
+                    <Icon size={19} />
+                  </span>
+                  <span className="path-period">
+                    {current && <span className="path-pulse" aria-hidden="true" />}
+                    <span className="mono-label">{period}</span>
+                  </span>
                 </div>
 
-                <div>
-                  <h3
-                    style={{
-                      fontFamily: "var(--f-display)",
-                      fontWeight: 800,
-                      fontSize: "clamp(1.3rem, 2.5vw, 1.9rem)",
-                      textTransform: "uppercase",
-                      letterSpacing: "-0.03em",
-                      lineHeight: 1.05,
-                    }}
-                  >
-                    {r.title}
-                  </h3>
-                  <p
-                    className="mono-label"
-                    style={{ marginTop: "0.6rem", color: "var(--flame)" }}
-                  >
-                    {r.org}
-                  </p>
-                  <p
-                    style={{
-                      marginTop: "1.25rem",
-                      maxWidth: "60ch",
-                      fontSize: "0.98rem",
-                      lineHeight: 1.85,
-                      color: "var(--bone-45)",
-                    }}
-                  >
-                    {r.copy}
-                  </p>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: "0.5rem",
-                      marginTop: "1.4rem",
-                    }}
-                  >
-                    {r.stack.map((s) => (
-                      <span key={s} className="tag">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
+                <h3 className="path-title">{title}</h3>
+                <p className="path-org">{org}</p>
+                <p className="path-copy">{copy}</p>
+
+                <div className="path-stack">
+                  {stack.map((s) => (
+                    <span key={s} className="tag">
+                      {s}
+                    </span>
+                  ))}
                 </div>
-              </div>
-            </Reveal>
+              </article>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );

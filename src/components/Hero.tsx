@@ -13,13 +13,6 @@ const ROLES = [
   "Interface Engineer",
 ];
 
-const META = [
-  { k: "Role", v: "Full Stack Developer" },
-  { k: "Based", v: "Lahore, Pakistan" },
-  { k: "Focus", v: "React · Next · Node" },
-  { k: "Status", v: "Available for work" },
-];
-
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
   const [role, setRole] = useState(0);
@@ -170,7 +163,7 @@ export default function Hero() {
                 {[
                   { I: FiGithub, href: "https://github.com/AsadKhan-11", l: "GitHub" },
                   { I: FiLinkedin, href: "https://linkedin.com", l: "LinkedIn" },
-                  { I: FiMail, href: "mailto:masad0108khan@gmail.com", l: "Email" },
+                  { I: FiMail, href: "mailto:mrasad10khan@gmail.com", l: "Email" },
                 ].map(({ I, href, l }) => (
                   <Magnetic key={l} strength={0.4}>
                     <a
@@ -222,46 +215,6 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* ── Meta strip ── */}
-        <motion.div
-          className="hero-meta-grid"
-          style={{ opacity: fade }}
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.7, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {META.map((m) => (
-            <div key={m.k}>
-              <p className="mono-label" style={{ marginBottom: "0.5rem" }}>
-                {m.k}
-              </p>
-              <p
-                style={{
-                  fontSize: "0.95rem",
-                  color: "var(--bone)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                }}
-              >
-                {m.k === "Status" && (
-                  <motion.span
-                    animate={{ opacity: [1, 0.25, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    style={{
-                      width: 7,
-                      height: 7,
-                      borderRadius: "50%",
-                      background: "#4ade80",
-                      flexShrink: 0,
-                    }}
-                  />
-                )}
-                {m.v}
-              </p>
-            </div>
-          ))}
-        </motion.div>
       </div>
 
       {/* scroll cue */}

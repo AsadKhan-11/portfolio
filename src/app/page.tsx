@@ -9,6 +9,7 @@ import Work from "@/components/Work";
 import Experience from "@/components/Experience";
 import Process from "@/components/Process";
 import Testimonials from "@/components/Testimonials";
+import Faq from "@/components/Faq";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
@@ -27,6 +28,7 @@ export default function Home() {
         <Experience />
         <Process />
         <Testimonials />
+        <Faq />
         <Contact />
       </main>
       <Footer />

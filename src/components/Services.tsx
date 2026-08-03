@@ -1,52 +1,78 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { FiArrowUpRight } from "react-icons/fi";
-import { Reveal, SplitText } from "./animations";
+import type { IconType } from "react-icons";
+import {
+  FiCpu,
+  FiLayers,
+  FiLayout,
+  FiMessageSquare,
+  FiRefreshCw,
+  FiShoppingBag,
+} from "react-icons/fi";
+import { Reveal, SplitText, Stagger, StaggerItem } from "./animations";
 
-const SERVICES = [
+type Service = {
+  n: string;
+  title: string;
+  copy: string;
+  tags: string[];
+  Icon: IconType;
+  /** Column span on the 12-column desktop grid. */
+  span: number;
+};
+
+const SERVICES: Service[] = [
   {
     n: "01",
-    title: "Frontend Engineering",
-    copy: "Performant, accessible interfaces in React and Next.js. Clean component architecture, real animation craft, and a build that stays fast as the product grows.",
-    tags: ["React / Next.js", "TypeScript", "Framer Motion"],
+    title: "AI Integration",
+    copy: "LLM features built into products that already work — semantic search, document Q&A, summarisation and drafting, wired to your own data with retrieval rather than guesswork.",
+    tags: ["OpenAI / Claude API", "RAG", "Vector Search"],
+    Icon: FiCpu,
+    span: 7,
   },
   {
     n: "02",
-    title: "Backend & APIs",
-    copy: "REST APIs and server logic on Node and Express, backed by MongoDB. Secure auth, sensible data modelling, and endpoints documented well enough to hand over.",
-    tags: ["Node / Express", "MongoDB", "REST APIs"],
+    title: "Chatbots & Assistants",
+    copy: "Support bots that deflect repetitive tickets and qualify leads before they reach your inbox — with escalation to a human when the bot is out of its depth.",
+    tags: ["Conversational UI", "Lead Capture", "Handoff"],
+    Icon: FiMessageSquare,
+    span: 5,
   },
   {
     n: "03",
-    title: "UI / UX Design",
-    copy: "Wireframes through to pixel-level design systems in Figma. Interfaces designed around what users are actually trying to do, not around what looks good in a mockup.",
-    tags: ["Figma", "Design Systems", "Prototyping"],
+    title: "CRM & Automation",
+    copy: "Connect the tools you already pay for. Two-way CRM sync, webhook pipelines and workflows that remove the copy-paste work between systems.",
+    tags: ["HubSpot", "Webhooks", "Zapier / Make"],
+    Icon: FiRefreshCw,
+    span: 5,
   },
   {
     n: "04",
-    title: "Responsive Web Apps",
-    copy: "Layouts that hold together from a 320px phone to an ultrawide monitor. Mobile-first, cross-browser tested, and progressive-web-app ready when it helps.",
-    tags: ["Mobile-First", "Cross-Browser", "PWA"],
+    title: "Full-Stack Web Apps",
+    copy: "End-to-end MERN builds — dashboards, admin panels, client portals. Secure auth, sensible data modelling, and a frontend that stays fast as the product grows.",
+    tags: ["React / Next.js", "Node / Express", "MongoDB"],
+    Icon: FiLayers,
+    span: 7,
   },
   {
     n: "05",
-    title: "Performance & SEO",
-    copy: "Speed is a feature. Code splitting, image delivery, and Core Web Vitals work that moves both search ranking and conversion in the right direction.",
-    tags: ["Core Web Vitals", "Lazy Loading", "SEO"],
+    title: "E-Commerce & Payments",
+    copy: "Storefronts, subscriptions and checkout flows on Stripe. Cart, orders and fulfilment handled properly, with an admin your team can actually operate.",
+    tags: ["Stripe", "Subscriptions", "Storefronts"],
+    Icon: FiShoppingBag,
+    span: 6,
   },
   {
     n: "06",
-    title: "Full-Stack Delivery",
-    copy: "Concept to deployment as a single point of contact. One cohesive product rather than a frontend and backend that were never introduced to each other.",
-    tags: ["MERN", "Deployment", "Maintenance"],
+    title: "UI / UX & Design Systems",
+    copy: "Wireframes through to pixel-level design systems in Figma, then built as reusable components. Interfaces designed around what users are actually trying to do.",
+    tags: ["Figma", "Design Systems", "Prototyping"],
+    Icon: FiLayout,
+    span: 6,
   },
 ];
 
 export default function Services() {
-  const [active, setActive] = useState<number | null>(null);
-
   return (
     <section id="services" className="section">
       <div className="rule-top" />
@@ -64,94 +90,44 @@ export default function Services() {
           </div>
           <Reveal delay={0.15}>
             <p className="lede">
-              Six things I get hired for. Most projects use several of them at
-              once — which is rather the point of hiring one person for the whole
-              stack.
+              Six things I get hired for, from AI features to the storefront
+              underneath them. Most projects use several at once — which is
+              rather the point of hiring one person for the whole stack.
             </p>
           </Reveal>
         </div>
 
-        <div style={{ marginTop: "clamp(3rem, 8vh, 5rem)" }}>
-          {SERVICES.map((s, i) => (
-            <Reveal key={s.n} delay={i * 0.05}>
-              <div
-                className="row-item"
-                onMouseEnter={() => setActive(i)}
-                onMouseLeave={() => setActive(null)}
-                onFocus={() => setActive(i)}
-                onBlur={() => setActive(null)}
-                onClick={() => setActive((v) => (v === i ? null : i))}
-                tabIndex={0}
-                role="button"
-                aria-expanded={active === i}
-              >
-                <span
-                  className="mono-label"
-                  style={{
-                    color: active === i ? "var(--flame)" : undefined,
-                    transition: "color .4s",
-                  }}
-                >
-                  {s.n}
+        <Stagger className="service-grid" gap={0.08}>
+          {SERVICES.map(({ n, title, copy, tags, Icon, span }) => (
+            <StaggerItem
+              key={n}
+              className="service-cell"
+              style={{ ["--span" as string]: span }}
+            >
+              <article className="service-card tick">
+                {/* Oversized numeral sits behind the content as texture */}
+                <span className="service-ghost" aria-hidden="true">
+                  {n}
                 </span>
 
-                <div>
-                  <h3 className="row-title">{s.title}</h3>
+                <span className="service-icon" aria-hidden="true">
+                  <Icon size={20} />
+                </span>
 
-                  <AnimatePresence initial={false}>
-                    {active === i && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                        style={{ overflow: "hidden" }}
-                      >
-                        <p
-                          style={{
-                            marginTop: "1.1rem",
-                            maxWidth: "62ch",
-                            fontSize: "0.98rem",
-                            lineHeight: 1.8,
-                            color: "var(--bone-45)",
-                          }}
-                        >
-                          {s.copy}
-                        </p>
-                        <div
-                          style={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: "0.6rem",
-                            marginTop: "1.1rem",
-                          }}
-                        >
-                          {s.tags.map((t) => (
-                            <span key={t} className="tag">
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                <h3 className="service-title">{title}</h3>
+                <p className="service-copy">{copy}</p>
+
+                <div className="service-tags">
+                  {tags.map((t) => (
+                    <span key={t} className="tag">
+                      {t}
+                    </span>
+                  ))}
                 </div>
-
-                <motion.span
-                  animate={{
-                    rotate: active === i ? 45 : 0,
-                    color:
-                      active === i ? "var(--flame)" : "rgba(244,241,234,0.3)",
-                  }}
-                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ display: "grid", placeItems: "center" }}
-                >
-                  <FiArrowUpRight size={26} />
-                </motion.span>
-              </div>
-            </Reveal>
+              </article>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
