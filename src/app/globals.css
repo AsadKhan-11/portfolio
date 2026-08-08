@@ -584,8 +584,19 @@ body[data-cursor-active] * {
     opacity 0.3s var(--ease-out-expo);
 }
 
-/* ═══════════ Hero ═══════════ */
+/* ═══════════ Hero ═══════════
+   Centred lockup: the name spreads edge to edge and the illustrated
+   portrait stands in the middle of it — hair breaking the first line,
+   shoulders sitting in front of the second.
+   Every measurement below hangs off these four custom properties, so a
+   single media query can rescale the whole composition. */
 .hero {
+  --w-lead: clamp(2.3rem, 8vw, 7rem);
+  --w-mark: clamp(3rem, 13vw, 11.5rem);
+  --head-w: clamp(140px, 19.5vw, 310px);
+  /* Source asset is 760 × 1231 */
+  --head-h: calc(var(--head-w) * 1.62);
+
   position: relative;
   min-height: 100svh;
   display: flex;
@@ -595,108 +606,326 @@ body[data-cursor-active] * {
   overflow: hidden;
 }
 
-.hero-type {
-  font-family: var(--f-display), sans-serif;
-  font-weight: 800;
-  font-size: clamp(2.75rem, 10vw, 8.5rem);
-  line-height: 0.86;
-  letter-spacing: -0.05em;
-  text-transform: uppercase;
+.hero-eyebrow {
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(0.75rem, 2vh, 1.5rem);
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(2.5rem, 6vw, 4rem);
-  align-items: center;
+.hero-stack {
+  position: relative;
+  /* Reserves the run of portrait that rises above the first line:
+     head height, less the part that overlaps both words. */
+  padding-top: calc(
+    var(--head-h) - var(--w-mark) * 0.51 - var(--w-lead) * 0.85 + 1rem
+  );
+  isolation: isolate;
 }
 
-/* Small screens read name-first; the portrait follows the copy. */
-.hero-type-col {
-  order: 1;
-}
-
-.hero-portrait-col {
-  order: 2;
-  max-width: 260px;
-  width: 62%;
-}
-
-/* Layered editorial arrangement once there's room for it */
-@media (min-width: 900px) {
-  .hero-grid {
-    grid-template-columns: repeat(12, 1fr);
-    gap: 0;
-  }
-
-  .hero-type-col {
-    order: 1;
-    grid-column: 1 / 9;
-    grid-row: 1;
-    z-index: 3;
-  }
-
-  .hero-portrait-col {
-    order: 2;
-    /* Starts at column 9 so the wordmark keeps its final letter; the
-       small negative inset gives a deliberate overlap, not a collision. */
-    grid-column: 9 / 13;
-    grid-row: 1;
-    z-index: 1;
-    width: 100%;
-    max-width: none;
-    margin-left: -4%;
-  }
-}
-
-/* The second line hangs slightly right for an offset lockup */
-.hero-line-2 {
-  display: block;
-  padding-left: clamp(0.5rem, 3vw, 3.5rem);
-  color: transparent;
-  -webkit-text-stroke: 1.5px var(--bone);
-}
-
-/* Portrait frame furniture */
-.portrait-wrap {
+.hero-lockup {
   position: relative;
 }
 
-.frame-tick {
+.hero-heading {
+  position: relative;
+  z-index: 1;
+  font-family: var(--f-display), sans-serif;
+  font-weight: 800;
+  line-height: 0.85;
+  text-transform: uppercase;
+}
+
+.hero-word {
+  display: flex;
+  justify-content: space-between;
+  margin-inline: auto;
+  /* Spacing comes from the flex gaps, so tracking would only skew the
+     right edge out of alignment. */
+  letter-spacing: 0;
+}
+
+.hero-letter {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+/* First line sits inside the margins; the mark below runs full bleed */
+.hero-word-lead {
+  width: min(80%, 1000px);
+  font-size: var(--w-lead);
+  color: var(--bone);
+}
+
+.hero-word-mark {
+  width: 100%;
+  font-size: var(--w-mark);
+  color: var(--flame);
+}
+
+.hero-avatar {
   position: absolute;
-  width: 22px;
-  height: 22px;
-  border-color: var(--flame);
+  left: 50%;
+  translate: -50% 0;
+  /* Bottom lands a third of the way into the mark, so the shoulders
+     cross it without covering the letterforms. */
+  bottom: calc(var(--w-mark) * 0.34);
+  z-index: 2;
+  width: var(--head-w);
+  height: var(--head-h);
   pointer-events: none;
 }
 
-.frame-tick-tl {
-  top: -8px;
-  left: -8px;
-  border-top: 1px solid;
-  border-left: 1px solid;
+/* Dissolves the dark shirt into the canvas instead of ending on a hard cut */
+.hero-avatar img {
+  -webkit-mask-image: linear-gradient(to bottom, #000 68%, transparent 97%);
+  mask-image: linear-gradient(to bottom, #000 68%, transparent 97%);
 }
 
-.frame-tick-br {
-  bottom: -8px;
-  right: -8px;
-  border-bottom: 1px solid;
-  border-right: 1px solid;
+.hero-avatar-glow {
+  position: absolute;
+  left: 50%;
+  top: 12%;
+  translate: -50% 0;
+  width: 190%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 92, 53, 0.22),
+    rgba(255, 92, 53, 0.06) 45%,
+    transparent 68%
+  );
+  filter: blur(6px);
+  pointer-events: none;
 }
 
-.portrait-caption {
+/* Copy and CTA flank the portrait at eye level */
+.hero-flank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-top: clamp(2rem, 5vh, 3rem);
+  text-align: center;
+}
+
+.hero-flank-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.hero-lede {
+  max-width: 30ch;
+  font-size: clamp(0.92rem, 1.1vw, 1.05rem);
+  line-height: 1.7;
+  color: var(--bone-45);
+}
+
+.hero-quiet-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--f-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bone-70);
+}
+
+/* Rotating role — masked box, one label mounted at a time */
+.hero-role {
+  position: relative;
+  display: inline-block;
+  height: 1.5em;
+  overflow: hidden;
+  font-family: var(--f-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--flame);
+}
+
+.hero-role-sizer {
+  visibility: hidden;
+  white-space: nowrap;
+}
+
+.hero-role-value {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+}
+
+@media (min-width: 900px) {
+  .hero-flank {
+    position: absolute;
+    inset-inline: 0;
+    /* Bottom-anchored to the cap line of the first word, so the copy
+       always clears the type no matter how the lockup rescales. */
+    bottom: calc((var(--w-lead) + var(--w-mark)) * 0.85 + 1.25rem);
+    z-index: 3;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: 0;
+    text-align: left;
+    pointer-events: none;
+  }
+
+  .hero-flank-col {
+    /* Half the free width either side of the portrait */
+    max-width: calc((100% - var(--head-w)) / 2 - 2rem);
+    pointer-events: auto;
+  }
+
+  .hero-flank-l {
+    align-items: flex-start;
+  }
+
+  .hero-flank-r {
+    align-items: flex-end;
+    text-align: right;
+  }
+}
+
+/* Proof strip */
+.hero-base {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.25rem, 4vw, 2.5rem);
+  margin-top: clamp(2rem, 5vh, 3.25rem);
+  padding-top: clamp(1.25rem, 3vh, 2rem);
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+
+@media (min-width: 760px) {
+  .hero-base {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.hero-proof {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 0.85rem;
+  gap: 0.9rem;
 }
 
-/* Keep the hero to a single screen so the meta strip stays visible */
-@media (min-width: 900px) {
-  .hero-portrait-col .portrait {
-    aspect-ratio: 4 / 5;
-    max-height: 60svh;
+.hero-faces {
+  display: flex;
+}
+
+.hero-face {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  /* Overlapped stack — the ring separates them against the dark canvas */
+  border: 1px solid var(--ink);
+  background: var(--ink-panel);
+  box-shadow: inset 0 0 0 1px var(--rule-strong);
+  font-family: var(--f-mono), monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  color: var(--bone-70);
+}
+
+.hero-face + .hero-face {
+  margin-left: -11px;
+}
+
+.hero-stars {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--flame);
+}
+
+.hero-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(0.85rem, 2.2vw, 1.75rem);
+  list-style: none;
+}
+
+.hero-socials {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.hero-socials .social {
+  width: 40px;
+  height: 40px;
+}
+
+/* Short viewports: pull the whole lockup in so the proof strip survives */
+@media (max-height: 780px) and (min-width: 900px) {
+  .hero {
+    --w-lead: clamp(2rem, 6.5vw, 5.5rem);
+    --w-mark: clamp(2.75rem, 10vw, 8.5rem);
+    --head-w: clamp(130px, 14vw, 200px);
+  }
+}
+
+/*
+  Below the breakpoint the letter gaps are narrower than the portrait, so
+  overlapping would bury two of the four letters. The portrait stacks
+  above the type instead of standing inside it.
+*/
+@media (max-width: 899px) {
+  .hero {
+    --head-w: clamp(128px, 34vw, 240px);
+  }
+
+  .hero-stack {
+    padding-top: 0;
+  }
+
+  /* Everything stacks here, so the vertical rhythm tightens to keep the
+     proof strip on the first screen. */
+  .hero-flank {
+    gap: 1.25rem;
+  }
+
+  .hero-flank-col {
+    gap: 0.9rem;
+  }
+
+  .hero-base {
+    margin-top: clamp(1.25rem, 3vh, 2rem);
+  }
+
+  .hero-lockup {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-avatar {
+    order: -1;
+    position: relative;
+    left: auto;
+    bottom: auto;
+    translate: none;
+    margin: 0 auto clamp(0.4rem, 1.2vh, 0.9rem);
+  }
+
+  .hero-word-lead {
+    width: 74%;
+  }
+
+  .hero-flank {
+    margin-top: clamp(1.5rem, 4vh, 2.5rem);
   }
 }
 
@@ -728,49 +957,6 @@ body[data-cursor-active] * {
   .scroll-cue {
     display: none;
   }
-}
-
-/* Portrait with duotone treatment.
-   The desaturation lives on the <img> itself — putting it on the frame
-   would drag the colour wash through the same filter and cancel it. */
-.portrait {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-  border-radius: 3px;
-  /* Confine the colour blend to this box so it duotones the photo
-     rather than the page behind it. */
-  isolation: isolate;
-}
-
-.portrait img {
-  filter: grayscale(1) contrast(1.15);
-  transition: filter 0.7s var(--ease-out-expo);
-}
-
-.portrait::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    165deg,
-    rgba(255, 92, 53, 0.55),
-    rgba(255, 92, 53, 0.1) 45%,
-    rgba(79, 240, 255, 0.35)
-  );
-  mix-blend-mode: color;
-  transition: opacity 0.7s var(--ease-out-expo);
-  pointer-events: none;
-}
-
-.portrait-wrap:hover .portrait img {
-  filter: grayscale(0) contrast(1);
-}
-
-.portrait-wrap:hover .portrait::after {
-  opacity: 0;
 }
 
 /* ═══════════ Services bento ═══════════ */
