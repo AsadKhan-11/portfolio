@@ -2,14 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { INTRO_EVENT, INTRO_KEY as SESSION_KEY } from "./intro";
 
 /*
   Intro sequence: a counter races 00 → 100 while a hairline fills,
   then the whole panel lifts away on a curtain wipe. Runs once per
   browser session so repeat navigation isn't punished.
 */
-
-const SESSION_KEY = "ak-intro-played";
 
 export default function Preloader() {
   const [visible, setVisible] = useState(false);
@@ -78,7 +77,11 @@ export default function Preloader() {
   }, []);
 
   return (
-    <AnimatePresence>
+    /* The page entrance keys off this — not off a timer that would have to
+       guess how long the curtain takes. */
+    <AnimatePresence
+      onExitComplete={() => window.dispatchEvent(new Event(INTRO_EVENT))}
+    >
       {visible && (
         <motion.div
           className="preloader"

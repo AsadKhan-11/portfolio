@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { Magnetic } from "./animations";
+import { useIntroDone } from "./intro";
 
 const NAV_ITEMS = [
   { label: "Index", href: "#home" },
@@ -21,6 +22,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [clock, setClock] = useState("");
   const { scrollYProgress } = useScroll();
+  const ready = useIntroDone();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -68,9 +70,11 @@ export default function Navbar() {
       <motion.header
         className="nav-bar"
         data-scrolled={scrolled}
+        /* Drops in once the intro curtain is clear — behind it, the slide
+           would play unseen. */
         initial={{ y: -90 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 1, delay: 0.2, ease: EASE }}
+        animate={ready ? { y: 0 } : { y: -90 }}
+        transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
       >
         <div className="nav-inner">
           <Magnetic strength={0.25}>

@@ -935,6 +935,9 @@ body[data-cursor-active] * {
   left: calc(var(--gutter) / 3);
   bottom: clamp(2rem, 12vh, 7rem);
   z-index: 3;
+}
+
+.scroll-cue-inner {
   display: flex;
   flex-direction: column;
   align-items: center;

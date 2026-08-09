@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { FiArrowDownRight, FiGithub, FiLinkedin, FiMail, FiStar } from "react-icons/fi";
 import { Magnetic } from "./animations";
+import { useIntroDone } from "./intro";
 
 const ROLES = [
   "MERN Developer",
@@ -22,6 +23,18 @@ const CLIENTS = ["SM", "JR", "EC", "MF"];
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 /*
+  Entrance beats, counted from the moment the intro curtain clears.
+  Portrait first, then the name rising from behind it, then the copy.
+*/
+const T = {
+  avatar: 0.2,
+  lead: 0.85,
+  mark: 1,
+  copy: 1.5,
+  cue: 2,
+};
+
+/*
   Splits a word into letters spread edge to edge. The gaps are what make
   the portrait readable on top of the type — it lands in negative space
   instead of eating a glyph.
@@ -30,10 +43,12 @@ function SpreadWord({
   text,
   className,
   delay = 0,
+  play,
 }: {
   text: string;
   className: string;
   delay?: number;
+  play: boolean;
 }) {
   return (
     <span className={className} aria-label={text}>
@@ -42,8 +57,8 @@ function SpreadWord({
           <motion.span
             style={{ display: "inline-block", willChange: "transform" }}
             initial={{ y: "115%" }}
-            animate={{ y: 0 }}
-            transition={{ duration: 1, delay: delay + i * 0.07, ease: EASE }}
+            animate={play ? { y: 0 } : { y: "115%" }}
+            transition={{ duration: 1, delay: delay + i * 0.06, ease: EASE }}
           >
             {ch}
           </motion.span>
@@ -56,6 +71,7 @@ function SpreadWord({
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
   const [role, setRole] = useState(0);
+  const ready = useIntroDone();
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -87,8 +103,8 @@ export default function Hero() {
         <motion.p
           className="eyebrow hero-eyebrow"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
+          animate={ready ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ delay: T.copy, duration: 0.8 }}
         >
           Available for work — 2026
         </motion.p>
@@ -99,16 +115,26 @@ export default function Hero() {
               flank below can grow without dragging it down. */}
           <div className="hero-lockup">
             <motion.h1 className="hero-heading" style={{ y: typeY }}>
-              <SpreadWord text="Asad" className="hero-word hero-word-lead" delay={0.75} />
-              <SpreadWord text="Khan" className="hero-word hero-word-mark" delay={0.95} />
+              <SpreadWord
+                text="Asad"
+                className="hero-word hero-word-lead"
+                delay={T.lead}
+                play={ready}
+              />
+              <SpreadWord
+                text="Khan"
+                className="hero-word hero-word-mark"
+                delay={T.mark}
+                play={ready}
+              />
             </motion.h1>
 
             <motion.div
               className="hero-avatar"
               style={{ y: portraitY }}
-              initial={{ opacity: 0, scale: 1.08 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.3, delay: 0.85, ease: EASE }}
+              initial={{ opacity: 0, scale: 1.1 }}
+              animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.1 }}
+              transition={{ duration: 1.1, delay: T.avatar, ease: EASE }}
             >
               <span className="hero-avatar-glow" aria-hidden="true" />
               <Image
@@ -127,8 +153,8 @@ export default function Hero() {
             <motion.div
               className="hero-flank-col hero-flank-l"
               initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.35, duration: 0.9, ease: EASE }}
+              animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+              transition={{ delay: T.copy + 0.08, duration: 0.9, ease: EASE }}
             >
               <p className="hero-lede">
                 I help founders and teams turn ideas into fast,{" "}
@@ -142,8 +168,8 @@ export default function Hero() {
             <motion.div
               className="hero-flank-col hero-flank-r"
               initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.5, duration: 0.9, ease: EASE }}
+              animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+              transition={{ delay: T.copy + 0.18, duration: 0.9, ease: EASE }}
             >
               {/* Only the current role is mounted, so the stack can never
                   pile up if motion is unavailable. */}
@@ -180,8 +206,8 @@ export default function Hero() {
         <motion.div
           className="hero-base"
           initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.7, duration: 0.9, ease: EASE }}
+          animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+          transition={{ delay: T.copy + 0.3, duration: 0.9, ease: EASE }}
         >
           <div className="hero-proof">
             <div className="hero-faces" aria-hidden="true">
@@ -233,20 +259,22 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* scroll cue */}
-      <motion.div
-        className="scroll-cue"
-        style={{ opacity: fade }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.1, duration: 0.8 }}
-      >
-        <span className="mono-label">Scroll</span>
-        <motion.span
-          className="scroll-cue-line"
-          animate={{ scaleY: [0, 1, 0], originY: [0, 0, 1] }}
-          transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-        />
+      {/* Scroll cue — outer box carries the scroll-driven fade, inner the
+          entrance, so the two opacities multiply instead of overwriting. */}
+      <motion.div className="scroll-cue" style={{ opacity: fade }}>
+        <motion.div
+          className="scroll-cue-inner"
+          initial={{ opacity: 0 }}
+          animate={ready ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ delay: T.cue, duration: 0.8 }}
+        >
+          <span className="mono-label">Scroll</span>
+          <motion.span
+            className="scroll-cue-line"
+            animate={{ scaleY: [0, 1, 0], originY: [0, 0, 1] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
       </motion.div>
     </section>
   );
