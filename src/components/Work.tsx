@@ -243,7 +243,7 @@ export default function Work() {
       <div className="shell">
         <div className="section-head">
           <div>
-            <p className="eyebrow">04 — Work</p>
+            <p className="eyebrow">05 — Work</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="Selected" />
               <br />

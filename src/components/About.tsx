@@ -1,14 +1,7 @@
 "use client";
 
-import { Counter, Reveal, SplitText, Stagger, StaggerItem } from "./animations";
+import { Reveal, SplitText } from "./animations";
 import ImageSlot from "./ImageSlot";
-
-const STATS = [
-  { n: 10, s: "+", label: "Projects shipped" },
-  { n: 20, s: "+", label: "Clients served" },
-  { n: 1, s: "+", label: "Years building" },
-  { n: 100, s: "%", label: "Satisfaction" },
-];
 
 const TAGS = [
   "React",
@@ -130,20 +123,6 @@ export default function About() {
             </Reveal>
           </div>
         </div>
-
-        {/* Figures run full width beneath the spread */}
-        <Stagger className="stat-row" gap={0.1}>
-          {STATS.map((s) => (
-            <StaggerItem key={s.label} className="stat-cell">
-              <p className="stat-num">
-                <Counter to={s.n} suffix={s.s} />
-              </p>
-              <p className="mono-label" style={{ marginTop: "0.75rem" }}>
-                {s.label}
-              </p>
-            </StaggerItem>
-          ))}
-        </Stagger>
       </div>
     </section>
   );

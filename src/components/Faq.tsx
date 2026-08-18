@@ -97,7 +97,7 @@ export default function Faq() {
       <div className="shell">
         <div className="section-head">
           <div>
-            <p className="eyebrow">08 — FAQ</p>
+            <p className="eyebrow">09 — FAQ</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="Before you" />
               <br />

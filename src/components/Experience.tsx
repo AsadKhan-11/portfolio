@@ -44,7 +44,7 @@ export default function Experience() {
       <div className="shell">
         <div className="section-head">
           <div>
-            <p className="eyebrow">05 — Path</p>
+            <p className="eyebrow">06 — Path</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="Where" />
               <br />

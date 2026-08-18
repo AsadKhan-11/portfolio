@@ -1,9 +1,11 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import Stats from "@/components/Stats";
 import Ticker from "@/components/Ticker";
 import About from "@/components/About";
 import Services from "@/components/Services";
 import Skills from "@/components/Skills";
+import Packages from "@/components/Packages";
 import Band from "@/components/Band";
 import Work from "@/components/Work";
 import Experience from "@/components/Experience";
@@ -19,10 +21,12 @@ export default function Home() {
       <Navbar />
       <main className="flex-1 relative" style={{ zIndex: 2 }}>
         <Hero />
-        <Ticker />
+        <Stats />
         <About />
+        <Ticker />
         <Services />
         <Skills />
+        <Packages />
         <Band />
         <Work />
         <Experience />

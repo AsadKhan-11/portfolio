@@ -96,14 +96,17 @@ body[data-cursor-active] * {
 ::-webkit-scrollbar {
   width: 9px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--ink);
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(244, 241, 234, 0.14);
   border-radius: 99px;
   border: 3px solid var(--ink);
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--flame);
 }
@@ -211,22 +214,28 @@ body[data-cursor-active] * {
 }
 
 @keyframes grain-shift {
+
   0%,
   100% {
     transform: translate(0, 0);
   }
+
   16% {
     transform: translate(-2%, 1%);
   }
+
   33% {
     transform: translate(1%, -2%);
   }
+
   50% {
     transform: translate(-1%, 2%);
   }
+
   66% {
     transform: translate(2%, 1%);
   }
+
   83% {
     transform: translate(1%, -1%);
   }
@@ -237,11 +246,9 @@ body[data-cursor-active] * {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: radial-gradient(
-    ellipse 80% 70% at 50% 45%,
-    transparent 40%,
-    rgba(8, 8, 10, 0.65) 100%
-  );
+  background: radial-gradient(ellipse 80% 70% at 50% 45%,
+      transparent 40%,
+      rgba(8, 8, 10, 0.65) 100%);
 }
 
 /* ═══════════ Custom cursor ═══════════ */
@@ -342,7 +349,7 @@ body[data-cursor-active] * {
   cursor: pointer;
 }
 
-.btn > * {
+.btn>* {
   position: relative;
   z-index: 1;
 }
@@ -465,13 +472,13 @@ body[data-cursor-active] * {
 .marquee-item {
   display: inline-flex;
   align-items: center;
-  gap: 2.5rem;
-  padding-inline: 1.25rem;
+  gap: 1.75rem;
+  padding-inline: 1rem;
   font-family: var(--f-display), sans-serif;
-  font-weight: 800;
-  font-size: clamp(1.75rem, 4.5vw, 3.5rem);
+  font-weight: 700;
+  font-size: clamp(1rem, 2.2vw, 1.75rem);
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -510,7 +517,7 @@ body[data-cursor-active] * {
   gap: clamp(0.75rem, 3vw, 1.5rem);
 }
 
-.nav-inner > * {
+.nav-inner>* {
   min-width: 0;
 }
 
@@ -616,9 +623,7 @@ body[data-cursor-active] * {
   position: relative;
   /* Reserves the run of portrait that rises above the first line:
      head height, less the part that overlaps both words. */
-  padding-top: calc(
-    var(--head-h) - var(--w-mark) * 0.51 - var(--w-lead) * 0.85 + 1rem
-  );
+  padding-top: calc(var(--head-h) - var(--w-mark) * 0.51 - var(--w-lead) * 0.85 + 1rem);
   isolation: isolate;
 }
 
@@ -690,12 +695,10 @@ body[data-cursor-active] * {
   width: 190%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 92, 53, 0.22),
-    rgba(255, 92, 53, 0.06) 45%,
-    transparent 68%
-  );
+  background: radial-gradient(circle,
+      rgba(255, 92, 53, 0.22),
+      rgba(255, 92, 53, 0.06) 45%,
+      transparent 68%);
   filter: blur(6px);
   pointer-events: none;
 }
@@ -841,7 +844,7 @@ body[data-cursor-active] * {
   color: var(--bone-70);
 }
 
-.hero-face + .hero-face {
+.hero-face+.hero-face {
   margin-left: -11px;
 }
 
@@ -962,7 +965,11 @@ body[data-cursor-active] * {
   }
 }
 
-/* ═══════════ Services bento ═══════════ */
+/* ═══════════ Services bento ═══════════
+   A true bento, not just varied widths: one tall hero cell, two cells
+   stacked beside it to match its height, then a row of three even
+   cells beneath. Each cell's grid coordinates come from the data
+   array via --col-start/--col-span/--row-start/--row-span. */
 .service-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -973,15 +980,16 @@ body[data-cursor-active] * {
 @media (min-width: 640px) {
   .service-grid {
     grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(210px, auto);
   }
 
-  /* Each cell declares its own span via --span */
   .service-cell {
-    grid-column: span var(--span);
+    grid-column: var(--col-start) / span var(--col-span);
+    grid-row: var(--row-start) / span var(--row-span);
   }
 }
 
-/* Below the bento breakpoint every cell is full width */
+/* Below the bento breakpoint every cell is full width, source order */
 @media (max-width: 639px) {
   .service-cell {
     grid-column: 1 / -1;
@@ -997,11 +1005,9 @@ body[data-cursor-active] * {
   padding: clamp(1.6rem, 2.6vw, 2.4rem);
   border: 1px solid var(--rule);
   border-radius: 6px;
-  background: linear-gradient(
-    165deg,
-    rgba(18, 18, 23, 0.9),
-    rgba(10, 10, 13, 0.75)
-  );
+  background: linear-gradient(165deg,
+      rgba(18, 18, 23, 0.9),
+      rgba(10, 10, 13, 0.75));
   transition: border-color 0.5s var(--ease-out-expo),
     transform 0.5s var(--ease-out-expo);
 }
@@ -1020,11 +1026,9 @@ body[data-cursor-active] * {
   width: 70%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(255, 92, 53, 0.16),
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(255, 92, 53, 0.16),
+      transparent 70%);
   opacity: 0;
   transition: opacity 0.6s var(--ease-out-expo);
   pointer-events: none;
@@ -1052,6 +1056,11 @@ body[data-cursor-active] * {
   -webkit-text-stroke-color: rgba(255, 92, 53, 0.28);
 }
 
+/* The hero cell gets a bigger numeral to match its footprint */
+.service-card.is-hero .service-ghost {
+  font-size: clamp(5rem, 9vw, 8.5rem);
+}
+
 /* Same badge language as the process timeline */
 .service-icon {
   position: relative;
@@ -1074,6 +1083,11 @@ body[data-cursor-active] * {
   color: var(--ink);
 }
 
+.service-card.is-hero .service-icon {
+  width: 64px;
+  height: 64px;
+}
+
 .service-title {
   position: relative;
   z-index: 1;
@@ -1086,6 +1100,10 @@ body[data-cursor-active] * {
   overflow-wrap: break-word;
 }
 
+.service-card.is-hero .service-title {
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+}
+
 .service-copy {
   position: relative;
   z-index: 1;
@@ -1096,13 +1114,207 @@ body[data-cursor-active] * {
   color: var(--bone-45);
 }
 
-.service-tags {
+.service-card.is-hero .service-copy {
+  margin-top: 1.1rem;
+  font-size: 1rem;
+  /* The art's own width is clamp(220px, 37%, 300px) of the card, so
+     it grows with the card — a flat reservation here either wasted
+     space on narrow cards or left a gap on wide ones. Mirror the
+     same clamp so the reserved space tracks the art's actual size
+     at every width, plus a fixed breathing gap. */
+  max-width: min(50ch, calc(100% - clamp(220px, 37%, 300px) - 2rem));
+}
+
+/* Fills the spare width the copy's 46ch measure leaves on the right.
+   Sits behind the text (z-index 0, same tier as the ghost numeral)
+   and drifts slowly so it doesn't compete with the copy for attention. */
+.service-hero-art {
+  position: absolute;
+  right: clamp(0.5rem, 2vw, 1.5rem);
+  bottom: clamp(-0.5rem, -1vw, 0px);
+  z-index: 0;
+  width: clamp(220px, 37%, 300px);
+  aspect-ratio: 1100 / 1131;
+  pointer-events: none;
+  animation: service-hero-float 6s ease-in-out infinite;
+}
+
+@keyframes service-hero-float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-16px);
+  }
+}
+
+/* ═══════════ Packages grid ═══════════
+   Pricing-tier card language: equal-width cards, a floating "most
+   popular" badge straddling the featured cell's top border, a big
+   headline stat where a price would sit, and a checklist below it. */
+.pkg-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.25rem, 2vw, 2rem);
+  margin-top: clamp(3rem, 8vh, 5rem);
+}
+
+@media (min-width: 900px) {
+  .pkg-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* No overflow:hidden here — the badge below deliberately straddles
+   the top border and would get clipped by it. */
+.pkg-card {
   position: relative;
-  z-index: 1;
+  height: 100%;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  padding: clamp(1.5rem, 2vw, 2rem);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: linear-gradient(165deg,
+      rgba(18, 18, 23, 0.9),
+      rgba(10, 10, 13, 0.75));
+  transition: border-color 0.5s var(--ease-out-expo),
+    transform 0.5s var(--ease-out-expo);
+}
+
+.pkg-card:hover {
+  border-color: var(--flame-line);
+  transform: translateY(-4px);
+}
+
+/* The featured card carries a full accent border at rest — it
+   shouldn't need a hover to be told apart from the rest of the grid. */
+.pkg-card.is-featured {
+  border-color: var(--flame-line);
+  background: linear-gradient(165deg,
+      rgba(255, 92, 53, 0.09),
+      rgba(10, 10, 13, 0.8));
+}
+
+/* Straddles the card's top border, centred — the pricing-tier
+   "most chosen" callout. */
+.pkg-badge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% -50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 99px;
+  background: var(--flame);
+  color: var(--ink);
+  font-family: var(--f-mono), monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(255, 92, 53, 0.35);
+}
+
+.pkg-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Per-card accent — volt for the field, flame for the featured pick */
+.pkg-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--volt);
+}
+
+.pkg-card.is-featured .pkg-dot {
+  background: var(--flame);
+}
+
+.pkg-name {
+  font-family: var(--f-display), sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+}
+
+.pkg-desc {
+  margin-top: 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--bone-45);
+}
+
+.pkg-price-block {
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+
+.pkg-price {
+  display: flex;
+  align-items: baseline;
   gap: 0.5rem;
-  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  margin-top: 0.4rem;
+}
+
+.pkg-price-from {
+  font-family: var(--f-mono), monospace;
+  font-size: 0.72rem;
+  color: var(--bone-45);
+}
+
+.pkg-price-num {
+  font-family: var(--f-display), sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 3.2vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pkg-divider {
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid var(--rule);
+}
+
+.pkg-features {
+  margin-top: clamp(1.25rem, 2.5vw, 1.5rem);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pkg-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.85rem;
+  color: var(--bone-70);
+}
+
+.pkg-features svg {
+  flex-shrink: 0;
+  color: var(--flame);
+}
+
+.pkg-cta {
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+  width: 100%;
+  justify-content: center;
+  padding: 0.9rem 1.5rem;
 }
 
 /* ═══════════ Numbered service rows (legacy) ═══════════ */
@@ -1120,7 +1332,7 @@ body[data-cursor-active] * {
 
 /* Grid items default to min-width:auto, so a long unbroken word like
    "Performance" would force the whole row wider than the viewport. */
-.row-item > * {
+.row-item>* {
   min-width: 0;
 }
 
@@ -1458,21 +1670,81 @@ body[data-cursor-active] * {
   border-color: var(--flame);
 }
 
-/* ═══════════ Footer wordmark ═══════════ */
+/* ═══════════ Footer wordmark ═══════════
+   Kept deliberately smaller than a viewport-fitted "hero" wordmark
+   would be — at 9.5rem "Asad Khan" only fits on one line above
+   roughly 1800px, so the vw factor is tuned down to hold one line
+   from mobile up. */
+.footer-mark-link {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin-block: clamp(2rem, 6vh, 3.5rem);
+  text-align: center;
+  text-decoration: none;
+}
+
 .footer-mark {
+  white-space: nowrap;
   font-family: var(--f-display), sans-serif;
   font-weight: 800;
-  font-size: clamp(2.75rem, 12vw, 9.5rem);
+  font-size: clamp(1.6rem, 7.2vw, 5.75rem);
   line-height: 0.8;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
   text-transform: uppercase;
   color: transparent;
   -webkit-text-stroke: 1px var(--bone-15);
   transition: -webkit-text-stroke-color 0.6s var(--ease-out-expo);
 }
 
-.footer-mark:hover {
+.footer-mark-link:hover .footer-mark {
   -webkit-text-stroke-color: var(--flame-line);
+}
+
+/* Each letter sits still, then idles into a slow wave — the delay is
+   staggered per letter (set inline) so the motion rolls across the
+   word instead of every glyph bobbing in lockstep. */
+.footer-mark-letter {
+  display: inline-block;
+  animation: footer-mark-wave 3.2s ease-in-out infinite;
+}
+
+@keyframes footer-mark-wave {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-0.12em);
+  }
+}
+
+/* Click ripple — expands from the pointer and fades, same feedback
+   language as a physical button press. */
+.footer-ripple {
+  position: absolute;
+  z-index: 1;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: radial-gradient(circle, var(--flame-soft), transparent 70%);
+  pointer-events: none;
+  animation: footer-ripple-expand 0.9s var(--ease-out-expo) forwards;
+}
+
+@keyframes footer-ripple-expand {
+  from {
+    transform: scale(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(22);
+    opacity: 0;
+  }
 }
 
 /* ═══════════ Image slots ═══════════ */
@@ -1506,12 +1778,10 @@ body[data-cursor-active] * {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(
-    165deg,
-    rgba(255, 92, 53, 0.28),
-    transparent 55%,
-    rgba(79, 240, 255, 0.18)
-  );
+  background: linear-gradient(165deg,
+      rgba(255, 92, 53, 0.28),
+      transparent 55%,
+      rgba(79, 240, 255, 0.18));
   mix-blend-mode: soft-light;
   transition: opacity 0.7s var(--ease-out-expo);
 }
@@ -1567,12 +1837,10 @@ body[data-cursor-active] * {
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  background: linear-gradient(
-    to top,
-    rgba(8, 8, 10, 0.92) 0%,
-    rgba(8, 8, 10, 0.45) 42%,
-    transparent 72%
-  );
+  background: linear-gradient(to top,
+      rgba(8, 8, 10, 0.92) 0%,
+      rgba(8, 8, 10, 0.45) 42%,
+      transparent 72%);
 }
 
 .band-caption {
@@ -1649,11 +1917,10 @@ body[data-cursor-active] * {
   margin-top: 1rem;
 }
 
-/* Figures: full-width band beneath the profile spread */
+/* Proof strip beneath the hero */
 .stat-row {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  margin-top: clamp(3.5rem, 9vh, 6rem);
   border-top: 1px solid var(--rule);
 }
 
@@ -1761,11 +2028,9 @@ body[data-cursor-active] * {
   padding: clamp(1.6rem, 2.6vw, 2.4rem);
   border: 1px solid var(--rule);
   border-radius: 6px;
-  background: linear-gradient(
-    165deg,
-    rgba(18, 18, 23, 0.9),
-    rgba(10, 10, 13, 0.75)
-  );
+  background: linear-gradient(165deg,
+      rgba(18, 18, 23, 0.9),
+      rgba(10, 10, 13, 0.75));
   transition: border-color 0.5s var(--ease-out-expo),
     transform 0.5s var(--ease-out-expo);
 }
@@ -1838,10 +2103,12 @@ body[data-cursor-active] * {
 }
 
 @keyframes path-pulse {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.25;
   }
@@ -2153,12 +2420,10 @@ body[data-cursor-active] * {
 .contact-visual-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-      to top,
+  background: linear-gradient(to top,
       rgba(8, 8, 10, 0.95) 0%,
       rgba(8, 8, 10, 0.45) 38%,
-      rgba(8, 8, 10, 0.1) 65%
-    ),
+      rgba(8, 8, 10, 0.1) 65%),
     linear-gradient(to right, rgba(8, 8, 10, 0.5), transparent 45%);
 }
 
@@ -2166,13 +2431,11 @@ body[data-cursor-active] * {
    dark zone — so the scrim reaches higher there. */
 @media (max-width: 979px) {
   .contact-visual-scrim {
-    background: linear-gradient(
-      to top,
-      rgba(8, 8, 10, 0.96) 0%,
-      rgba(8, 8, 10, 0.82) 32%,
-      rgba(8, 8, 10, 0.35) 62%,
-      transparent 88%
-    );
+    background: linear-gradient(to top,
+        rgba(8, 8, 10, 0.96) 0%,
+        rgba(8, 8, 10, 0.82) 32%,
+        rgba(8, 8, 10, 0.35) 62%,
+        transparent 88%);
   }
 
   .contact-panel {
@@ -2287,6 +2550,7 @@ body[data-cursor-active] * {
 
 /* ═══════════ Accessibility ═══════════ */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

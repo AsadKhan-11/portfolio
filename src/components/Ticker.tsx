@@ -25,7 +25,7 @@ export default function Ticker() {
       style={{
         position: "relative",
         zIndex: 2,
-        paddingBlock: "clamp(2.5rem, 7vh, 5rem)",
+        paddingBlock: "clamp(1.75rem, 5vh, 3.25rem)",
         borderBlock: "1px solid var(--rule)",
         overflow: "hidden",
       }}

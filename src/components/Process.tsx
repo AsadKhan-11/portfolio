@@ -102,7 +102,7 @@ export default function Process() {
         <div className="process-layout">
           {/* Sticky title column */}
           <div className="process-aside">
-            <p className="eyebrow">06 — Process</p>
+            <p className="eyebrow">07 — Process</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="How" />
               <br />

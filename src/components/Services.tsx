@@ -1,6 +1,7 @@
 "use client";
 
 import type { IconType } from "react-icons";
+import Image from "next/image";
 import {
   FiCpu,
   FiLayers,
@@ -15,10 +16,16 @@ type Service = {
   n: string;
   title: string;
   copy: string;
-  tags: string[];
   Icon: IconType;
-  /** Column span on the 12-column desktop grid. */
-  span: number;
+  /** Position on the 12-column desktop bento grid. */
+  colStart: number;
+  colSpan: number;
+  rowStart: number;
+  rowSpan: number;
+  /** The oversized showcase cell — bigger icon, title and numeral. */
+  hero?: boolean;
+  /** Decorative art filling the hero cell's spare space. */
+  art?: string;
 };
 
 const SERVICES: Service[] = [
@@ -26,49 +33,63 @@ const SERVICES: Service[] = [
     n: "01",
     title: "AI Integration",
     copy: "LLM features built into products that already work — semantic search, document Q&A, summarisation and drafting, wired to your own data with retrieval rather than guesswork.",
-    tags: ["OpenAI / Claude API", "RAG", "Vector Search"],
     Icon: FiCpu,
-    span: 7,
+    colStart: 1,
+    colSpan: 7,
+    rowStart: 1,
+    rowSpan: 2,
+    hero: true,
+    art: "/ai-integration-bot.png",
   },
   {
     n: "02",
     title: "Chatbots & Assistants",
     copy: "Support bots that deflect repetitive tickets and qualify leads before they reach your inbox — with escalation to a human when the bot is out of its depth.",
-    tags: ["Conversational UI", "Lead Capture", "Handoff"],
     Icon: FiMessageSquare,
-    span: 5,
+    colStart: 8,
+    colSpan: 5,
+    rowStart: 1,
+    rowSpan: 1,
   },
   {
     n: "03",
     title: "CRM & Automation",
     copy: "Connect the tools you already pay for. Two-way CRM sync, webhook pipelines and workflows that remove the copy-paste work between systems.",
-    tags: ["HubSpot", "Webhooks", "Zapier / Make"],
     Icon: FiRefreshCw,
-    span: 5,
+    colStart: 8,
+    colSpan: 5,
+    rowStart: 2,
+    rowSpan: 1,
   },
   {
     n: "04",
     title: "Full-Stack Web Apps",
     copy: "End-to-end MERN builds — dashboards, admin panels, client portals. Secure auth, sensible data modelling, and a frontend that stays fast as the product grows.",
-    tags: ["React / Next.js", "Node / Express", "MongoDB"],
     Icon: FiLayers,
-    span: 7,
+    colStart: 1,
+    colSpan: 4,
+    rowStart: 3,
+    rowSpan: 1,
   },
   {
     n: "05",
     title: "E-Commerce & Payments",
     copy: "Storefronts, subscriptions and checkout flows on Stripe. Cart, orders and fulfilment handled properly, with an admin your team can actually operate.",
-    tags: ["Stripe", "Subscriptions", "Storefronts"],
     Icon: FiShoppingBag,
-    span: 6,
+    colStart: 5,
+    colSpan: 4,
+    rowStart: 3,
+    rowSpan: 1,
   },
   {
     n: "06",
     title: "UI / UX & Design Systems",
     copy: "Wireframes through to pixel-level design systems in Figma, then built as reusable components. Interfaces designed around what users are actually trying to do.",
-    tags: ["Figma", "Design Systems", "Prototyping"],
     Icon: FiLayout,
-    span: 6,
+    colStart: 9,
+    colSpan: 4,
+    rowStart: 3,
+    rowSpan: 1,
   },
 ];
 
@@ -98,17 +119,34 @@ export default function Services() {
         </div>
 
         <Stagger className="service-grid" gap={0.08}>
-          {SERVICES.map(({ n, title, copy, tags, Icon, span }) => (
+          {SERVICES.map(({ n, title, copy, Icon, colStart, colSpan, rowStart, rowSpan, hero, art }) => (
             <StaggerItem
               key={n}
               className="service-cell"
-              style={{ ["--span" as string]: span }}
+              style={{
+                ["--col-start" as string]: colStart,
+                ["--col-span" as string]: colSpan,
+                ["--row-start" as string]: rowStart,
+                ["--row-span" as string]: rowSpan,
+              }}
             >
-              <article className="service-card tick">
+              <article className={`service-card tick${hero ? " is-hero" : ""}`}>
                 {/* Oversized numeral sits behind the content as texture */}
                 <span className="service-ghost" aria-hidden="true">
                   {n}
                 </span>
+
+                {art && (
+                  <span className="service-hero-art" aria-hidden="true">
+                    <Image
+                      src={art}
+                      alt=""
+                      fill
+                      sizes="(max-width: 640px) 55vw, 280px"
+                      style={{ objectFit: "contain" }}
+                    />
+                  </span>
+                )}
 
                 <span className="service-icon" aria-hidden="true">
                   <Icon size={20} />
@@ -116,14 +154,6 @@ export default function Services() {
 
                 <h3 className="service-title">{title}</h3>
                 <p className="service-copy">{copy}</p>
-
-                <div className="service-tags">
-                  {tags.map((t) => (
-                    <span key={t} className="tag">
-                      {t}
-                    </span>
-                  ))}
-                </div>
               </article>
             </StaggerItem>
           ))}

@@ -65,7 +65,7 @@ export default function Testimonials() {
       <div className="shell">
         <div className="section-head">
           <div>
-            <p className="eyebrow">07 — Words</p>
+            <p className="eyebrow">08 — Words</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="Client" />
               <br />

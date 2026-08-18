@@ -69,7 +69,7 @@ export default function Contact() {
       <div className="contact-panel">
         <div className="contact-panel-inner">
           <Reveal>
-            <p className="eyebrow">09 — Contact</p>
+            <p className="eyebrow">10 — Contact</p>
           </Reveal>
 
           <h2

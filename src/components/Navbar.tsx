@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { label: "Profile", href: "#about" },
   { label: "Services", href: "#services" },
   { label: "Stack", href: "#skills" },
+  { label: "Packages", href: "#packages" },
   { label: "Work", href: "#work" },
   { label: "Path", href: "#experience" },
   { label: "Contact", href: "#contact" },
