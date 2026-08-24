@@ -96,7 +96,7 @@ export default function Process() {
   });
 
   return (
-    <section id="process" className="section">
+    <section id="process" className="section bg-grid">
       <div className="rule-top" />
       <div className="shell">
         <div className="process-layout">

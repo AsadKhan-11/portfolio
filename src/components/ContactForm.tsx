@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { FiArrowUpRight, FiCheck, FiChevronDown } from "react-icons/fi";
+import { FiArrowUpRight, FiCheck } from "react-icons/fi";
 import { Magnetic } from "./animations";
+import Select from "./Select";
 
 const EMAIL = "mrasad10khan@gmail.com";
 
@@ -225,23 +226,13 @@ export default function ContactForm() {
           />
         </div>
 
-        <div className="field" data-filled={!!f.budget}>
-          <label htmlFor="f-budget">Budget range</label>
-          <select
-            id="f-budget"
-            name="budget"
-            value={f.budget}
-            onChange={(e) => set("budget")(e.target.value)}
-          >
-            <option value="" />
-            {BUDGETS.map((b) => (
-              <option key={b} value={b}>
-                {b}
-              </option>
-            ))}
-          </select>
-          <FiChevronDown className="field-caret" size={16} />
-        </div>
+        <Select
+          id="f-budget"
+          label="Budget range"
+          value={f.budget}
+          onChange={set("budget")}
+          options={BUDGETS}
+        />
       </div>
 
       {/* Project type */}

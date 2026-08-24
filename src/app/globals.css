@@ -113,6 +113,8 @@ body[data-cursor-active] * {
 
 /* ═══════════ Layout ═══════════ */
 .shell {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: var(--measure);
   margin-inline: auto;
@@ -131,6 +133,68 @@ body[data-cursor-active] * {
   top: 0;
   height: 1px;
   background: var(--rule);
+}
+
+/* ═══════════ Section background variety ═══════════
+   Every section sits on the same global ShaderField + vignette +
+   grain, which made the whole page read as one flat backdrop. These
+   are ambient, restrained variations built from existing tokens only
+   (no new hues) — a corner glow, a fine grid, a tone shift, or a
+   vertical wash — applied per section for rhythm as you scroll. Each
+   works on any `position: relative` container (`.section`,
+   `.contact-split`, ...); `.shell` sits at z-index 1 above these
+   (z-index 0) so content always paints on top. */
+.bg-raised {
+  background: var(--ink-raised);
+}
+
+.bg-glow-tl::before,
+.bg-glow-tr::before,
+.bg-glow-bl::before,
+.bg-glow-br::before,
+.bg-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-glow-tl::before {
+  background: radial-gradient(640px circle at 6% -8%, var(--volt-soft), transparent 62%);
+}
+
+.bg-glow-tr::before {
+  background: radial-gradient(640px circle at 94% -8%, var(--flame-soft), transparent 62%);
+}
+
+.bg-glow-bl::before {
+  background: radial-gradient(680px circle at 4% 108%, var(--volt-soft), transparent 60%);
+}
+
+.bg-glow-br::before {
+  background: radial-gradient(680px circle at 96% 108%, var(--flame-soft), transparent 60%);
+}
+
+.bg-grid::before {
+  background-image: linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: linear-gradient(to bottom,
+      transparent,
+      black 15%,
+      black 85%,
+      transparent);
+  mask-image: linear-gradient(to bottom,
+      transparent,
+      black 15%,
+      black 85%,
+      transparent);
+  opacity: 0.6;
+}
+
+.bg-panel-wash {
+  background: linear-gradient(180deg, var(--ink-raised), var(--ink) 65%);
 }
 
 /* ═══════════ Typography ═══════════ */
@@ -530,7 +594,11 @@ body[data-cursor-active] * {
   transform-origin: left;
 }
 
-/* Fullscreen overlay menu */
+/* Fullscreen overlay menu. Centers vertically when the 8 nav items
+   fit the viewport, but with `safe center` falls back to top-aligned
+   the moment they don't — plain `center` let the list overflow
+   upward past its own top padding and collide with the fixed header
+   (the "Index" row rendering behind the logo bar). */
 .menu-overlay {
   position: fixed;
   inset: 0;
@@ -538,57 +606,178 @@ body[data-cursor-active] * {
   background: var(--ink-raised);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  justify-content: safe center;
   padding: calc(84px + 2rem) var(--gutter) var(--gutter);
   overflow-y: auto;
 }
 
-.menu-link {
-  display: block;
-  font-family: var(--f-display), sans-serif;
-  font-weight: 800;
-  font-size: clamp(1.9rem, 6.5vw, 4.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
-  color: var(--bone);
-  text-decoration: none;
-  transition: color 0.4s var(--ease-out-expo);
+/* Nav list left, contact details right. Type is deliberately sized as
+   navigation rather than display — at the old poster scale the eight
+   items overflowed the viewport and the last one was cut off. */
+.menu-shell {
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 5vh, 3.25rem);
 }
 
-.menu-link:hover {
+@media (min-width: 900px) {
+  .menu-shell {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.7fr);
+    gap: clamp(3rem, 6vw, 6rem);
+    align-items: start;
+  }
+}
+
+.menu-eyebrow {
+  display: block;
+  margin-bottom: 1.1rem;
+}
+
+.menu-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+/* The mask the row animates up out of */
+.menu-row-wrap {
+  overflow: hidden;
+}
+
+.menu-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.85rem, 2vw, 1.5rem);
+  padding-block: clamp(0.65rem, 1.5vh, 1rem);
+  border-bottom: 1px solid var(--rule);
+  color: var(--bone);
+  text-decoration: none;
+  transition: color 0.4s var(--ease-out-expo),
+    padding-left 0.45s var(--ease-out-expo);
+}
+
+.menu-row:hover {
   color: var(--flame);
+  padding-left: 0.7rem;
 }
 
 .menu-index {
+  flex-shrink: 0;
+  width: 2rem;
   font-family: var(--f-mono), monospace;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   letter-spacing: 0.2em;
   color: var(--bone-30);
-  vertical-align: super;
-  margin-right: 1rem;
+  transition: color 0.4s var(--ease-out-expo);
+}
+
+.menu-row:hover .menu-index {
+  color: var(--flame);
+}
+
+.menu-label {
+  flex: 1;
+  font-family: var(--f-display), sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.3rem, 2.6vw, 2rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.menu-arrow {
+  flex-shrink: 0;
+  opacity: 0;
+  transform: translate(-6px, 6px);
+  transition: opacity 0.4s var(--ease-out-expo),
+    transform 0.4s var(--ease-out-expo);
+}
+
+.menu-row:hover .menu-arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.menu-aside {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vh, 1.85rem);
+}
+
+@media (min-width: 900px) {
+  .menu-aside {
+    padding-top: 2.4rem;
+  }
+}
+
+.menu-aside-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.menu-aside-value {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--bone-70);
+  text-decoration: none;
+}
+
+.menu-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.4rem;
+}
+
+.menu-social {
+  font-size: 0.92rem;
+  color: var(--bone-70);
+  text-decoration: none;
 }
 
 /* Hamburger */
+/* Bars are absolutely placed so the closed gap and the open
+   convergence are stated in the same place — when the two disagreed,
+   the bars rotated without meeting and read as a ">" rather than an X. */
 .burger {
+  position: relative;
   width: 44px;
   height: 44px;
-  display: grid;
-  place-items: center;
-  gap: 6px;
   background: none;
   border: none;
   cursor: pointer;
 }
 
 .burger span {
-  display: block;
+  position: absolute;
+  left: 9px;
   width: 26px;
   height: 1.5px;
+  margin-top: -0.75px;
   background: var(--bone);
   border-radius: 2px;
-  transition: transform 0.45s var(--ease-out-expo),
-    opacity 0.3s var(--ease-out-expo);
+  transition: transform 0.45s var(--ease-out-expo);
+}
+
+.burger span:nth-child(1) {
+  top: calc(50% - 3.5px);
+}
+
+.burger span:nth-child(2) {
+  top: calc(50% + 3.5px);
+}
+
+.burger[data-open="true"] span:nth-child(1) {
+  transform: translateY(3.5px) rotate(45deg);
+}
+
+.burger[data-open="true"] span:nth-child(2) {
+  transform: translateY(-3.5px) rotate(-45deg);
 }
 
 /* ═══════════ Hero ═══════════
@@ -1317,6 +1506,75 @@ body[data-cursor-active] * {
   padding: 0.9rem 1.5rem;
 }
 
+/* Deliberately plainer than the three fixed tiers — no price, no
+   checklist — since a custom build can't be priced up front. */
+.pkg-custom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-top: clamp(1.25rem, 2vw, 2rem);
+  padding: clamp(1.5rem, 2.4vw, 2rem);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: linear-gradient(
+    165deg,
+    rgba(18, 18, 23, 0.9),
+    rgba(10, 10, 13, 0.75)
+  );
+}
+
+@media (min-width: 760px) {
+  .pkg-custom {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.pkg-custom-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--flame-soft);
+  border: 1px solid rgba(255, 92, 53, 0.22);
+  color: var(--flame);
+}
+
+.pkg-custom-copy {
+  flex: 1;
+}
+
+.pkg-custom-title {
+  font-family: var(--f-display), sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  letter-spacing: -0.01em;
+}
+
+.pkg-custom-desc {
+  margin-top: 0.5rem;
+  max-width: 56ch;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--bone-45);
+}
+
+.pkg-custom-cta {
+  flex-shrink: 0;
+  width: 100%;
+  justify-content: center;
+  padding: 0.9rem 1.75rem;
+}
+
+@media (min-width: 760px) {
+  .pkg-custom-cta {
+    width: auto;
+  }
+}
+
 /* ═══════════ Numbered service rows (legacy) ═══════════ */
 .row-item {
   position: relative;
@@ -1470,11 +1728,14 @@ body[data-cursor-active] * {
     color 0.4s var(--ease-out-expo), letter-spacing 0.4s var(--ease-out-expo);
 }
 
-/* Lift the label once the field is focused or holds a value */
+/* Lift the label once the field is focused or holds a value. Scale
+   is deliberately mild (0.68 read as a jarring size-jump once real
+   text sat right underneath it at full size) — the label should
+   step back, not shrink dramatically. */
 .field:focus-within label,
 .field[data-filled="true"] label {
-  transform: translateY(-1.35rem) scale(0.68);
-  letter-spacing: 0.18em;
+  transform: translateY(-1.3rem) scale(0.82);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   font-family: var(--f-mono), monospace;
   color: var(--flame);
@@ -1494,7 +1755,7 @@ body[data-cursor-active] * {
   outline: none;
   color: var(--bone);
   font-family: var(--f-body), sans-serif;
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.6;
   resize: none;
   border-radius: 0;
@@ -1516,6 +1777,94 @@ body[data-cursor-active] * {
   bottom: 1rem;
   pointer-events: none;
   color: var(--bone-30);
+}
+
+/* ═══════════ Custom select (replaces native <select>) ═══════════
+   A native select's open popup renders in the OS's own layer, which
+   ignores page CSS entirely — including the cursor:none rule, so the
+   custom cursor visibly disappears under it. This is a plain button +
+   listbox instead, built from the same field/option primitives as
+   the rest of the form. */
+.select-field {
+  cursor: pointer;
+}
+
+.select-trigger {
+  display: block;
+  width: 100%;
+  padding: 0.35rem 0 0.95rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--f-body), sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--bone);
+}
+
+.select-value {
+  display: block;
+  min-height: 1.6em;
+}
+
+.select-caret {
+  transition: transform 0.35s var(--ease-out-expo);
+}
+
+.select-caret.is-open {
+  transform: rotate(180deg);
+}
+
+.select-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  z-index: 20;
+  max-height: 240px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.4rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 10px;
+  background: var(--ink-panel);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  list-style: none;
+  animation: select-list-in 0.18s var(--ease-out-expo);
+}
+
+@keyframes select-list-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.select-option {
+  padding: 0.65rem 0.85rem;
+  border-radius: 6px;
+  font-family: var(--f-body), sans-serif;
+  font-size: 0.92rem;
+  color: var(--bone-70);
+  cursor: pointer;
+  transition: background 0.2s var(--ease-out-expo),
+    color 0.2s var(--ease-out-expo);
+}
+
+.select-option.is-active {
+  background: var(--flame-soft);
+  color: var(--bone);
+}
+
+.select-option[aria-selected="true"] {
+  color: var(--flame);
 }
 
 .field-error {
@@ -2006,22 +2355,85 @@ body[data-cursor-active] * {
 }
 
 /* ═══════════ Path: side-by-side role cards ═══════════ */
-.path-grid {
+/* ═══════════ Path: sticky brief + rope-pulled timeline ═══════════
+   Left column pins in place while the right column's cards rise into
+   position as they're scrolled past — each card tracks its own
+   scroll progress (see PathRow in Experience.tsx) rather than firing
+   once on entering the viewport, so the motion tracks the scrollbar
+   directly. A single line grows down the timeline in step with the
+   same scroll range, standing in for the rope pulling each card up. */
+.path-layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(1rem, 1.8vw, 1.5rem);
+  gap: clamp(2.5rem, 5vw, 4rem);
   margin-top: clamp(3rem, 8vh, 5rem);
 }
 
-@media (min-width: 780px) {
-  .path-grid {
-    grid-template-columns: repeat(2, 1fr);
+@media (min-width: 900px) {
+  .path-layout {
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+
+  .path-sticky {
+    position: sticky;
+    top: 140px;
+    align-self: start;
   }
 }
 
-.path-card {
+.path-timeline {
   position: relative;
-  height: 100%;
+}
+
+.path-rope {
+  position: absolute;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  left: 11px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--flame), var(--rule-strong));
+  transform-origin: top;
+  z-index: 0;
+}
+
+.path-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+
+.path-row + .path-row {
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+
+.path-node-col {
+  flex-shrink: 0;
+  width: 24px;
+  display: flex;
+  justify-content: center;
+  padding-top: 1.2rem;
+}
+
+.path-node {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 2px solid var(--rule-strong);
+}
+
+.path-node[data-current] {
+  background: var(--flame);
+  border-color: var(--flame);
+}
+
+.path-card {
+  flex: 1;
+  min-width: 0;
+  position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2031,13 +2443,14 @@ body[data-cursor-active] * {
   background: linear-gradient(165deg,
       rgba(18, 18, 23, 0.9),
       rgba(10, 10, 13, 0.75));
-  transition: border-color 0.5s var(--ease-out-expo),
-    transform 0.5s var(--ease-out-expo);
+  /* No transform transition here — the card's y/rotate are driven by
+     scroll-linked MotionValues in `style`, which would fight a CSS
+     transform transition on the same property. */
+  transition: border-color 0.5s var(--ease-out-expo);
 }
 
 .path-card:hover {
   border-color: var(--flame-line);
-  transform: translateY(-4px);
 }
 
 .path-ghost {
@@ -2490,6 +2903,8 @@ body[data-cursor-active] * {
 
 /* Form side */
 .contact-panel {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   padding-block: var(--section-y);

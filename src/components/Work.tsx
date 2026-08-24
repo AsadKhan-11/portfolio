@@ -238,7 +238,7 @@ export default function Work() {
   const x = useSpring(rawX, { stiffness: 110, damping: 30, mass: 0.4 });
 
   return (
-    <section id="work" className="section" style={{ paddingBottom: 0 }}>
+    <section id="work" className="section bg-glow-bl" style={{ paddingBottom: 0 }}>
       <div className="rule-top" />
       <div className="shell">
         <div className="section-head">

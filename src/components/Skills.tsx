@@ -107,7 +107,7 @@ function SkillRow({
 
 export default function Skills() {
   return (
-    <section id="skills" className="section">
+    <section id="skills" className="section bg-grid">
       <div className="rule-top" />
       <div className="shell">
         <div className="section-head">

@@ -92,7 +92,7 @@ export default function Faq() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="section">
+    <section id="faq" className="section bg-raised">
       <div className="rule-top" />
       <div className="shell">
         <div className="section-head">

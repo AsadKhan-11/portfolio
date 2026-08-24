@@ -2,8 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
+import { FiArrowUpRight } from "react-icons/fi";
 import { Magnetic } from "./animations";
 import { useIntroDone } from "./intro";
+
+const EMAIL = "mrasad10khan@gmail.com";
+
+const MENU_SOCIALS = [
+  { label: "GitHub", href: "https://github.com/AsadKhan-11" },
+  { label: "LinkedIn", href: "https://linkedin.com" },
+  { label: "X", href: "https://x.com/webforge_dev" },
+  { label: "Instagram", href: "https://www.instagram.com/webforge.dev/" },
+];
 
 const NAV_ITEMS = [
   { label: "Index", href: "#home" },
@@ -119,26 +129,18 @@ export default function Navbar() {
             </span>
 
             <Magnetic strength={0.2}>
+              {/* The open/close transform lives in CSS next to the bars'
+                  own positioning — the two have to agree on the exact
+                  gap to converge into a clean X. */}
               <button
                 className="burger"
+                data-open={open}
                 onClick={() => setOpen((v) => !v)}
                 aria-label={open ? "Close menu" : "Open menu"}
                 aria-expanded={open}
               >
-                <span
-                  style={{
-                    transform: open
-                      ? "translateY(3.75px) rotate(45deg)"
-                      : "none",
-                  }}
-                />
-                <span
-                  style={{
-                    transform: open
-                      ? "translateY(-3.75px) rotate(-45deg)"
-                      : "none",
-                  }}
-                />
+                <span />
+                <span />
               </button>
             </Magnetic>
           </div>
@@ -159,54 +161,74 @@ export default function Navbar() {
             exit={{ clipPath: "inset(0 0 100% 0)" }}
             transition={{ duration: 0.85, ease: EASE }}
           >
-            <div style={{ maxWidth: "var(--measure)", margin: "0 auto", width: "100%" }}>
-              {NAV_ITEMS.map((item, i) => (
-                <span key={item.label} style={{ display: "block", overflow: "hidden" }}>
-                  <motion.a
-                    href={item.href}
-                    className="menu-link"
-                    onClick={() => setOpen(false)}
-                    initial={{ y: "110%" }}
-                    animate={{ y: 0 }}
-                    exit={{ y: "110%" }}
-                    transition={{
-                      duration: 0.8,
-                      delay: 0.15 + i * 0.055,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                  >
-                    <span className="menu-index">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    {item.label}
-                  </motion.a>
-                </span>
-              ))}
+            <div className="menu-shell">
+              <div>
+                <p className="mono-label menu-eyebrow">Navigation</p>
+                <ul className="menu-list">
+                  {NAV_ITEMS.map((item, i) => (
+                    <li key={item.label} className="menu-row-wrap">
+                      <motion.a
+                        href={item.href}
+                        className="menu-row"
+                        onClick={() => setOpen(false)}
+                        initial={{ y: "110%" }}
+                        animate={{ y: 0 }}
+                        exit={{ y: "110%" }}
+                        transition={{
+                          duration: 0.8,
+                          delay: 0.15 + i * 0.045,
+                          ease: [0.16, 1, 0.3, 1],
+                        }}
+                      >
+                        <span className="menu-index">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="menu-label">{item.label}</span>
+                        <FiArrowUpRight className="menu-arrow" size={18} />
+                      </motion.a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-              <motion.div
+              <motion.aside
+                className="menu-aside"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ delay: 0.55, duration: 0.5 }}
-                style={{
-                  marginTop: "clamp(2.5rem, 6vh, 4rem)",
-                  paddingTop: "1.75rem",
-                  borderTop: "1px solid var(--rule)",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "2rem",
-                  justifyContent: "space-between",
-                }}
+                transition={{ delay: 0.5, duration: 0.5 }}
               >
-                <a
-                  href="mailto:mrasad10khan@gmail.com"
-                  className="link-sweep mono-label"
-                  style={{ color: "var(--bone-70)" }}
-                >
-                  mrasad10khan@gmail.com
-                </a>
-                <span className="mono-label">Lahore, Pakistan — {clock}</span>
-              </motion.div>
+                <div className="menu-aside-block">
+                  <p className="mono-label">Get in touch</p>
+                  <a href={`mailto:${EMAIL}`} className="menu-aside-value link-sweep">
+                    {EMAIL}
+                  </a>
+                </div>
+
+                <div className="menu-aside-block">
+                  <p className="mono-label">Based in</p>
+                  <span className="menu-aside-value" suppressHydrationWarning>
+                    Lahore, Pakistan — {clock}
+                  </span>
+                </div>
+
+                <div className="menu-aside-block">
+                  <p className="mono-label">Elsewhere</p>
+                  <div className="menu-socials">
+                    {MENU_SOCIALS.map((s) => (
+                      <a
+                        key={s.label}
+                        href={s.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="menu-social link-sweep"
+                      >
+                        {s.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </motion.aside>
             </div>
           </motion.nav>
         )}

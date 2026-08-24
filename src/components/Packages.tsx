@@ -1,6 +1,6 @@
 "use client";
 
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiSliders } from "react-icons/fi";
 import { Reveal, SplitText, Stagger, StaggerItem } from "./animations";
 
 type Pkg = {
@@ -60,7 +60,7 @@ const PACKAGES: Pkg[] = [
 
 export default function Packages() {
   return (
-    <section id="packages" className="section">
+    <section id="packages" className="section bg-raised">
       <div className="rule-top" />
       <div className="shell">
         <div className="section-head">
@@ -124,12 +124,35 @@ export default function Packages() {
                   data-cursor="Get started"
                   className={`btn pkg-cta${featured ? " btn-solid" : ""}`}
                 >
-                  Talk about {name}
+                  <span>Talk about {name}</span>
                 </a>
               </article>
             </StaggerItem>
           ))}
         </Stagger>
+
+        <Reveal delay={0.1}>
+          <div className="pkg-custom">
+            <span className="pkg-custom-icon" aria-hidden="true">
+              <FiSliders size={20} />
+            </span>
+            <div className="pkg-custom-copy">
+              <h3 className="pkg-custom-title">Need something custom?</h3>
+              <p className="pkg-custom-desc">
+                Bigger scope, unusual integrations, or a build that doesn&rsquo;t
+                fit a fixed tier — let&rsquo;s scope it together. Price is set
+                once I know exactly what you need, not before.
+              </p>
+            </div>
+            <a
+              href="#contact"
+              data-cursor="Get started"
+              className="btn pkg-custom-cta"
+            >
+              <span>Discuss your project</span>
+            </a>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

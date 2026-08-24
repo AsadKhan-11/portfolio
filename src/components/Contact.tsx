@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import {
-  FiFacebook,
   FiGithub,
   FiInstagram,
   FiLinkedin,
@@ -10,6 +9,7 @@ import {
   FiMapPin,
   FiPhone,
 } from "react-icons/fi";
+import { FaXTwitter } from "react-icons/fa6";
 import { Magnetic, Reveal, SplitText } from "./animations";
 import ContactForm from "./ContactForm";
 
@@ -24,13 +24,13 @@ const DETAILS = [
 const SOCIALS = [
   { I: FiGithub, href: "https://github.com/AsadKhan-11", l: "GitHub" },
   { I: FiLinkedin, href: "https://linkedin.com", l: "LinkedIn" },
-  { I: FiInstagram, href: "https://instagram.com", l: "Instagram" },
-  { I: FiFacebook, href: "https://facebook.com", l: "Facebook" },
+  { I: FaXTwitter, href: "https://x.com/webforge_dev", l: "X" },
+  { I: FiInstagram, href: "https://www.instagram.com/webforge.dev/", l: "Instagram" },
 ];
 
 export default function Contact() {
   return (
-    <section id="contact" className="contact-split">
+    <section id="contact" className="contact-split bg-glow-br">
       <div className="rule-top" />
 
       {/* ── Portrait, full-bleed to the left edge ── */}

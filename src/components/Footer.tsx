@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FiArrowUp, FiFacebook, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
+import { FiArrowUp, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
+import { FaXTwitter } from "react-icons/fa6";
 import { Magnetic, Marquee } from "./animations";
 
 const LINKS = [
@@ -18,8 +19,8 @@ const WORDMARK = "Asad Khan";
 const SOCIALS = [
   { I: FiGithub, href: "https://github.com/AsadKhan-11", l: "GitHub" },
   { I: FiLinkedin, href: "https://linkedin.com", l: "LinkedIn" },
-  { I: FiInstagram, href: "https://instagram.com", l: "Instagram" },
-  { I: FiFacebook, href: "https://facebook.com", l: "Facebook" },
+  { I: FaXTwitter, href: "https://x.com/webforge_dev", l: "X" },
+  { I: FiInstagram, href: "https://www.instagram.com/webforge.dev/", l: "Instagram" },
 ];
 
 export default function Footer() {

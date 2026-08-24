@@ -16,7 +16,7 @@ const TAGS = [
 
 export default function About() {
   return (
-    <section id="about" className="section">
+    <section id="about" className="section bg-glow-tl">
       <div className="rule-top" />
       <div className="shell">
         {/* Portrait left, everything else right */}

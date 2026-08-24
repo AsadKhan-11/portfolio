@@ -60,7 +60,7 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section className="section" style={{ overflow: "hidden" }}>
+    <section className="section bg-glow-tr" style={{ overflow: "hidden" }}>
       <div className="rule-top" />
       <div className="shell">
         <div className="section-head">

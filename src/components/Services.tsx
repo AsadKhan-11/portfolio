@@ -95,7 +95,7 @@ const SERVICES: Service[] = [
 
 export default function Services() {
   return (
-    <section id="services" className="section">
+    <section id="services" className="section bg-glow-tr">
       <div className="rule-top" />
       <div className="shell">
         <div className="section-head">
