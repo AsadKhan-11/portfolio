@@ -3,17 +3,6 @@
 import { Reveal, SplitText } from "./animations";
 import ImageSlot from "./ImageSlot";
 
-const TAGS = [
-  "React",
-  "Next.js",
-  "Node.js",
-  "Express",
-  "MongoDB",
-  "TypeScript",
-  "Tailwind",
-  "Figma",
-];
-
 export default function About() {
   return (
     <section id="about" className="section bg-glow-tl">
@@ -28,7 +17,6 @@ export default function About() {
                 alt="Asad Khan working at his desk in Lahore"
                 slot="/about/workspace.jpg"
                 ratio="4 / 5"
-                duotone
                 sizes="(max-width: 900px) 90vw, 40vw"
                 fallback={
                   <div
@@ -54,10 +42,10 @@ export default function About() {
             <p className="eyebrow">01 — Profile</p>
 
             <h2 className="section-title" style={{ marginTop: "1.5rem" }}>
-              <SplitText text="Who" />
+              <SplitText text="Meet the guy" />
               <br />
               <span className="serif-em" style={{ color: "var(--flame)" }}>
-                <SplitText text="I am" delay={0.1} />
+                <SplitText text="behind the work" delay={0.1} />
               </span>
             </h2>
 
@@ -87,10 +75,11 @@ export default function About() {
                   color: "var(--bone-45)",
                 }}
               >
-                Based in Lahore, Pakistan, I work as a freelance full stack
-                developer specialising in the MERN stack. My focus is on
-                interfaces that feel considered and backends that hold up under
-                real traffic — no shortcuts hidden behind a nice landing page.
+                I&rsquo;m Asad — a full stack developer working with founders
+                and teams worldwide from Lahore, Pakistan. People hire me when
+                they want one person who can carry a product all the way:
+                design that sells the idea, and engineering that doesn&rsquo;t
+                fall over once it works.
               </p>
             </Reveal>
 
@@ -103,23 +92,11 @@ export default function About() {
                   color: "var(--bone-45)",
                 }}
               >
-                I turn design ideas into responsive, accessible interfaces and
-                wire them to solid server-side logic. Attention to detail,
-                honest timelines, and code the next developer can actually read.
+                Working with me looks like this: a fixed quote before we start,
+                honest timelines, a staging link you can open any day of the
+                week, and a finished product you fully own. No hand-offs
+                between departments, no surprises on the invoice.
               </p>
-            </Reveal>
-
-            <Reveal delay={0.28}>
-              <p className="mono-label" style={{ marginTop: "2.25rem" }}>
-                Working with
-              </p>
-              <div className="about-tags">
-                {TAGS.map((t) => (
-                  <span key={t} className="tag">
-                    {t}
-                  </span>
-                ))}
-              </div>
             </Reveal>
           </div>
         </div>

@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from "framer-motion";
 import { Marquee } from "./animations";
 
 const WORDS = [
@@ -16,9 +23,17 @@ const WORDS = [
 /*
   Full-bleed kinetic ticker. Two rows running opposite directions —
   solid on top, outlined below — to break the vertical rhythm between
-  the hero and the first content section.
+  the hero and the first content section. The whole strip shears with
+  scroll velocity, so flicking the page drags the type with it.
 */
 export default function Ticker() {
+  const { scrollY } = useScroll();
+  const velocity = useVelocity(scrollY);
+  const skewRaw = useTransform(velocity, [-1400, 1400], [-5, 5], {
+    clamp: true,
+  });
+  const skewX = useSpring(skewRaw, { stiffness: 180, damping: 24, mass: 0.5 });
+
   return (
     <section
       aria-hidden="true"
@@ -30,41 +45,43 @@ export default function Ticker() {
         overflow: "hidden",
       }}
     >
-      <Marquee speed={42}>
-        {WORDS.map((w) => (
-          <span key={w} className="marquee-item">
-            {w}
-            <span
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: "50%",
-                background: "var(--flame)",
-                flexShrink: 0,
-              }}
-            />
-          </span>
-        ))}
-      </Marquee>
+      <motion.div style={{ skewX }}>
+        <Marquee speed={42}>
+          {WORDS.map((w) => (
+            <span key={w} className="marquee-item">
+              {w}
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  background: "var(--flame)",
+                  flexShrink: 0,
+                }}
+              />
+            </span>
+          ))}
+        </Marquee>
 
-      <div style={{ height: "clamp(0.5rem, 1.5vh, 1rem)" }} />
+        <div style={{ height: "clamp(0.5rem, 1.5vh, 1rem)" }} />
 
-      <Marquee speed={54} reverse>
-        {WORDS.map((w) => (
-          <span key={w} className="marquee-item marquee-outline">
-            {w}
-            <span
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: "50%",
-                border: "1px solid var(--bone-30)",
-                flexShrink: 0,
-              }}
-            />
-          </span>
-        ))}
-      </Marquee>
+        <Marquee speed={54} reverse>
+          {WORDS.map((w) => (
+            <span key={w} className="marquee-item marquee-outline">
+              {w}
+              <span
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  border: "1px solid var(--bone-30)",
+                  flexShrink: 0,
+                }}
+              />
+            </span>
+          ))}
+        </Marquee>
+      </motion.div>
     </section>
   );
 }

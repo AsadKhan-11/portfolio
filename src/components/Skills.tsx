@@ -23,7 +23,7 @@ import {
   SiTypescript,
 } from "react-icons/si";
 import type { IconType } from "react-icons";
-import { Reveal, SplitText } from "./animations";
+import { Counter, Reveal, SplitText } from "./animations";
 
 const GROUPS = [
   {
@@ -89,7 +89,7 @@ function SkillRow({
           className="mono-label"
           style={{ fontSize: "0.62rem", letterSpacing: "0.12em" }}
         >
-          {skill.level}
+          <Counter to={skill.level} suffix="%" duration={1.3} />
         </span>
       </div>
 

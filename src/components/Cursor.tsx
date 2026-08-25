@@ -29,6 +29,14 @@ export default function Cursor() {
   const ring = useRef({ x: 0, y: 0 });
   const scale = useRef(1);
   const targetScale = useRef(1);
+  /* Split so a press can end while still hovering — release returns to
+     the hover scale, not blindly to 1. */
+  const hoverScale = useRef(1);
+  const pressed = useRef(false);
+
+  const applyScale = () => {
+    targetScale.current = pressed.current ? 0.62 : hoverScale.current;
+  };
 
   useEffect(() => {
     if (!enabled) return;
@@ -52,15 +60,27 @@ export default function Cursor() {
         | HTMLElement
         | null;
       if (!el) return;
-      targetScale.current = 1.9;
+      hoverScale.current = 1.9;
+      applyScale();
       setLabel(el.dataset.cursor ?? "");
     };
 
     const onOut = (e: PointerEvent) => {
       const el = (e.target as HTMLElement)?.closest?.(INTERACTIVE);
       if (!el) return;
-      targetScale.current = 1;
+      hoverScale.current = 1;
+      applyScale();
       setLabel("");
+    };
+
+    const onDown = () => {
+      pressed.current = true;
+      applyScale();
+    };
+
+    const onUp = () => {
+      pressed.current = false;
+      applyScale();
     };
 
     let raf = 0;
@@ -86,12 +106,16 @@ export default function Cursor() {
     window.addEventListener("pointermove", onMove, { passive: true });
     document.addEventListener("pointerover", onOver, { passive: true });
     document.addEventListener("pointerout", onOut, { passive: true });
+    document.addEventListener("pointerdown", onDown, { passive: true });
+    document.addEventListener("pointerup", onUp, { passive: true });
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("pointermove", onMove);
       document.removeEventListener("pointerover", onOver);
       document.removeEventListener("pointerout", onOut);
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("pointerup", onUp);
       delete document.body.dataset.cursorActive;
     };
   }, [enabled]);

@@ -1,13 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
+import { useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { FiArrowUpRight, FiGithub } from "react-icons/fi";
 import { Reveal, SplitText } from "./animations";
 import ImageSlot from "./ImageSlot";
+import { useMediaQuery } from "./useClient";
 
 /*
-  `image` is intentionally absent until real artwork exists — each card
+  `image` is intentionally absent until real artwork exists — each page
   falls back to its generated composition, so nothing looks unfinished.
   Drop a file at the `slot` path and set `image` to that same path.
 */
@@ -19,7 +25,6 @@ const PROJECTS = [
     title: "Estate Agency",
     blurb:
       "Property listings with faceted search, saved filters and a map view. Agents manage inventory from a role-gated dashboard.",
-    tags: ["React", "Node.js", "MongoDB"],
     from: "#ff5c35",
     to: "#7c2d12",
   },
@@ -30,7 +35,6 @@ const PROJECTS = [
     title: "Nexa",
     blurb:
       "A business landing page built around motion — scroll-linked sections, a component library, and a 98 Lighthouse score.",
-    tags: ["Next.js", "Tailwind", "Framer Motion"],
     from: "#4ff0ff",
     to: "#0e7490",
   },
@@ -41,7 +45,6 @@ const PROJECTS = [
     title: "Wander",
     blurb:
       "Travel discovery app pairing an interactive map with editorial destination guides and offline-friendly itineraries.",
-    tags: ["React", "Maps API", "CSS3"],
     from: "#a78bfa",
     to: "#4c1d95",
   },
@@ -52,7 +55,6 @@ const PROJECTS = [
     title: "E-Commerce Store",
     blurb:
       "Full storefront: cart, Stripe checkout, order history and an admin panel for catalogue and fulfilment.",
-    tags: ["MERN", "Stripe", "Redux"],
     from: "#fb7185",
     to: "#881337",
   },
@@ -63,7 +65,6 @@ const PROJECTS = [
     title: "Analytics Dashboard",
     blurb:
       "Real-time data visualisation with streaming updates, custom chart components and CSV export.",
-    tags: ["React", "Chart.js", "Node.js"],
     from: "#34d399",
     to: "#065f46",
   },
@@ -74,7 +75,6 @@ const PROJECTS = [
     title: "This Portfolio",
     blurb:
       "GLSL background field, scroll-driven layout, custom cursor. Built to be the work sample rather than describe one.",
-    tags: ["Next.js", "Three.js", "GLSL"],
     from: "#fbbf24",
     to: "#92400e",
   },
@@ -114,128 +114,92 @@ function ProceduralArt({ from, to }: { from: string; to: string }) {
   );
 }
 
-function Card({ p }: { p: (typeof PROJECTS)[number] }) {
-  return (
-    <article className="work-card tick" data-cursor="View">
-      <div className="work-visual">
-        <ImageSlot
-          src={p.image}
-          alt={`${p.title} — project preview`}
-          slot={p.slot}
-          ratio="4 / 3"
-          sizes="(max-width: 900px) 78vw, 560px"
-          fallback={<ProceduralArt from={p.from} to={p.to} />}
-        />
-        <span
-          style={{
-            position: "absolute",
-            right: "1.5rem",
-            bottom: "0.5rem",
-            fontFamily: "var(--f-display)",
-            fontWeight: 800,
-            fontSize: "clamp(3rem, 7vw, 5.5rem)",
-            lineHeight: 0.8,
-            color: "rgba(8,8,10,.3)",
-            zIndex: 2,
-            pointerEvents: "none",
-          }}
-        >
-          {p.n}
-        </span>
-      </div>
+/*
+  One spread of the deck. Every page is sticky at the same spot, so the
+  next one in flow scrolls up and turns over it. While being covered,
+  the page under tips back (rotateX, origin top), shrinks and dims —
+  the closest scroll can honestly get to a page being flipped.
+*/
+function Page({
+  p,
+  index,
+  total,
+  progress,
+  still,
+}: {
+  p: (typeof PROJECTS)[number];
+  index: number;
+  total: number;
+  progress: MotionValue<number>;
+  still: boolean;
+}) {
+  /* Deck progress maps over total-1 hand-offs, not total pages */
+  const start = index / (total - 1);
+  const end = (index + 1) / (total - 1);
+  const cover = useTransform(progress, [start, end], [0, 1], { clamp: true });
 
-      <div style={{ padding: "clamp(1.5rem, 3vw, 2.25rem)" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            gap: "1rem",
-          }}
-        >
-          <h3
-            style={{
-              fontFamily: "var(--f-display)",
-              fontWeight: 800,
-              fontSize: "clamp(1.1rem, 1.7vw, 1.35rem)",
-              textTransform: "uppercase",
-              letterSpacing: "-0.02em",
-              lineHeight: 1.05,
-            }}
-          >
-            {p.title}
-          </h3>
-          <div style={{ display: "flex", gap: "0.5rem", flexShrink: 0 }}>
-            <a href="#" className="social" style={{ width: 38, height: 38 }} aria-label={`${p.title} live site`}>
-              <FiArrowUpRight size={15} />
+  const scale = useTransform(cover, [0, 1], [1, 0.93]);
+  const rotateX = useTransform(cover, [0, 1], [0, -7]);
+  const y = useTransform(cover, [0, 1], ["0%", "-5%"]);
+  const filter = useTransform(cover, (v) => `brightness(${1 - v * 0.45})`);
+
+  const isLast = index === total - 1;
+  const reversed = index % 2 === 1;
+
+  return (
+    <div className="work-page-slot">
+      <motion.article
+        className={`work-page tick${reversed ? " is-reversed" : ""}`}
+        style={
+          still || isLast
+            ? undefined
+            : { scale, rotateX, y, filter, transformOrigin: "50% 0%" }
+        }
+      >
+        <div className="work-page-visual" data-cursor="View">
+          <ImageSlot
+            src={p.image}
+            alt={`${p.title} — project preview`}
+            slot={p.slot}
+            ratio="auto"
+            className="work-page-media"
+            sizes="(max-width: 899px) 100vw, 60vw"
+            fallback={<ProceduralArt from={p.from} to={p.to} />}
+          />
+          <span className="work-page-num" aria-hidden="true">
+            {p.n}
+          </span>
+        </div>
+
+        <div className="work-page-body">
+          <span className="mono-label work-page-count">
+            {p.n} — {String(total).padStart(2, "0")}
+          </span>
+          <h3 className="work-page-title">{p.title}</h3>
+          <p className="work-page-blurb">{p.blurb}</p>
+
+          <div className="work-page-links">
+            <a href="#" className="btn work-page-cta">
+              <span>View project</span>
+              <FiArrowUpRight />
             </a>
-            <a href="#" className="social" style={{ width: 38, height: 38 }} aria-label={`${p.title} source`}>
-              <FiGithub size={15} />
+            <a href="#" className="social" aria-label={`${p.title} source code`}>
+              <FiGithub size={16} />
             </a>
           </div>
         </div>
-
-        <p
-          style={{
-            marginTop: "0.9rem",
-            fontSize: "0.92rem",
-            lineHeight: 1.75,
-            color: "var(--bone-45)",
-          }}
-        >
-          {p.blurb}
-        </p>
-
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-            marginTop: "1.25rem",
-          }}
-        >
-          {p.tags.map((t) => (
-            <span key={t} className="tag">
-              {t}
-            </span>
-          ))}
-        </div>
-      </div>
-    </article>
+      </motion.article>
+    </div>
   );
 }
 
 export default function Work() {
-  const pinRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [distance, setDistance] = useState(0);
-  const [pinned, setPinned] = useState(false);
-
-  // Only scroll-jack where there's room for it; phones get a swipe rail.
-  useEffect(() => {
-    const measure = () => {
-      const desktop = window.matchMedia("(min-width: 900px)").matches;
-      const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      setPinned(desktop && !still);
-
-      const track = trackRef.current;
-      if (!track) return;
-      const overflow = track.scrollWidth - window.innerWidth;
-      setDistance(Math.max(0, overflow + 96));
-    };
-
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, []);
-
+  const deckRef = useRef<HTMLDivElement>(null);
+  const still = useMediaQuery("(prefers-reduced-motion: reduce)");
   const { scrollYProgress } = useScroll({
-    target: pinRef,
+    target: deckRef,
     offset: ["start start", "end end"],
   });
-
-  const rawX = useTransform(scrollYProgress, [0, 1], [0, -distance]);
-  const x = useSpring(rawX, { stiffness: 110, damping: 30, mass: 0.4 });
 
   return (
     <section id="work" className="section bg-glow-bl" style={{ paddingBottom: 0 }}>
@@ -254,83 +218,24 @@ export default function Work() {
           </div>
           <Reveal delay={0.15}>
             <p className="lede">
-              Six builds that cover the range — storefronts, dashboards, content
-              sites. {pinned ? "Keep scrolling to move sideways." : "Swipe to browse."}
+              Six builds that cover the range — storefronts, dashboards,
+              content sites. Keep scrolling: each spread turns over the last.
             </p>
           </Reveal>
         </div>
-      </div>
 
-      {/* The scroll target must stay mounted from first paint, so the
-          wrapper is always rendered and only its behaviour switches. */}
-      <div
-        ref={pinRef}
-        style={{
-          // Must stay non-static in both modes — useScroll measures its
-          // offset and warns (and mismeasures) against a static container.
-          position: "relative",
-          ...(pinned ? { height: `calc(100vh + ${distance}px)` } : null),
-        }}
-      >
-        {pinned ? (
-          <>
-            <div
-              style={{
-                position: "sticky",
-                top: 0,
-                height: "100vh",
-                display: "flex",
-                alignItems: "center",
-                overflow: "hidden",
-              }}
-            >
-              <motion.div
-                ref={trackRef}
-                className="work-track"
-                style={{ x, paddingInline: "var(--gutter)" }}
-              >
-                {PROJECTS.map((p) => (
-                  <Card key={p.n} p={p} />
-                ))}
-              </motion.div>
-            </div>
-
-            {/* progress rail */}
-            <div
-              style={{
-                position: "sticky",
-                bottom: "3rem",
-                marginInline: "var(--gutter)",
-                height: 1,
-                background: "var(--bone-08)",
-              }}
-            >
-              <motion.div
-                style={{
-                  height: "100%",
-                  background: "var(--flame)",
-                  transformOrigin: "left",
-                  scaleX: scrollYProgress,
-                }}
-              />
-            </div>
-          </>
-        ) : (
-          <div
-            className="work-rail"
-            style={{ marginTop: "clamp(2.5rem, 6vh, 4rem)" }}
-          >
-            <div
-              ref={trackRef}
-              className="work-track"
-              style={{ paddingInline: "var(--gutter)" }}
-            >
-              {PROJECTS.map((p) => (
-                <Card key={p.n} p={p} />
-              ))}
-            </div>
-          </div>
-        )}
+        <div ref={deckRef} className="work-deck">
+          {PROJECTS.map((p, i) => (
+            <Page
+              key={p.n}
+              p={p}
+              index={i}
+              total={PROJECTS.length}
+              progress={scrollYProgress}
+              still={still}
+            />
+          ))}
+        </div>
       </div>
 
       <div style={{ height: "var(--section-y)" }} />

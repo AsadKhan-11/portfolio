@@ -1,67 +1,122 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import ImageSlot from "./ImageSlot";
-import { Reveal } from "./animations";
+import { FiArrowUpRight, FiCheck } from "react-icons/fi";
+import { Magnetic, Reveal, SplitText, Stagger, StaggerItem } from "./animations";
 
 /*
-  Full-bleed visual break between the stack and the portfolio. Drifts
-  slightly against the scroll so it reads as depth rather than a static
-  banner.
+  The moment of doubt: a visitor has just seen the prices and is
+  quietly comparing them to a $20 template or a $15k agency. Answer
+  that comparison head-on, in the site's own honest voice, right
+  before the work proves it.
 */
+const ROWS = [
+  "Price",
+  "Timeline",
+  "You talk to",
+  "Design",
+  "Ownership",
+  "After launch",
+];
+
+const OPTIONS: {
+  name: string;
+  values: string[];
+  featured?: boolean;
+}[] = [
+  {
+    name: "A template site",
+    values: [
+      "$20–100 a month, forever",
+      "A weekend",
+      "A help-center chatbot",
+      "Same as everyone else's",
+      "Rented — cancel and it's gone",
+      "You're on your own",
+    ],
+  },
+  {
+    name: "An agency",
+    values: [
+      "$15,000 and climbing",
+      "2–6 months",
+      "An account manager",
+      "Designed by committee",
+      "Depends on the contract",
+      "A support ticket queue",
+    ],
+  },
+  {
+    name: "Working with me",
+    values: [
+      "Fixed quote, paid once",
+      "2–6 weeks",
+      "The person building it",
+      "Designed around your business",
+      "Yours, fully, from day one",
+      "30 days included — then a direct line",
+    ],
+    featured: true,
+  },
+];
+
 export default function Band() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const raw = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
-  const y = useSpring(raw, { stiffness: 90, damping: 30, mass: 0.4 });
-
   return (
-    <section ref={ref} className="band" aria-label="Working environment">
-      <div className="band-inner">
-        <motion.div style={{ y, willChange: "transform" }}>
-          <ImageSlot
-            src="/band/craft.jpg"
-            alt="Building interfaces — a late session at the desk"
-            slot="/band/craft.jpg"
-            ratio="21 / 9"
-            duotone
-            sizes="100vw"
-            className="band-image"
-            fallback={
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(115deg, rgba(255,92,53,.28), rgba(8,8,10,.95) 45%, rgba(79,240,255,.2))",
-                }}
-              />
-            }
-          />
-        </motion.div>
+    <section className="band" aria-label="How working with me compares">
+      <div className="shell">
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">Why me</p>
+            <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
+              <SplitText text="Three ways" />
+              <br />
+              <span className="serif-em" style={{ color: "var(--flame)" }}>
+                <SplitText text="to get a website" delay={0.1} />
+              </span>
+            </h2>
+          </div>
+          <Reveal delay={0.15}>
+            <p className="lede">
+              The honest comparison nobody puts on their pricing page. Only
+              one of these is built around your business — and picks up the
+              phone afterwards.
+            </p>
+          </Reveal>
+        </div>
 
-        {/* keeps the caption legible over any photograph */}
-        <div className="band-scrim" />
+        <Stagger className="vs-grid" gap={0.1}>
+          {OPTIONS.map(({ name, values, featured }) => (
+            <StaggerItem key={name}>
+              <article className={`vs-card tick${featured ? " is-me" : ""}`}>
+                {featured && (
+                  <span className="pkg-badge">
+                    <FiCheck size={11} />
+                    The sweet spot
+                  </span>
+                )}
+                <h3 className="vs-name">{name}</h3>
+                <ul className="vs-rows">
+                  {values.map((v, i) => (
+                    <li key={ROWS[i]}>
+                      <span className="mono-label">{ROWS[i]}</span>
+                      <p>{v}</p>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </StaggerItem>
+          ))}
+        </Stagger>
 
-        <Reveal className="band-caption">
-          <p className="eyebrow">The work behind the work</p>
-          <p
-            style={{
-              marginTop: "1rem",
-              fontFamily: "var(--f-display)",
-              fontWeight: 700,
-              fontSize: "clamp(1.05rem, 1.8vw, 1.5rem)",
-              lineHeight: 1.3,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Most of it is unglamorous — reading docs, deleting code, and
-            testing on the one browser that disagrees.
-          </p>
+        <Reveal delay={0.1}>
+          <div className="band-cta-row">
+            <Magnetic strength={0.3}>
+              <a href="#contact" className="btn btn-solid">
+                <span>Start yours</span>
+                <FiArrowUpRight />
+              </a>
+            </Magnetic>
+            <span className="mono-label">Currently booking — 2026</span>
+          </div>
         </Reveal>
       </div>
     </section>

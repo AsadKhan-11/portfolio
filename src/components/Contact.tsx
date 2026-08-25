@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import {
   FiGithub,
   FiInstagram,
@@ -30,92 +29,79 @@ const SOCIALS = [
 
 export default function Contact() {
   return (
-    <section id="contact" className="contact-split bg-glow-br">
+    <section id="contact" className="section bg-glow-br">
       <div className="rule-top" />
+      <div className="shell">
+        <div className="contact-layout">
+          {/* ── Intro + ways to reach me ── */}
+          <div className="contact-intro">
+            <Reveal>
+              <p className="eyebrow">10 — Contact</p>
+            </Reveal>
 
-      {/* ── Portrait, full-bleed to the left edge ── */}
-      <div className="contact-visual">
-        <Image
-          src="/contact/portrait.jpg"
-          alt="Asad Khan at his desk"
-          fill
-          sizes="(max-width: 979px) 100vw, 50vw"
-          style={{ objectFit: "cover", objectPosition: "center 25%" }}
-        />
-        <div className="contact-visual-scrim" />
-
-        <div className="contact-visual-meta">
-          {DETAILS.map(({ Icon, k, v, href }) => (
-            <div key={k} className="contact-meta-item">
-              <span className="contact-meta-icon" aria-hidden="true">
-                <Icon size={16} />
+            <h2 className="section-title" style={{ marginTop: "1.5rem" }}>
+              <SplitText text="Let's build" />
+              <br />
+              <span className="serif-em" style={{ color: "var(--flame)" }}>
+                <SplitText text="something" delay={0.1} />
               </span>
-              <span>
-                <span className="mono-label">{k}</span>
-                {href ? (
-                  <a href={href} className="contact-meta-value link-sweep">
-                    {v}
-                  </a>
-                ) : (
-                  <span className="contact-meta-value">{v}</span>
-                )}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+            </h2>
 
-      {/* ── Form panel ── */}
-      <div className="contact-panel">
-        <div className="contact-panel-inner">
-          <Reveal>
-            <p className="eyebrow">10 — Contact</p>
-          </Reveal>
+            <Reveal delay={0.1}>
+              <p className="lede" style={{ marginTop: "1.5rem" }}>
+                Whether you have a spec ready or just the beginning of an
+                idea, tell me about it. I reply within a day.
+              </p>
+            </Reveal>
 
-          <h2
-            className="section-title"
-            style={{ marginTop: "1.5rem", fontSize: "clamp(2rem, 4.4vw, 3.25rem)" }}
-          >
-            <SplitText text="Let's build" />
-            <br />
-            <span className="serif-em" style={{ color: "var(--flame)" }}>
-              <SplitText text="something" delay={0.1} />
-            </span>
-          </h2>
-
-          <Reveal delay={0.1}>
-            <p
-              className="lede"
-              style={{ marginTop: "1.25rem", marginBottom: "clamp(2rem, 4vw, 2.75rem)" }}
-            >
-              Whether you have a spec ready or just the beginning of an idea,
-              tell me about it. I reply within a day.
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.16}>
-            <ContactForm />
-          </Reveal>
-
-          <Reveal delay={0.22}>
-            <div className="contact-socials">
-              <span className="mono-label">Elsewhere</span>
-              <div style={{ display: "flex", gap: "0.7rem" }}>
-                {SOCIALS.map(({ I, href, l }) => (
-                  <Magnetic key={l} strength={0.4}>
-                    <a
-                      href={href}
-                      className="social"
-                      aria-label={l}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <I size={16} />
-                    </a>
-                  </Magnetic>
+            <Reveal delay={0.16}>
+              <div className="contact-details">
+                {DETAILS.map(({ Icon, k, v, href }) => (
+                  <div key={k} className="contact-meta-item">
+                    <span className="contact-meta-icon" aria-hidden="true">
+                      <Icon size={16} />
+                    </span>
+                    <span>
+                      <span className="mono-label">{k}</span>
+                      {href ? (
+                        <a href={href} className="contact-meta-value link-sweep">
+                          {v}
+                        </a>
+                      ) : (
+                        <span className="contact-meta-value">{v}</span>
+                      )}
+                    </span>
+                  </div>
                 ))}
               </div>
-            </div>
+            </Reveal>
+
+            <Reveal delay={0.22}>
+              <div className="contact-socials">
+                <span className="mono-label">Elsewhere</span>
+                <div style={{ display: "flex", gap: "0.7rem" }}>
+                  {SOCIALS.map(({ I, href, l }) => (
+                    <Magnetic key={l} strength={0.4}>
+                      <a
+                        href={href}
+                        className="social"
+                        aria-label={l}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <I size={16} />
+                      </a>
+                    </Magnetic>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* ── The form, carried by its own panel ── */}
+          <Reveal delay={0.15} className="contact-form-panel">
+            <p className="mono-label contact-form-label">Start a project</p>
+            <ContactForm />
           </Reveal>
         </div>
       </div>
