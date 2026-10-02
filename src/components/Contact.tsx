@@ -22,7 +22,7 @@ const DETAILS = [
 
 const SOCIALS = [
   { I: FiGithub, href: "https://github.com/AsadKhan-11", l: "GitHub" },
-  { I: FiLinkedin, href: "https://linkedin.com", l: "LinkedIn" },
+  { I: FiLinkedin, href: "https://www.linkedin.com/in/asad-khan-011h/", l: "LinkedIn" },
   { I: FaXTwitter, href: "https://x.com/webforge_dev", l: "X" },
   { I: FiInstagram, href: "https://www.instagram.com/webforge.dev/", l: "Instagram" },
 ];
@@ -36,7 +36,7 @@ export default function Contact() {
           {/* ── Intro + ways to reach me ── */}
           <div className="contact-intro">
             <Reveal>
-              <p className="eyebrow">10 — Contact</p>
+              <p className="eyebrow">10 · Contact</p>
             </Reveal>
 
             <h2 className="section-title" style={{ marginTop: "1.5rem" }}>

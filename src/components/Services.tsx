@@ -32,7 +32,7 @@ const SERVICES: Service[] = [
   {
     n: "01",
     title: "AI Integration",
-    copy: "LLM features built into products that already work — semantic search, document Q&A, summarisation and drafting, wired to your own data with retrieval rather than guesswork.",
+    copy: "LLM features built into products that already work: semantic search, document Q&A, summarisation and drafting, wired to your own data with retrieval rather than guesswork.",
     Icon: FiCpu,
     colStart: 1,
     colSpan: 7,
@@ -44,7 +44,7 @@ const SERVICES: Service[] = [
   {
     n: "02",
     title: "Chatbots & Assistants",
-    copy: "Support bots that deflect repetitive tickets and qualify leads before they reach your inbox — with escalation to a human when the bot is out of its depth.",
+    copy: "Support bots that deflect repetitive tickets and qualify leads before they reach your inbox, with escalation to a human when the bot is out of its depth.",
     Icon: FiMessageSquare,
     colStart: 8,
     colSpan: 5,
@@ -64,7 +64,7 @@ const SERVICES: Service[] = [
   {
     n: "04",
     title: "Full-Stack Web Apps",
-    copy: "End-to-end MERN builds — dashboards, admin panels, client portals. Secure auth, sensible data modelling, and a frontend that stays fast as the product grows.",
+    copy: "End-to-end MERN builds: dashboards, admin panels, client portals. Secure auth, sensible data modelling, and a frontend that stays fast as the product grows.",
     Icon: FiLayers,
     colStart: 1,
     colSpan: 4,
@@ -100,7 +100,7 @@ export default function Services() {
       <div className="shell">
         <div className="section-head">
           <div>
-            <p className="eyebrow">02 — Services</p>
+            <p className="eyebrow">02 · Services</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="What I" />
               <br />
@@ -112,7 +112,7 @@ export default function Services() {
           <Reveal delay={0.15}>
             <p className="lede">
               Six things I get hired for, from AI features to the storefront
-              underneath them. Most projects use several at once — which is
+              underneath them. Most projects use several at once, which is
               rather the point of hiring one person for the whole stack.
             </p>
           </Reveal>

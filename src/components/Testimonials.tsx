@@ -28,7 +28,7 @@ const TESTIMONIALS = [
     name: "Michael Foster",
     role: "CTO, DataVerse",
     quote:
-      "His full-stack range is real. He built our dashboard end to end — clean API design, live data, and a UI that makes complex data legible.",
+      "His full-stack range is real. He built our dashboard end to end: clean API design, live data, and a UI that makes complex data legible.",
   },
   {
     name: "Priya Sharma",
@@ -40,7 +40,7 @@ const TESTIMONIALS = [
     name: "David Kim",
     role: "Entrepreneur",
     quote:
-      "I've hired a lot of freelancers. Asad is a level above — clean code, documented, and he proactively flags improvements instead of waiting.",
+      "I've hired a lot of freelancers. Asad is a level above: clean code, documented, and he proactively flags improvements instead of waiting.",
   },
 ];
 
@@ -65,7 +65,7 @@ export default function Testimonials() {
       <div className="shell">
         <div className="section-head">
           <div>
-            <p className="eyebrow">08 — Words</p>
+            <p className="eyebrow">08 · Words</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="Client" />
               <br />

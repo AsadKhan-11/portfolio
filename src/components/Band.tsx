@@ -30,9 +30,21 @@ const OPTIONS: {
       "A weekend",
       "A help-center chatbot",
       "Same as everyone else's",
-      "Rented — cancel and it's gone",
+      "Rented. Cancel and it's gone",
       "You're on your own",
     ],
+  },
+  {
+    name: "Working with me",
+    values: [
+      "Fixed quote, paid once",
+      "2–6 weeks",
+      "The person building it",
+      "Designed around your business",
+      "Yours, fully, from day one",
+      "30 days included, then a direct line",
+    ],
+    featured: true,
   },
   {
     name: "An agency",
@@ -44,18 +56,6 @@ const OPTIONS: {
       "Depends on the contract",
       "A support ticket queue",
     ],
-  },
-  {
-    name: "Working with me",
-    values: [
-      "Fixed quote, paid once",
-      "2–6 weeks",
-      "The person building it",
-      "Designed around your business",
-      "Yours, fully, from day one",
-      "30 days included — then a direct line",
-    ],
-    featured: true,
   },
 ];
 
@@ -77,8 +77,8 @@ export default function Band() {
           <Reveal delay={0.15}>
             <p className="lede">
               The honest comparison nobody puts on their pricing page. Only
-              one of these is built around your business — and picks up the
-              phone afterwards.
+              one of these is built around your business, and only one picks
+              up the phone afterwards.
             </p>
           </Reveal>
         </div>
@@ -115,7 +115,7 @@ export default function Band() {
                 <FiArrowUpRight />
               </a>
             </Magnetic>
-            <span className="mono-label">Currently booking — 2026</span>
+            <span className="mono-label">Currently booking for 2026</span>
           </div>
         </Reveal>
       </div>

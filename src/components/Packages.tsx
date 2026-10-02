@@ -49,7 +49,7 @@ const PACKAGES: Pkg[] = [
     price: 9000,
     features: [
       "Everything in Build",
-      "AI features — chat, search, automation",
+      "AI features: chat, search, automation",
       "Payments & subscriptions",
       "Performance & accessibility audit",
       "30 days of post-launch support",
@@ -65,7 +65,7 @@ export default function Packages() {
       <div className="shell">
         <div className="section-head">
           <div>
-            <p className="eyebrow">04 — Packages</p>
+            <p className="eyebrow">04 · Packages</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="Pick a" />
               <br />
@@ -76,7 +76,7 @@ export default function Packages() {
           </div>
           <Reveal delay={0.15}>
             <p className="lede">
-              Fixed scope, fixed price, a clear finish line — pick the one
+              Fixed scope, fixed price, a clear finish line. Pick the one
               that matches where you&rsquo;re starting from, or use it as a
               starting point for a conversation.
             </p>
@@ -140,7 +140,7 @@ export default function Packages() {
               <h3 className="pkg-custom-title">Need something custom?</h3>
               <p className="pkg-custom-desc">
                 Bigger scope, unusual integrations, or a build that doesn&rsquo;t
-                fit a fixed tier — let&rsquo;s scope it together. Price is set
+                fit a fixed tier? Let&rsquo;s scope it together. Price is set
                 once I know exactly what you need, not before.
               </p>
             </div>

@@ -5,6 +5,7 @@ import Cursor from "@/components/Cursor";
 import MotionProvider from "@/components/MotionProvider";
 import Preloader from "@/components/Preloader";
 import ShaderField from "@/components/ShaderField";
+import SmoothScroll from "@/components/SmoothScroll";
 
 /* Display — geometric, characterful. Carries every headline. */
 const syne = Syne({
@@ -36,7 +37,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Asad Khan — Full Stack Developer",
+  title: "Asad Khan · Full Stack Developer",
   description:
     "Full Stack MERN Developer based in Lahore, Pakistan. Building modern, scalable web applications with React, Next.js, Node.js, and MongoDB.",
   keywords: [
@@ -50,7 +51,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Asad Khan" }],
   openGraph: {
-    title: "Asad Khan — Full Stack Developer",
+    title: "Asad Khan · Full Stack Developer",
     description: "Full Stack MERN Developer crafting modern web experiences.",
     type: "website",
   },
@@ -68,6 +69,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <MotionProvider>
+          <SmoothScroll />
           <Preloader />
           <ShaderField />
           <div className="vignette" aria-hidden="true" />

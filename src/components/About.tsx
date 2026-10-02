@@ -39,7 +39,7 @@ export default function About() {
           </Reveal>
 
           <div className="profile-body">
-            <p className="eyebrow">01 — Profile</p>
+            <p className="eyebrow">01 · Profile</p>
 
             <h2 className="section-title" style={{ marginTop: "1.5rem" }}>
               <SplitText text="Meet the guy" />
@@ -61,7 +61,7 @@ export default function About() {
                   color: "var(--bone)",
                 }}
               >
-                I build complete web products — from the first pixel of an
+                I build complete web products, from the first pixel of an
                 interface to the last line of the API behind it.
               </p>
             </Reveal>
@@ -75,7 +75,7 @@ export default function About() {
                   color: "var(--bone-45)",
                 }}
               >
-                I&rsquo;m Asad — a full stack developer working with founders
+                I&rsquo;m Asad, a full stack developer working with founders
                 and teams worldwide from Lahore, Pakistan. People hire me when
                 they want one person who can carry a product all the way:
                 design that sells the idea, and engineering that doesn&rsquo;t

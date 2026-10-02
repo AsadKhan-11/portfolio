@@ -10,7 +10,7 @@ const EMAIL = "mrasad10khan@gmail.com";
 
 const MENU_SOCIALS = [
   { label: "GitHub", href: "https://github.com/AsadKhan-11" },
-  { label: "LinkedIn", href: "https://linkedin.com" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/asad-khan-011h/" },
   { label: "X", href: "https://x.com/webforge_dev" },
   { label: "Instagram", href: "https://www.instagram.com/webforge.dev/" },
 ];
@@ -208,7 +208,7 @@ export default function Navbar() {
                 <div className="menu-aside-block">
                   <p className="mono-label">Based in</p>
                   <span className="menu-aside-value" suppressHydrationWarning>
-                    Lahore, Pakistan — {clock}
+                    Lahore, Pakistan · {clock}
                   </span>
                 </div>
 

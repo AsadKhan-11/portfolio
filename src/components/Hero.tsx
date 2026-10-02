@@ -106,7 +106,7 @@ export default function Hero() {
           animate={ready ? { opacity: 1 } : { opacity: 0 }}
           transition={{ delay: T.copy, duration: 0.8 }}
         >
-          Available for work — 2026
+          Available for work · 2026
         </motion.p>
 
         {/* ── Type + portrait lockup ── */}
@@ -240,7 +240,7 @@ export default function Hero() {
           <div className="hero-socials">
             {[
               { I: FiGithub, href: "https://github.com/AsadKhan-11", l: "GitHub" },
-              { I: FiLinkedin, href: "https://linkedin.com", l: "LinkedIn" },
+              { I: FiLinkedin, href: "https://www.linkedin.com/in/asad-khan-011h/", l: "LinkedIn" },
               { I: FiMail, href: "mailto:mrasad10khan@gmail.com", l: "Email" },
             ].map(({ I, href, l }) => (
               <Magnetic key={l} strength={0.4}>

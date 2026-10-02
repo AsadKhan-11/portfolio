@@ -18,7 +18,7 @@ const WORDMARK = "Asad Khan";
 
 const SOCIALS = [
   { I: FiGithub, href: "https://github.com/AsadKhan-11", l: "GitHub" },
-  { I: FiLinkedin, href: "https://linkedin.com", l: "LinkedIn" },
+  { I: FiLinkedin, href: "https://www.linkedin.com/in/asad-khan-011h/", l: "LinkedIn" },
   { I: FaXTwitter, href: "https://x.com/webforge_dev", l: "X" },
   { I: FiInstagram, href: "https://www.instagram.com/webforge.dev/", l: "Instagram" },
 ];
@@ -157,7 +157,7 @@ export default function Footer() {
         <div className="footer-bottom">
           <span className="mono-label">© {year} Asad Khan</span>
           <span className="mono-label" suppressHydrationWarning>
-            Lahore, PK — {clock}
+            Lahore, PK · {clock}
           </span>
           <span className="mono-label">Next.js · Three.js · Framer Motion</span>
           <Magnetic strength={0.3}>

@@ -16,7 +16,7 @@ const STEPS: { n: string; title: string; copy: string; Icon: IconType }[] = [
   {
     n: "01",
     title: "Discovery",
-    copy: "We work out what you actually need — goals, audience, constraints, budget. I'll tell you if a simpler build gets you there faster.",
+    copy: "We work out what you actually need: goals, audience, constraints, budget. I'll tell you if a simpler build gets you there faster.",
     Icon: FiMessageCircle,
   },
   {
@@ -40,7 +40,7 @@ const STEPS: { n: string; title: string; copy: string; Icon: IconType }[] = [
   {
     n: "05",
     title: "Launch",
-    copy: "Deployment, monitoring, and a handover you can act on. I stay reachable afterwards — launches always surface something.",
+    copy: "Deployment, monitoring, and a handover you can act on. I stay reachable afterwards, because launches always surface something.",
     Icon: FiSend,
   },
 ];
@@ -102,7 +102,7 @@ export default function Process() {
         <div className="process-layout">
           {/* Sticky title column */}
           <div className="process-aside">
-            <p className="eyebrow">07 — Process</p>
+            <p className="eyebrow">07 · Process</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="How" />
               <br />

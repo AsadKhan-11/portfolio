@@ -44,10 +44,10 @@ function validate(f: Fields): Partial<Record<keyof Fields, string>> {
   const e: Partial<Record<keyof Fields, string>> = {};
   if (!f.name.trim()) e.name = "Please add your name";
   if (!f.email.trim()) e.email = "Please add an email so I can reply";
-  else if (!EMAIL_RE.test(f.email.trim())) e.email = "Check this email — it looks incomplete";
+  else if (!EMAIL_RE.test(f.email.trim())) e.email = "Check this email, it looks incomplete";
   if (!f.message.trim()) e.message = "Tell me a little about the project";
   else if (f.message.trim().length < 20)
-    e.message = "A bit more detail helps — 20 characters minimum";
+    e.message = "A bit more detail helps, 20 characters minimum";
   return e;
 }
 
@@ -79,7 +79,7 @@ export default function ContactForm() {
   const showErr = (k: keyof Fields) => (touched[k] ? errors[k] : undefined);
 
   const mailto = useMemo(() => {
-    const subject = `Project enquiry — ${f.name.trim() || "Website"}`;
+    const subject = `Project enquiry: ${f.name.trim() || "Website"}`;
     const body = [
       `Name: ${f.name.trim()}`,
       `Email: ${f.email.trim()}`,
@@ -140,7 +140,7 @@ export default function ContactForm() {
         </span>
         <h3 className="form-sent-title">Your mail client is open</h3>
         <p className="form-sent-copy">
-          Everything is filled in — just hit send. If nothing opened, email me
+          Everything is filled in. Just hit send. If nothing opened, email me
           directly at{" "}
           <a href={`mailto:${EMAIL}`} className="link-sweep" style={{ color: "var(--bone)" }}>
             {EMAIL}
@@ -295,7 +295,7 @@ export default function ContactForm() {
           </button>
         </Magnetic>
         <p className="form-note">
-          Your details go straight to my inbox — never shared, never added to a
+          Your details go straight to my inbox. Never shared, never added to a
           mailing list.
         </p>
       </div>

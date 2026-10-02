@@ -111,6 +111,20 @@ body[data-cursor-active] * {
   background: var(--flame);
 }
 
+/* ═══════════ Smooth scroll (Lenis) ═══════════ */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 /* ═══════════ Layout ═══════════ */
 .shell {
   position: relative;
@@ -370,6 +384,55 @@ body[data-cursor-active] * {
   flex-direction: column;
   justify-content: flex-end;
   padding: var(--gutter);
+}
+
+/* Centre stage for the portrait's turntable spin-up and its flight
+   to the hero. Perspective lives here so rotateY reads as a figure
+   turning in depth, not a flat card. */
+.preloader-stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  perspective: 1300px;
+  pointer-events: none;
+}
+
+/* Same aspect as the hero's --head-w × --head-h box (ratio 1.62), so
+   the flight's end rect maps onto the hero avatar exactly. */
+.preloader-avatar {
+  position: relative;
+  width: clamp(170px, 24vw, 300px);
+  aspect-ratio: 1 / 1.62;
+}
+
+.preloader-avatar-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* Identical bottom dissolve to the hero portrait — at handoff the two
+   copies must be indistinguishable */
+.preloader-avatar-inner img {
+  -webkit-mask-image: linear-gradient(to bottom, #000 68%, transparent 97%);
+  mask-image: linear-gradient(to bottom, #000 68%, transparent 97%);
+}
+
+.preloader-glow {
+  position: absolute;
+  left: 50%;
+  top: 12%;
+  translate: -50% 0;
+  width: 190%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+      rgba(255, 92, 53, 0.22),
+      rgba(255, 92, 53, 0.06) 45%,
+      transparent 68%);
+  filter: blur(6px);
+  pointer-events: none;
 }
 
 .preloader-count {
@@ -1675,162 +1738,199 @@ body[data-cursor-active] * {
   color: var(--flame);
 }
 
-/* ═══════════ Work: stacked page deck ═══════════
-   Every page is sticky at the same viewport spot, so the next one in
-   flow scrolls up and turns over it — while the covered page tips
-   back from its top edge, shrinks and dims (driven per-page in
-   Work.tsx). Reads as leafing through a book of spreads. */
-.work-deck {
-  position: relative;
-  margin-top: clamp(2rem, 5vh, 3.5rem);
-}
-
-.work-page-slot {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  display: flex;
-  align-items: center;
-  perspective: 1400px;
-}
-
-.work-page {
-  width: 100%;
-  height: min(74svh, 640px);
+/* ═══════════ Work: rotating showcase ═══════════
+   One project on stage at a time: copy and controls on the left, a
+   browser-framed mockup on the right. The reel advances on a timer
+   (Work.tsx), pauses while hovered, and each bar fills across the
+   dwell time so the rhythm is legible. */
+.show-stage {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  overflow: hidden;
-  border: 1px solid var(--rule-strong);
-  border-radius: 14px;
-  background: linear-gradient(165deg,
-      rgba(18, 18, 23, 0.97),
-      rgba(10, 10, 13, 0.94));
-  /* The page rising over a dimmed one needs its own shadow to read
-     as a separate sheet */
-  box-shadow: 0 -24px 80px rgba(0, 0, 0, 0.5);
-  will-change: transform;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: center;
+  margin-top: clamp(2.5rem, 6vh, 4rem);
 }
 
-/* Alternate spreads flip the image to the other side */
-.work-page.is-reversed .work-page-visual {
-  order: 2;
+@media (min-width: 900px) {
+  .show-stage {
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(3rem, 5vw, 5rem);
+  }
+
+  /* Copy height varies per project; hold the stage steady */
+  .show-content {
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 
-.work-page.is-reversed .work-page-body {
-  order: 1;
-}
-
-.work-page-visual {
-  position: relative;
-  overflow: hidden;
-  min-height: 0;
-}
-
-.work-page-media {
-  height: 100%;
-}
-
-.work-page:hover .work-page-visual img {
-  transform: scale(1.05);
-}
-
-/* Diagonal shine that sweeps across the visual once per hover */
-.work-page-visual::before {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  z-index: 3;
-  background: linear-gradient(115deg,
-      transparent 42%,
-      rgba(244, 241, 234, 0.14) 50%,
-      transparent 58%);
-  transform: translateX(-110%);
-  pointer-events: none;
-}
-
-.work-page:hover .work-page-visual::before {
-  transition: transform 0.9s var(--ease-out-expo);
-  transform: translateX(110%);
-}
-
-/* Grounds the ghost numeral on any artwork */
-.work-page-visual::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 55%, rgba(8, 8, 10, 0.75));
-}
-
-.work-page-num {
-  position: absolute;
-  right: 1.5rem;
-  bottom: 0.75rem;
-  z-index: 2;
-  font-family: var(--f-display), sans-serif;
-  font-weight: 800;
-  font-size: clamp(4rem, 9vw, 8rem);
-  line-height: 0.8;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(244, 241, 234, 0.35);
-  pointer-events: none;
-}
-
-.work-page-body {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1.1rem;
-  padding: clamp(1.75rem, 3vw, 3rem);
-}
-
-.work-page-count {
+.show-count {
   color: var(--flame);
   letter-spacing: 0.22em;
 }
 
-.work-page-title {
+.show-title {
+  margin-top: 0.9rem;
   font-family: var(--f-display), sans-serif;
   font-weight: 800;
-  font-size: clamp(1.5rem, 2.8vw, 2.4rem);
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
   line-height: 1.02;
   letter-spacing: -0.03em;
   text-transform: uppercase;
   overflow-wrap: break-word;
 }
 
-.work-page-blurb {
-  max-width: 44ch;
-  font-size: 0.95rem;
+.show-blurb {
+  margin-top: 1rem;
+  max-width: 40ch;
+  font-size: 0.96rem;
   line-height: 1.75;
   color: var(--bone-45);
 }
 
-.work-page-links {
+.show-links {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-top: 0.5rem;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
 }
 
-.work-page-cta {
-  padding: 0.85rem 1.6rem;
+.show-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: clamp(2rem, 4vw, 2.75rem);
 }
 
+.show-bars {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.show-bar {
+  width: 56px;
+  height: 16px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* The clickable area is generous; the visible bar is a hairline */
+.show-bar-fill {
+  display: block;
+  width: 100%;
+  height: 3px;
+  border-radius: 99px;
+  background: var(--bone-08);
+  overflow: hidden;
+  position: relative;
+}
+
+.show-bar-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--flame);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.show-bar[data-active="true"] .show-bar-fill::after {
+  animation: show-fill linear forwards;
+  animation-duration: inherit;
+  animation-play-state: paused;
+}
+
+.show-bar .show-bar-fill[data-running="true"]::after {
+  animation-play-state: running;
+}
+
+@keyframes show-fill {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ── The framed mockup ── */
+.show-mock {
+  position: relative;
+}
+
+.show-mock-glow {
+  position: absolute;
+  inset: -12%;
+  background: radial-gradient(ellipse 60% 55% at 50% 55%,
+      rgba(255, 92, 53, 0.16),
+      transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.show-browser {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--rule-strong);
+  border-radius: 12px;
+  background: var(--ink-panel);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+.show-browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--rule);
+  background: var(--ink-raised);
+}
+
+.show-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.show-dots i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bone-15);
+}
+
+.show-dots i:first-child {
+  background: var(--flame);
+}
+
+.show-url {
+  flex: 1;
+  max-width: 260px;
+  padding: 0.3rem 0.9rem;
+  border-radius: 99px;
+  background: var(--ink);
+  border: 1px solid var(--rule);
+  font-family: var(--f-mono), monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  color: var(--bone-45);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.show-browser-body {
+  position: relative;
+}
+
+/* Mockup leads on small screens, copy follows */
 @media (max-width: 899px) {
-  .work-page {
-    grid-template-columns: 1fr;
-    height: auto;
-    max-height: 88svh;
-  }
-
-  /* One column: image always on top, whatever the spread's parity */
-  .work-page.is-reversed .work-page-visual {
+  .show-mock {
     order: -1;
-  }
-
-  .work-page-visual {
-    aspect-ratio: 16 / 10;
   }
 }
 

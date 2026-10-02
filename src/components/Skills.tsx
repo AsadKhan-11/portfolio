@@ -112,7 +112,7 @@ export default function Skills() {
       <div className="shell">
         <div className="section-head">
           <div>
-            <p className="eyebrow">03 — Stack</p>
+            <p className="eyebrow">03 · Stack</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="The" />
               <br />
@@ -124,7 +124,7 @@ export default function Skills() {
           <Reveal delay={0.15}>
             <p className="lede">
               What I reach for, and how confidently. These numbers are my own
-              honest read — not a marketing exercise.
+              honest read, not a marketing exercise.
             </p>
           </Reveal>
         </div>

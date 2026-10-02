@@ -12,7 +12,7 @@ const FAQS = [
   },
   {
     q: "How long will it take?",
-    a: "A marketing site is usually 1–2 weeks. A full-stack application is typically 4–8 weeks depending on how many features it has. I'll give you a realistic timeline up front — and if I think a deadline isn't achievable, I'll say so before we start rather than after.",
+    a: "A marketing site is usually 1–2 weeks. A full-stack application is typically 4–8 weeks depending on how many features it has. I'll give you a realistic timeline up front, and if I think a deadline isn't achievable, I'll say so before we start rather than after.",
   },
   {
     q: "Do you work with clients outside Pakistan?",
@@ -20,11 +20,11 @@ const FAQS = [
   },
   {
     q: "Can you work with my existing codebase or team?",
-    a: "Yes. I've picked up other people's React and Node projects plenty of times. I'll start by reading the code and telling you honestly what shape it's in — sometimes the right answer is a refactor rather than a rebuild, and that's usually the cheaper one.",
+    a: "Yes. I've picked up other people's React and Node projects plenty of times. I'll start by reading the code and telling you honestly what shape it's in. Sometimes the right answer is a refactor rather than a rebuild, and that's usually the cheaper one.",
   },
   {
     q: "Who owns the code, and will I be locked in?",
-    a: "You own everything once the final invoice is settled — repository, assets, and any accounts set up for the project. No proprietary framework, no hosting you can't move, nothing that requires you to keep paying me to keep the site running.",
+    a: "You own everything once the final invoice is settled: repository, assets, and any accounts set up for the project. No proprietary framework, no hosting you can't move, nothing that requires you to keep paying me to keep the site running.",
   },
   {
     q: "What happens after launch?",
@@ -97,7 +97,7 @@ export default function Faq() {
       <div className="shell">
         <div className="section-head">
           <div>
-            <p className="eyebrow">09 — FAQ</p>
+            <p className="eyebrow">09 · FAQ</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="Before you" />
               <br />
@@ -132,8 +132,8 @@ export default function Faq() {
             Something not covered here?{" "}
             <a href="#contact" className="link-sweep" style={{ color: "var(--flame)" }}>
               Ask me directly
-            </a>{" "}
-            — I reply within a day.
+            </a>.
+            I reply within a day.
           </p>
         </Reveal>
       </div>

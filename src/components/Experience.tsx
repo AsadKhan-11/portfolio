@@ -20,7 +20,7 @@ type Role = {
 const ROLES: Role[] = [
   {
     year: "24",
-    period: "2024 — Present",
+    period: "2024 – Present",
     title: "Freelance Web Developer",
     org: "Self-employed",
     copy: "Building custom web products for clients worldwide. Full-stack MERN applications, AI-assisted features, and 10+ delivered projects across e-commerce, SaaS and business sites.",
@@ -30,7 +30,7 @@ const ROLES: Role[] = [
   },
   {
     year: "23",
-    period: "2023 — 2024",
+    period: "2023 – 2024",
     title: "Front-End Developer",
     org: "Project-based",
     copy: "Interactive, responsive interfaces in React and modern CSS. Focused on performance budgets, accessibility, and a component architecture that survived handover.",
@@ -124,7 +124,7 @@ export default function Experience() {
       <div className="shell">
         <div className="path-layout">
           <div className="path-sticky">
-            <p className="eyebrow">06 — Path</p>
+            <p className="eyebrow">06 · Path</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="Where" />
               <br />
