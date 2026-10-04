@@ -31,6 +31,16 @@ const PROJECTS = [
     blurb:
       "A Scottsdale clinic in warm ivory and serif. Unhurried, personal, and built so booking a consultation feels as considered as the treatments themselves.",
   },
+  {
+    n: "03",
+    slot: "/work/03-aurelle.jpg",
+    image: "/work/03-aurelle.jpg",
+    title: "Aurelle",
+    domain: "aurelle-mauve-two.vercel.app",
+    url: "https://aurelle-mauve-two.vercel.app",
+    blurb:
+      "Advanced aesthetics and skin wellness in soft cream: arched editorial photography, a personalization-first philosophy, and a consultation flow that feels effortless.",
+  },
 ];
 
 const EASE = [0.16, 1, 0.3, 1] as const;
