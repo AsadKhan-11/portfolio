@@ -1,18 +1,24 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { AnimatePresence, motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { FiArrowDownRight, FiGithub, FiLinkedin, FiMail, FiStar } from "react-icons/fi";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import {
+  FiArrowDownRight,
+  FiGithub,
+  FiLinkedin,
+  FiMail,
+  FiStar,
+} from "react-icons/fi";
 import { Magnetic } from "./animations";
 import { useIntroDone } from "./intro";
-
-const ROLES = [
-  "MERN Developer",
-  "React Specialist",
-  "API Architect",
-  "Interface Engineer",
-];
+import { useMediaQuery } from "./useClient";
 
 const TOOLS = ["React", "Next.js", "Node", "MongoDB", "TypeScript"];
 
@@ -22,45 +28,82 @@ const CLIENTS = ["SM", "JR", "EC", "MF"];
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/*
-  Entrance beats, counted from the moment the intro curtain clears.
-  Portrait first, then the name rising from behind it, then the copy.
-*/
-const T = {
-  avatar: 0.2,
-  lead: 0.85,
-  mark: 1,
-  copy: 1.5,
-  cue: 2,
-};
+/* How long each product screen holds before the mockup moves on */
+const SCREEN_MS = 3400;
 
 /*
-  Splits a word into letters spread edge to edge. The gaps are what make
-  the portrait readable on top of the type — it lands in negative space
-  instead of eating a glyph.
+  The product reel inside the browser frame. Each entry is a different
+  kind of build, so the first thing a visitor parses is the range of
+  work, not a single screenshot.
 */
-function SpreadWord({
+const SCREENS = [
+  {
+    key: "website",
+    label: "Website",
+    caption: "Marketing sites that load fast and book work",
+  },
+  {
+    key: "portal",
+    label: "Client portal",
+    caption: "Portals your customers sign into every day",
+  },
+  {
+    key: "automation",
+    label: "Automation",
+    caption: "Flows that quietly remove the busywork",
+  },
+  {
+    key: "dashboard",
+    label: "Dashboard",
+    caption: "Dashboards that show the numbers that matter",
+  },
+];
+
+/* Entrance beats, counted from the moment the intro curtain clears */
+const T = {
+  status: 0.15,
+  head: 0.3,
+  lede: 0.85,
+  cta: 1,
+  mock: 0.5,
+  base: 1.2,
+  cue: 1.6,
+};
+
+/* Word-by-word mask reveal, gated on `play` — SplitText triggers on
+   viewport entry, which would fire unseen behind the intro panel. */
+function MaskWords({
   text,
-  className,
   delay = 0,
   play,
 }: {
   text: string;
-  className: string;
   delay?: number;
   play: boolean;
 }) {
+  const words = text.split(" ");
   return (
-    <span className={className} aria-label={text}>
-      {text.split("").map((ch, i) => (
-        <span key={`${ch}-${i}`} className="hero-letter" aria-hidden="true">
+    <span aria-label={text} style={{ display: "inline" }}>
+      {words.map((word, i) => (
+        <span
+          key={`${word}-${i}`}
+          aria-hidden="true"
+          style={{
+            display: "inline-block",
+            overflow: "hidden",
+            verticalAlign: "bottom",
+            paddingBottom: "0.1em",
+            marginBottom: "-0.1em",
+          }}
+        >
           <motion.span
             style={{ display: "inline-block", willChange: "transform" }}
             initial={{ y: "115%" }}
             animate={play ? { y: 0 } : { y: "115%" }}
-            transition={{ duration: 1, delay: delay + i * 0.06, ease: EASE }}
+            transition={{ duration: 0.9, delay: delay + i * 0.06, ease: EASE }}
           >
-            {ch}
+            {word}
+            {i < words.length - 1 ? " " : ""}
           </motion.span>
         </span>
       ))}
@@ -68,138 +111,340 @@ function SpreadWord({
   );
 }
 
+/* Shared stagger for every skeleton screen */
+const pane = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05, delayChildren: 0.08 },
+  },
+  exit: { opacity: 0, transition: { duration: 0.22 } },
+};
+
+const el = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE } },
+};
+
+const grow = {
+  hidden: { opacity: 0, scaleY: 0 },
+  show: { opacity: 1, scaleY: 1, transition: { duration: 0.5, ease: EASE } },
+};
+
+function Bar({ w, tone }: { w: string; tone?: "hi" | "accent" }) {
+  return (
+    <motion.span
+      variants={el}
+      className="sk-bar"
+      data-tone={tone}
+      style={{ width: w }}
+    />
+  );
+}
+
+function WebsiteScreen() {
+  return (
+    <>
+      <motion.div variants={el} className="sk-nav">
+        <span className="sk-dot" />
+        <span className="sk-bar" style={{ width: "14%" }} />
+        <span className="sk-nav-links">
+          <span className="sk-bar" style={{ width: 26 }} />
+          <span className="sk-bar" style={{ width: 26 }} />
+          <span className="sk-bar" style={{ width: 26 }} />
+        </span>
+        <span className="sk-pill sk-pill-solid" style={{ width: 54 }} />
+      </motion.div>
+      <div className="sk-split">
+        <div className="sk-col-copy">
+          <Bar w="88%" tone="hi" />
+          <Bar w="64%" tone="hi" />
+          <Bar w="78%" />
+          <Bar w="52%" />
+          <motion.div variants={el} className="sk-row">
+            <span className="sk-pill sk-pill-solid" style={{ width: 74 }} />
+            <span className="sk-pill" style={{ width: 64 }} />
+          </motion.div>
+        </div>
+        <motion.div variants={el} className="sk-card sk-card-media">
+          <span className="sk-media" />
+          <span className="sk-bar" style={{ width: "70%" }} />
+          <span className="sk-bar" style={{ width: "45%" }} />
+        </motion.div>
+      </div>
+    </>
+  );
+}
+
+function PortalScreen() {
+  return (
+    <>
+      <motion.div variants={el} className="sk-nav">
+        <span className="sk-avatar" />
+        <span className="sk-bar" style={{ width: "22%" }} />
+        <span className="sk-pill" style={{ width: 58, marginLeft: "auto" }} />
+      </motion.div>
+      {[72, 58, 66, 48].map((w, i) => (
+        <motion.div variants={el} className="sk-list-row" key={i}>
+          <span className="sk-sq" />
+          <span className="sk-bar" style={{ width: `${w}%` }} />
+          <span className="sk-pill" data-state={i === 1 ? "on" : undefined} />
+        </motion.div>
+      ))}
+    </>
+  );
+}
+
+function AutomationScreen() {
+  return (
+    <>
+      <motion.div variants={el} className="sk-nav">
+        <span className="sk-bar" style={{ width: "30%" }} />
+        <span className="sk-pill sk-pill-solid" style={{ width: 54, marginLeft: "auto" }} />
+      </motion.div>
+      <div className="sk-flow">
+        {["Trigger", "Action", "Done"].map((step, i) => (
+          <motion.div variants={el} className="sk-flow-step" key={step}>
+            <span className="sk-node" data-last={i === 2 || undefined}>
+              <span className="sk-sq" />
+              <span className="sk-bar" style={{ width: "72%" }} />
+            </span>
+            {i < 2 && <span className="sk-link" aria-hidden="true" />}
+          </motion.div>
+        ))}
+      </div>
+      {[64, 50].map((w, i) => (
+        <motion.div variants={el} className="sk-list-row" key={i}>
+          <span className="sk-toggle" data-on={i === 0 || undefined} />
+          <span className="sk-bar" style={{ width: `${w}%` }} />
+        </motion.div>
+      ))}
+    </>
+  );
+}
+
+function DashboardScreen() {
+  return (
+    <>
+      <div className="sk-stats">
+        {[0, 1, 2, 3].map((i) => (
+          <motion.div variants={el} className="sk-card sk-stat" key={i}>
+            <span className="sk-bar" style={{ width: "58%" }} />
+            <span className="sk-bar sk-num" data-tone={i === 0 ? "accent" : "hi"} />
+          </motion.div>
+        ))}
+      </div>
+      <motion.div variants={el} className="sk-card sk-chart-card">
+        <div className="sk-chart">
+          {[38, 62, 46, 80, 58, 92, 70, 100].map((h, i) => (
+            <motion.span
+              key={i}
+              variants={grow}
+              className="sk-chart-col"
+              data-peak={h === 100 || undefined}
+              style={{ height: `${h}%` }}
+            />
+          ))}
+        </div>
+      </motion.div>
+    </>
+  );
+}
+
+const SCREEN_RENDER: Record<string, () => React.ReactNode> = {
+  website: WebsiteScreen,
+  portal: PortalScreen,
+  automation: AutomationScreen,
+  dashboard: DashboardScreen,
+};
+
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
-  const [role, setRole] = useState(0);
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
   const ready = useIntroDone();
+  const still = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
-
-  const rawType = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const rawPortrait = useTransform(scrollYProgress, [0, 1], [0, 70]);
-  const typeY = useSpring(rawType, { stiffness: 90, damping: 26 });
-  const portraitY = useSpring(rawPortrait, { stiffness: 90, damping: 26 });
+  const rawCopy = useTransform(scrollYProgress, [0, 1], [0, -70]);
+  const rawMock = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const copyY = useSpring(rawCopy, { stiffness: 90, damping: 26 });
+  const mockY = useSpring(rawMock, { stiffness: 90, damping: 26 });
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
-  /*
-    Cycle the role line so the hero never sits completely still. Paused
-    while the tab is backgrounded — timers keep firing there but the
-    exit animations can't, so rotations would otherwise queue up.
-  */
+  /* Pointer tilt — the frame leans toward the cursor like a card held
+     in hand. Springs keep it from twitching. */
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const rotateX = useSpring(rx, { stiffness: 120, damping: 18 });
+  const rotateY = useSpring(ry, { stiffness: 120, damping: 18 });
+
+  const onTilt = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (still) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    ry.set(((e.clientX - r.left) / r.width - 0.5) * 9);
+    rx.set((0.5 - (e.clientY - r.top) / r.height) * 7);
+  };
+  const resetTilt = () => {
+    rx.set(0);
+    ry.set(0);
+  };
+
+  /* Auto-advance the product reel — paused on hover, reduced motion,
+     or a backgrounded tab. Re-runs on `active` so a manual pick also
+     resets the clock. */
   useEffect(() => {
+    if (paused || still || !ready) return;
     const id = setInterval(() => {
-      if (document.hidden) return;
-      setRole((r) => (r + 1) % ROLES.length);
-    }, 2600);
+      if (!document.hidden) setActive((i) => (i + 1) % SCREENS.length);
+    }, SCREEN_MS);
     return () => clearInterval(id);
-  }, []);
+  }, [paused, still, ready, active]);
+
+  const screen = SCREENS[active];
+  const Screen = SCREEN_RENDER[screen.key];
 
   return (
     <section ref={ref} id="home" className="hero">
       <div className="shell" style={{ position: "relative", zIndex: 2, width: "100%" }}>
-        <motion.p
-          className="eyebrow hero-eyebrow"
-          initial={{ opacity: 0 }}
-          animate={ready ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: T.copy, duration: 0.8 }}
-        >
-          Available for work · 2026
-        </motion.p>
-
-        {/* ── Type + portrait lockup ── */}
-        <div className="hero-stack">
-          {/* Portrait is anchored to the type, not the section — so the
-              flank below can grow without dragging it down. */}
-          <div className="hero-lockup">
-            <motion.h1 className="hero-heading" style={{ y: typeY }}>
-              <SpreadWord
-                text="WebForge"
-                className="hero-word hero-word-lead"
-                delay={T.lead}
-                play={ready}
-              />
-              <SpreadWord
-                text="Digital"
-                className="hero-word hero-word-mark"
-                delay={T.mark}
-                play={ready}
-              />
-            </motion.h1>
-
-            <motion.div
-              className="hero-avatar"
-              style={{ y: portraitY }}
-              initial={{ opacity: 0, scale: 1.1 }}
-              animate={ready ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.1 }}
-              transition={{ duration: 1.1, delay: T.avatar, ease: EASE }}
+        <div className="hero-grid">
+          {/* ── Copy ── */}
+          <motion.div className="hero-copy" style={{ y: copyY }}>
+            <motion.p
+              className="hero-status"
+              initial={{ opacity: 0 }}
+              animate={ready ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ delay: T.status, duration: 0.8 }}
             >
-              <span className="hero-avatar-glow" aria-hidden="true" />
-              <Image
-                src="/hero-avatar.png"
-                alt="Illustrated portrait of Asad Khan"
-                fill
-                priority
-                sizes="(max-width: 900px) 40vw, 20vw"
-                style={{ objectFit: "contain", objectPosition: "bottom" }}
-              />
-            </motion.div>
-          </div>
+              <span className="hero-status-dot" aria-hidden="true" />
+              Taking on new builds · 2026
+            </motion.p>
 
-          {/* Flanks the portrait on desktop, falls under the type on mobile */}
-          <div className="hero-flank">
-            <motion.div
-              className="hero-flank-col hero-flank-l"
-              initial={{ opacity: 0, y: 18 }}
-              animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-              transition={{ delay: T.copy + 0.08, duration: 0.9, ease: EASE }}
-            >
-              <p className="hero-lede">
-                A full stack studio turning ideas into fast,{" "}
-                <span className="serif-em">considered</span> web products.
-              </p>
-              <a href="#work" className="link-sweep hero-quiet-link" data-cursor="See work">
-                Selected work <FiArrowDownRight />
-              </a>
-            </motion.div>
-
-            <motion.div
-              className="hero-flank-col hero-flank-r"
-              initial={{ opacity: 0, y: 18 }}
-              animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-              transition={{ delay: T.copy + 0.18, duration: 0.9, ease: EASE }}
-            >
-              {/* Only the current role is mounted, so the stack can never
-                  pile up if motion is unavailable. */}
-              <span className="hero-role">
-                {/* Invisible sizer holds the box open to the longest role
-                    so no label is ever clipped mid-word. */}
-                <span aria-hidden="true" className="hero-role-sizer">
-                  {ROLES.reduce((a, b) => (b.length > a.length ? b : a))}
-                </span>
-                <AnimatePresence mode="popLayout" initial={false}>
-                  <motion.span
-                    key={ROLES[role]}
-                    className="hero-role-value"
-                    initial={{ y: "100%" }}
-                    animate={{ y: "0%" }}
-                    exit={{ y: "-100%" }}
-                    transition={{ duration: 0.7, ease: EASE }}
-                  >
-                    {ROLES[role]}
-                  </motion.span>
-                </AnimatePresence>
+            <h1 className="hero-headline">
+              <MaskWords text="We forge the web products" delay={T.head} play={ready} />{" "}
+              <span className="serif-em" style={{ color: "var(--flame)" }}>
+                <MaskWords text="your business runs on." delay={T.head + 0.3} play={ready} />
               </span>
+            </h1>
 
+            <motion.p
+              className="hero-lede"
+              initial={{ opacity: 0, y: 18 }}
+              animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+              transition={{ delay: T.lede, duration: 0.9, ease: EASE }}
+            >
+              One studio for design, engineering, and launch. Sites, client
+              portals, and full products, built fast and handed over fully
+              yours.
+            </motion.p>
+
+            <motion.div
+              className="hero-cta-row"
+              initial={{ opacity: 0, y: 18 }}
+              animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+              transition={{ delay: T.cta, duration: 0.9, ease: EASE }}
+            >
               <Magnetic strength={0.3}>
                 <a href="#contact" className="btn btn-solid">
                   <span>Start a project</span>
                 </a>
               </Magnetic>
+              <a href="#work" className="link-sweep hero-quiet-link" data-cursor="See work">
+                See the work <FiArrowDownRight />
+              </a>
             </motion.div>
-          </div>
+          </motion.div>
+
+          {/* ── Product mockup ── */}
+          <motion.div
+            className="hero-mock"
+            style={{ y: mockY }}
+            initial={{ opacity: 0, y: 44 }}
+            animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 44 }}
+            transition={{ delay: T.mock, duration: 1.1, ease: EASE }}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => {
+              setPaused(false);
+              resetTilt();
+            }}
+          >
+            <span className="hm-glow" aria-hidden="true" />
+            <motion.div
+              className="hm-tilt"
+              style={{ rotateX, rotateY, transformPerspective: 1100 }}
+              onPointerMove={onTilt}
+            >
+              <div className="hm-browser">
+                <div className="hm-bar">
+                  <span className="hm-dots" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                  <span className="hm-url">app.yourbusiness.com</span>
+                  <span className="hm-live">
+                    <i aria-hidden="true" /> Live
+                  </span>
+                </div>
+
+                <div className="hm-body">
+                  <div className="hm-rail" role="tablist" aria-label="Build types">
+                    {SCREENS.map((s, i) => (
+                      <button
+                        key={s.key}
+                        className="hm-tab"
+                        role="tab"
+                        aria-selected={i === active}
+                        data-active={i === active}
+                        onClick={() => setActive(i)}
+                      >
+                        <span className="hm-tab-n">{String(i + 1).padStart(2, "0")}</span>
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="hm-pane-wrap">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={screen.key}
+                        className="hm-pane"
+                        variants={pane}
+                        initial="hidden"
+                        animate="show"
+                        exit="exit"
+                      >
+                        <Screen />
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                </div>
+
+                <div className="hm-chips" aria-hidden="true">
+                  <span>1.2s loads</span>
+                  <span>98 / 100 Lighthouse</span>
+                  <span>Fully yours</span>
+                </div>
+              </div>
+            </motion.div>
+
+            <div className="hm-caption" aria-live="polite">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={screen.key}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.35, ease: EASE }}
+                >
+                  {screen.caption}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+          </motion.div>
         </div>
 
         {/* ── Proof strip ── */}
@@ -207,7 +452,7 @@ export default function Hero() {
           className="hero-base"
           initial={{ opacity: 0, y: 18 }}
           animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-          transition={{ delay: T.copy + 0.3, duration: 0.9, ease: EASE }}
+          transition={{ delay: T.base, duration: 0.9, ease: EASE }}
         >
           <div className="hero-proof">
             <div className="hero-faces" aria-hidden="true">

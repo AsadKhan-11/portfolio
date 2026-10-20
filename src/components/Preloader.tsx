@@ -8,13 +8,13 @@ import { INTRO_EVENT, INTRO_KEY as SESSION_KEY } from "./intro";
 /*
   Intro sequence, in three beats:
 
-  1. The hero portrait spins up from nothing on a 3D turntable while
+  1. The anvil mark spins up from nothing on a 3D turntable while
      the counter races 00 → 100.
-  2. It flies to the exact spot the hero's own portrait occupies
-     (measured live from `.hero-avatar`, landing at ×1.1 — the same
-     scale the hero entrance starts from).
+  2. It flies to the exact spot the navbar keeps its own mark
+     (measured live from `.nav-mark`), shrinking into place like a
+     stamp coming down.
   3. The ink panel dissolves. The intro event fires at landing, so the
-     hero fades its copy in underneath ours while we fade out — one
+     navbar fades in underneath the flown copy while we fade out — one
      continuous settle instead of a swap.
 
   Runs once per browser session so repeat navigation isn't punished.
@@ -72,8 +72,8 @@ export default function Preloader() {
     const t0 = performance.now();
     let raf = 0;
 
-    /* Launch the flight: measure where the hero keeps its portrait and
-       head for it. If the hero ever stops rendering one, skip the
+    /* Launch the flight: measure where the navbar keeps its mark and
+       head for it. If the navbar ever stops rendering one, skip the
        theatrics and leave gracefully. */
     const fly = () => {
       /* The scroll lock hides the scrollbar; release it before measuring
@@ -81,22 +81,30 @@ export default function Preloader() {
       document.body.style.overflow = "";
 
       const from = avatarRef.current?.getBoundingClientRect();
-      const target = document.querySelector<HTMLElement>(".hero-avatar");
+      const target = document.querySelector<HTMLElement>(".nav-mark");
       const to = target?.getBoundingClientRect();
       if (!from || !target || !to || from.width === 0) {
         finalize();
         return;
       }
+      /* The navbar waits for the intro at opacity 0, in its final
+         position — but guard against any ancestor transform (an
+         entrance mid-flight would skew the measured rect). */
+      let ox = 0;
+      let oy = 0;
+      const header = target.closest("header");
+      if (header) {
+        const t = getComputedStyle(header).transform;
+        if (t && t !== "none") {
+          const m = new DOMMatrixReadOnly(t);
+          ox = m.m41;
+          oy = m.m42;
+        }
+      }
       setFlight({
-        /* Rect centre survives the hero's centre-origin scale; its width
-           does not — the avatar waits in its pre-entrance scale(1.1)
-           state, so rect width is 10% inflated. offsetWidth is the true
-           layout width. */
-        x: to.left + to.width / 2 - (from.left + from.width / 2),
-        y: to.top + to.height / 2 - (from.top + from.height / 2),
-        /* ×1.1 — land matching the hero entrance's own starting scale,
-           so the settle continues seamlessly under the crossfade */
-        scale: (target.offsetWidth * 1.1) / from.width,
+        x: to.left - ox + to.width / 2 - (from.left + from.width / 2),
+        y: to.top - oy + to.height / 2 - (from.top + from.height / 2),
+        scale: target.offsetWidth / from.width,
       });
     };
 
@@ -144,7 +152,7 @@ export default function Preloader() {
           exit={{ opacity: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
         >
-          {/* ── Centre stage: the portrait on a 3D turntable ── */}
+          {/* ── Centre stage: the anvil mark on a 3D turntable ── */}
           <div className="preloader-stage" aria-hidden="true">
             <motion.div
               ref={avatarRef}
@@ -166,12 +174,12 @@ export default function Preloader() {
                   transition={{ duration: 0.8, delay: flight ? 0 : 0.5 }}
                 />
                 <Image
-                  src="/hero-avatar.png"
+                  src="/brand/mark-light.png"
                   alt=""
                   fill
                   priority
-                  sizes="(max-width: 900px) 40vw, 20vw"
-                  style={{ objectFit: "contain", objectPosition: "bottom" }}
+                  sizes="(max-width: 900px) 50vw, 26vw"
+                  style={{ objectFit: "contain" }}
                 />
               </motion.div>
             </motion.div>
@@ -191,14 +199,6 @@ export default function Preloader() {
             }}
           >
             <div>
-              <Image
-                src="/brand/mark-light.png"
-                alt=""
-                width={46}
-                height={28}
-                priority
-                style={{ display: "block", marginBottom: "1rem" }}
-              />
               <p className="mono-label" style={{ marginBottom: "1.25rem" }}>
                 WebForge Digital · Full Stack Studio
               </p>

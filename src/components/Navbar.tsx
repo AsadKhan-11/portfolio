@@ -82,11 +82,12 @@ export default function Navbar() {
       <motion.header
         className="nav-bar"
         data-scrolled={scrolled}
-        /* Drops in once the intro curtain is clear — behind it, the slide
-           would play unseen. */
-        initial={{ y: -90 }}
-        animate={ready ? { y: 0 } : { y: -90 }}
-        transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+        /* Fades in place once the intro curtain is clear — the intro's
+           anvil lands exactly on `.nav-mark`, so the bar must wait in
+           its final position, not slide into it. */
+        initial={{ opacity: 0 }}
+        animate={ready ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
       >
         <div className="nav-inner">
           <Magnetic strength={0.25}>
@@ -110,6 +111,7 @@ export default function Navbar() {
               <Image
                 src="/brand/mark-light.png"
                 alt=""
+                className="nav-mark"
                 width={32}
                 height={19}
                 priority
