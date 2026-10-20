@@ -116,13 +116,13 @@ export default function Hero() {
           <div className="hero-lockup">
             <motion.h1 className="hero-heading" style={{ y: typeY }}>
               <SpreadWord
-                text="Asad"
+                text="WebForge"
                 className="hero-word hero-word-lead"
                 delay={T.lead}
                 play={ready}
               />
               <SpreadWord
-                text="Khan"
+                text="Digital"
                 className="hero-word hero-word-mark"
                 delay={T.mark}
                 play={ready}
@@ -157,7 +157,7 @@ export default function Hero() {
               transition={{ delay: T.copy + 0.08, duration: 0.9, ease: EASE }}
             >
               <p className="hero-lede">
-                I help founders and teams turn ideas into fast,{" "}
+                A full stack studio turning ideas into fast,{" "}
                 <span className="serif-em">considered</span> web products.
               </p>
               <a href="#work" className="link-sweep hero-quiet-link" data-cursor="See work">

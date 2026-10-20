@@ -37,10 +37,12 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Asad Khan · Full Stack Developer",
+  title: "WebForge Digital · Full Stack Web Studio",
   description:
-    "Full Stack MERN Developer based in Lahore, Pakistan. Building modern, scalable web applications with React, Next.js, Node.js, and MongoDB.",
+    "WebForge Digital is the full stack studio of Asad Khan. Design and engineering under one roof: fast, considered web products built with React, Next.js, Node.js, and MongoDB.",
   keywords: [
+    "WebForge Digital",
+    "Web Studio",
     "Full Stack Developer",
     "MERN Stack",
     "React Developer",
@@ -51,9 +53,26 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Asad Khan" }],
   openGraph: {
-    title: "Asad Khan · Full Stack Developer",
-    description: "Full Stack MERN Developer crafting modern web experiences.",
+    title: "WebForge Digital · Full Stack Web Studio",
+    description:
+      "Design and engineering under one roof. Fixed quotes, honest timelines, and web products you fully own.",
     type: "website",
+    siteName: "WebForge Digital",
+    images: [
+      {
+        url: "/brand/og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "WebForge Digital",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "WebForge Digital · Full Stack Web Studio",
+    description:
+      "Design and engineering under one roof. Fixed quotes, honest timelines, and web products you fully own.",
+    images: ["/brand/og.jpg"],
   },
 };
 

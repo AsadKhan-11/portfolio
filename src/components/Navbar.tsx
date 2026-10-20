@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 import { Magnetic } from "./animations";
@@ -106,15 +107,18 @@ export default function Navbar() {
                 whiteSpace: "nowrap",
               }}
             >
-              Asad Khan
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  background: "var(--flame)",
-                }}
+              <Image
+                src="/brand/mark-light.png"
+                alt=""
+                width={32}
+                height={19}
+                priority
+                style={{ display: "block" }}
               />
+              WebForge
+              <span style={{ color: "var(--bone-45)", fontWeight: 600 }}>
+                Digital
+              </span>
             </a>
           </Magnetic>
 

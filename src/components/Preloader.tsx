@@ -191,8 +191,16 @@ export default function Preloader() {
             }}
           >
             <div>
+              <Image
+                src="/brand/mark-light.png"
+                alt=""
+                width={46}
+                height={28}
+                priority
+                style={{ display: "block", marginBottom: "1rem" }}
+              />
               <p className="mono-label" style={{ marginBottom: "1.25rem" }}>
-                Asad Khan · Full Stack Developer
+                WebForge Digital · Full Stack Studio
               </p>
               <p
                 className="preloader-count"
@@ -207,7 +215,7 @@ export default function Preloader() {
             >
               Lahore, PK
               <br />
-              <span style={{ color: "var(--flame)" }}>Loading experience</span>
+              <span style={{ color: "var(--flame)" }}>Forging the experience</span>
             </p>
           </motion.div>
 

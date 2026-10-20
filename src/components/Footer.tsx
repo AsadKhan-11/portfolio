@@ -14,7 +14,7 @@ const LINKS = [
   { label: "Contact", href: "#contact" },
 ];
 
-const WORDMARK = "Asad Khan";
+const WORDMARK = "WebForge Digital";
 
 const SOCIALS = [
   { I: FiGithub, href: "https://github.com/AsadKhan-11", l: "GitHub" },
@@ -155,7 +155,7 @@ export default function Footer() {
         </a>
 
         <div className="footer-bottom">
-          <span className="mono-label">© {year} Asad Khan</span>
+          <span className="mono-label">© {year} WebForge Digital</span>
           <span className="mono-label" suppressHydrationWarning>
             Lahore, PK · {clock}
           </span>

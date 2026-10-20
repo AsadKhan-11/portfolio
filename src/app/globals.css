@@ -852,7 +852,9 @@ html.lenis body {
 .hero {
   --w-lead: clamp(2.3rem, 8vw, 7rem);
   --w-mark: clamp(3rem, 13vw, 11.5rem);
-  --head-w: clamp(140px, 19.5vw, 310px);
+  /* Slimmer than the old name lockup — "WebForge" packs its letters
+     tighter than "Asad" did, so the face needs less of the line. */
+  --head-w: clamp(128px, 17vw, 272px);
   /* Source asset is 760 × 1231 */
   --head-h: calc(var(--head-w) * 1.62);
 
@@ -2268,10 +2270,9 @@ html.lenis body {
 }
 
 /* ═══════════ Footer wordmark ═══════════
-   Kept deliberately smaller than a viewport-fitted "hero" wordmark
-   would be — at 9.5rem "Asad Khan" only fits on one line above
-   roughly 1800px, so the vw factor is tuned down to hold one line
-   from mobile up. */
+   Sized for "WebForge Digital" (16 characters, roughly 16.7em of
+   Syne 800) — the vw factor and cap are tuned so the single line
+   fits inside the shell from mobile up. */
 .footer-mark-link {
   position: relative;
   display: block;
@@ -2285,7 +2286,7 @@ html.lenis body {
   white-space: nowrap;
   font-family: var(--f-display), sans-serif;
   font-weight: 800;
-  font-size: clamp(1.6rem, 7.2vw, 5.75rem);
+  font-size: clamp(1rem, 5vw, 4.5rem);
   line-height: 0.8;
   letter-spacing: -0.04em;
   text-transform: uppercase;
