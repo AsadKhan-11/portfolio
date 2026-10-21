@@ -118,7 +118,10 @@ export default function Navbar() {
                 style={{ display: "block" }}
               />
               WebForge
-              <span style={{ color: "var(--bone-45)", fontWeight: 600 }}>
+              <span
+                className="nav-digital"
+                style={{ color: "var(--bone-45)", fontWeight: 600 }}
+              >
                 Digital
               </span>
             </a>
