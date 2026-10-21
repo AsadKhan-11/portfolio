@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import type { IconType } from "react-icons";
-import { FiCode, FiMonitor } from "react-icons/fi";
+import { FiBriefcase, FiCode, FiMonitor } from "react-icons/fi";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Reveal, SplitText } from "./animations";
 
@@ -19,11 +19,21 @@ type Role = {
 
 const ROLES: Role[] = [
   {
+    year: "26",
+    period: "2026 – Present",
+    title: "Full Stack Developer",
+    org: "MyntorX",
+    copy: "Shipping production features on a team: React interfaces, Node services, and data models that real users lean on every day. The studio discipline, applied at company scale.",
+    stack: ["React", "Next.js", "Node.js", "MongoDB", "TypeScript"],
+    Icon: FiBriefcase,
+    current: true,
+  },
+  {
     year: "24",
     period: "2024 – Present",
-    title: "Freelance Web Developer",
-    org: "Self-employed",
-    copy: "Building custom web products for clients worldwide. Full-stack MERN applications, AI-assisted features, and 10+ delivered projects across e-commerce, SaaS and business sites.",
+    title: "Founder & Developer",
+    org: "WebForge Digital",
+    copy: "My own studio, running alongside everything else. Custom web products for clients worldwide: full stack MERN applications, AI-assisted features, and 10+ delivered projects across e-commerce, SaaS and business sites.",
     stack: ["React", "Next.js", "Node.js", "MongoDB", "Tailwind"],
     Icon: FiCode,
     current: true,
@@ -134,8 +144,9 @@ export default function Experience() {
             </h2>
             <Reveal delay={0.15}>
               <p className="lede" style={{ marginTop: "clamp(1.5rem, 3vw, 2rem)" }}>
-                Short and honest. I started taking client work seriously in 2023
-                and have been full-time freelance since 2024.
+                Short and honest. Client work since 2023, WebForge Digital
+                since 2024, and now full stack work at MyntorX while the
+                studio keeps shipping.
               </p>
             </Reveal>
           </div>

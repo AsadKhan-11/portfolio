@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
 import { FiStar } from "react-icons/fi";
 import { Reveal, SplitText } from "./animations";
+import { useMediaQuery } from "./useClient";
 
 const TESTIMONIALS = [
   {
@@ -44,20 +44,80 @@ const TESTIMONIALS = [
   },
 ];
 
-export default function Testimonials() {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [drag, setDrag] = useState(0);
+function QuoteCard({ t }: { t: (typeof TESTIMONIALS)[number] }) {
+  return (
+    <div className="quote-card panel tick">
+      <div style={{ display: "flex", gap: 3, marginBottom: "1.5rem" }}>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <FiStar
+            key={i}
+            size={13}
+            style={{ color: "var(--flame)", fill: "var(--flame)" }}
+          />
+        ))}
+      </div>
 
-  useEffect(() => {
-    const measure = () => {
-      const el = trackRef.current;
-      if (!el) return;
-      setDrag(Math.max(0, el.scrollWidth - el.offsetWidth));
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, []);
+      <p
+        style={{
+          flex: 1,
+          fontFamily: "var(--f-display)",
+          fontWeight: 400,
+          fontSize: "1.02rem",
+          lineHeight: 1.65,
+          color: "var(--bone-70)",
+        }}
+      >
+        “{t.quote}”
+      </p>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0.9rem",
+          marginTop: "2rem",
+          paddingTop: "1.25rem",
+          borderTop: "1px solid var(--rule)",
+        }}
+      >
+        <span
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: "50%",
+            border: "1px solid var(--flame-line)",
+            color: "var(--flame)",
+            display: "grid",
+            placeItems: "center",
+            fontFamily: "var(--f-mono)",
+            fontSize: "0.72rem",
+            flexShrink: 0,
+          }}
+        >
+          {t.name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")}
+        </span>
+        <div>
+          <p style={{ fontSize: "0.9rem", fontWeight: 600 }}>{t.name}</p>
+          <p className="mono-label" style={{ marginTop: 3 }}>
+            {t.role}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/*
+  The quotes drift past on their own, opposite to the work shelf's
+  direction so the two reels read as currents, not copies. Hover holds
+  the stream still; reduced motion flattens it to a hand-scrolled row.
+*/
+export default function Testimonials() {
+  const [paused, setPaused] = useState(false);
+  const still = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   return (
     <section className="section bg-glow-tr" style={{ overflow: "hidden" }}>
@@ -76,93 +136,33 @@ export default function Testimonials() {
           </div>
           <Reveal delay={0.15}>
             <p className="lede">
-              Drag to read through. What people said after the invoice was
-              settled, which is the only review that counts.
+              What people said after the invoice was settled, which is the
+              only review that counts. Hover to hold one still.
             </p>
           </Reveal>
         </div>
       </div>
 
       <Reveal delay={0.1}>
-        <motion.div
-          ref={trackRef}
-          drag="x"
-          dragConstraints={{ left: -drag, right: 0 }}
-          dragElastic={0.08}
-          whileDrag={{ cursor: "grabbing" }}
-          data-cursor="Drag"
-          style={{
-            display: "flex",
-            gap: "clamp(1rem, 2vw, 1.75rem)",
-            paddingInline: "var(--gutter)",
-            marginTop: "clamp(2.5rem, 6vh, 4rem)",
-            cursor: "grab",
-          }}
+        <div
+          className="quote-stream"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
         >
-          {TESTIMONIALS.map((t) => (
-            <div key={t.name} className="quote-card panel tick">
-              <div style={{ display: "flex", gap: 3, marginBottom: "1.5rem" }}>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <FiStar
-                    key={i}
-                    size={13}
-                    style={{ color: "var(--flame)", fill: "var(--flame)" }}
-                  />
+          <div className="quote-track" data-paused={paused || still}>
+            {[0, 1].map((dup) => (
+              <div
+                key={dup}
+                className="quote-track-half"
+                aria-hidden={dup === 1}
+              >
+                {TESTIMONIALS.map((t) => (
+                  <QuoteCard key={`${dup}-${t.name}`} t={t} />
                 ))}
               </div>
-
-              <p
-                style={{
-                  flex: 1,
-                  fontFamily: "var(--f-display)",
-                  fontWeight: 400,
-                  fontSize: "1.02rem",
-                  lineHeight: 1.65,
-                  color: "var(--bone-70)",
-                }}
-              >
-                “{t.quote}”
-              </p>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.9rem",
-                  marginTop: "2rem",
-                  paddingTop: "1.25rem",
-                  borderTop: "1px solid var(--rule)",
-                }}
-              >
-                <span
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    border: "1px solid var(--flame-line)",
-                    color: "var(--flame)",
-                    display: "grid",
-                    placeItems: "center",
-                    fontFamily: "var(--f-mono)",
-                    fontSize: "0.72rem",
-                    flexShrink: 0,
-                  }}
-                >
-                  {t.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </span>
-                <div>
-                  <p style={{ fontSize: "0.9rem", fontWeight: 600 }}>{t.name}</p>
-                  <p className="mono-label" style={{ marginTop: 3 }}>
-                    {t.role}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </motion.div>
+            ))}
+          </div>
+        </div>
       </Reveal>
     </section>
   );

@@ -2776,9 +2776,54 @@ html.lenis body {
 }
 
 /* ═══════════ Testimonial cards ═══════════ */
+/* ── The feedback stream: a reverse-drift marquee of quote cards ── */
+.quote-stream {
+  margin-top: clamp(2.5rem, 6vh, 4rem);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+
+.quote-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  /* Runs right-to-left source order, drifting rightward — the mirror
+     of the work shelf so the two reels feel like opposing currents */
+  animation: quote-drift 52s linear infinite reverse;
+}
+
+.quote-track[data-paused="true"] {
+  animation-play-state: paused;
+}
+
+@keyframes quote-drift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.quote-track-half {
+  display: flex;
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .quote-track {
+    animation: none;
+  }
+
+  .quote-stream {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
 .quote-card {
   flex: 0 0 auto;
   width: clamp(268px, 74vw, 380px);
+  margin-right: clamp(1rem, 2vw, 1.75rem);
   padding: clamp(1.75rem, 3vw, 2.25rem);
   display: flex;
   flex-direction: column;
