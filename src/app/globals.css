@@ -845,8 +845,8 @@ html.lenis body {
 }
 
 /* ═══════════ Hero ═══════════
-   One clear statement, then proof: a shelf of live builds drifting
-   across a tilted plane below the headline. Nothing else competes. */
+   One clear statement, dead centre, with forge embers drifting up
+   behind the type. The work itself waits in its own section. */
 .hero {
   position: relative;
   min-height: 100svh;
@@ -895,10 +895,10 @@ html.lenis body {
 }
 
 .hero-headline {
-  margin-top: clamp(1.25rem, 3vh, 1.75rem);
+  margin-top: clamp(1.5rem, 3.5vh, 2.25rem);
   font-family: var(--f-display), sans-serif;
   font-weight: 800;
-  font-size: clamp(2.2rem, 4.9vw, 4.6rem);
+  font-size: clamp(2.3rem, 5.4vw, 5rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
   color: var(--bone);
@@ -917,57 +917,59 @@ html.lenis body {
   margin-top: clamp(1.5rem, 3.5vh, 2.25rem);
 }
 
-/* ─── Shelf of live builds ─── */
-.hero-shelf {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  margin-top: clamp(2.25rem, 6vh, 4rem);
-  perspective: 1100px;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
-}
-
-/* The whole track leans back like prints on a table */
-.hero-shelf-tilt {
-  transform: rotateX(13deg);
-  transform-style: preserve-3d;
-}
-
-.shelf-card {
-  margin: 0 clamp(0.7rem, 1.4vw, 1.25rem);
-  flex-shrink: 0;
-}
-
-.shelf-shot {
-  position: relative;
-  display: block;
-  width: clamp(240px, 29vw, 420px);
-  aspect-ratio: 16 / 10;
-  border: 1px solid var(--rule-strong);
-  border-radius: 14px;
+/* ─── Forge embers ─── */
+.hero-embers {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   overflow: hidden;
-  background: var(--ink-raised);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
 }
 
-.shelf-domain {
-  display: block;
-  margin-top: 0.7rem;
-  text-align: center;
-  color: var(--bone-30);
+.ember {
+  position: absolute;
+  bottom: -8px;
+  border-radius: 50%;
+  background: var(--flame);
+  box-shadow: 0 0 6px rgba(255, 92, 53, 0.55);
+  opacity: 0;
+  animation: ember-rise var(--ember-d) linear var(--ember-delay) infinite;
+}
+
+@keyframes ember-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(1);
+  }
+
+  12% {
+    opacity: 0.85;
+  }
+
+  60% {
+    opacity: 0.5;
+    transform: translate(var(--ember-drift), -48vh) scale(0.75);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--ember-drift) * -0.6), -88vh) scale(0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-embers {
+    display: none;
+  }
 }
 
 .hero-proofline {
-  position: relative;
-  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.8rem;
-  margin-top: clamp(1.75rem, 5vh, 2.75rem);
-  padding-inline: var(--gutter);
+  margin-top: clamp(2rem, 6vh, 3.25rem);
 }
 
 .hero-lede {
@@ -995,29 +997,10 @@ html.lenis body {
   color: var(--flame);
 }
 
-/* Short viewports: tighten the rhythm so the shelf survives on screen */
+/* Short viewports: rein the type in so nothing crowds the fold */
 @media (max-height: 780px) and (min-width: 900px) {
   .hero-headline {
-    font-size: clamp(2rem, 3.6vw, 3.4rem);
-  }
-
-  .shelf-shot {
-    width: clamp(220px, 24vw, 340px);
-  }
-
-  .hero-shelf {
-    margin-top: clamp(1.5rem, 4vh, 2.5rem);
-  }
-}
-
-@media (max-width: 899px) {
-  .hero-shelf {
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-  }
-
-  .shelf-shot {
-    width: clamp(220px, 62vw, 320px);
+    font-size: clamp(2.2rem, 4.2vw, 4rem);
   }
 }
 

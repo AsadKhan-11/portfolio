@@ -1,22 +1,31 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { FiArrowDownRight, FiStar } from "react-icons/fi";
-import { Magnetic, Marquee } from "./animations";
+import { Magnetic } from "./animations";
 import { useIntroDone } from "./intro";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 /*
-  The shelf under the headline is real shipped work, not a staged
-  mockup — the fastest honest answer to "what do they actually make?".
+  Forge embers drifting up behind the type — ambience, not content.
+  Values are precomputed constants: Math.random() in render would
+  disagree between server and client markup.
 */
-const SHELF = [
-  { src: "/work/01-vanta-aesthetics.jpg", domain: "vanta-aesthetics.vercel.app" },
-  { src: "/work/02-lumiere-aesthetics.jpg", domain: "lumi-re-aesthetics.vercel.app" },
-  { src: "/work/03-aurelle.jpg", domain: "aurelle-mauve-two.vercel.app" },
+const EMBERS = [
+  { x: 6, s: 3, d: 11, delay: 0, drift: -18 },
+  { x: 14, s: 2, d: 14, delay: 3.2, drift: 14 },
+  { x: 23, s: 4, d: 12.5, delay: 1.4, drift: -10 },
+  { x: 31, s: 2, d: 15.5, delay: 5.1, drift: 20 },
+  { x: 38, s: 3, d: 10.5, delay: 2.3, drift: -22 },
+  { x: 47, s: 2, d: 13, delay: 6.4, drift: 12 },
+  { x: 55, s: 4, d: 16, delay: 0.8, drift: -14 },
+  { x: 62, s: 2, d: 11.5, delay: 4.2, drift: 18 },
+  { x: 70, s: 3, d: 14.5, delay: 2.9, drift: -20 },
+  { x: 78, s: 2, d: 12, delay: 5.8, drift: 10 },
+  { x: 86, s: 3, d: 15, delay: 1.9, drift: -12 },
+  { x: 93, s: 2, d: 13.5, delay: 3.7, drift: 16 },
 ];
 
 /* Entrance beats, counted from the moment the intro curtain clears */
@@ -25,7 +34,6 @@ const T = {
   head: 0.3,
   lede: 0.85,
   cta: 1,
-  shelf: 0.6,
   proof: 1.25,
   cue: 1.6,
 };
@@ -80,13 +88,32 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
   const rawCopy = useTransform(scrollYProgress, [0, 1], [0, -70]);
-  const rawShelf = useTransform(scrollYProgress, [0, 1], [0, 70]);
   const copyY = useSpring(rawCopy, { stiffness: 90, damping: 26 });
-  const shelfY = useSpring(rawShelf, { stiffness: 90, damping: 26 });
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
     <section ref={ref} id="home" className="hero">
+      {/* Embers rise behind the type — pure ambience, hidden from AT
+          and switched off entirely under reduced motion */}
+      <div className="hero-embers" aria-hidden="true">
+        {EMBERS.map((e, i) => (
+          <span
+            key={i}
+            className="ember"
+            style={
+              {
+                left: `${e.x}%`,
+                width: e.s,
+                height: e.s,
+                "--ember-d": `${e.d}s`,
+                "--ember-delay": `${e.delay}s`,
+                "--ember-drift": `${e.drift}px`,
+              } as React.CSSProperties
+            }
+          />
+        ))}
+      </div>
+
       <div className="shell" style={{ position: "relative", zIndex: 2, width: "100%" }}>
         {/* ── The pitch, centred and brief ── */}
         <motion.div className="hero-center" style={{ y: copyY }}>
@@ -133,51 +160,22 @@ export default function Hero() {
               See the work <FiArrowDownRight />
             </a>
           </motion.div>
+          {/* ── One quiet line of proof ── */}
+          <motion.div
+            className="hero-proofline"
+            initial={{ opacity: 0 }}
+            animate={ready ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ delay: T.proof, duration: 0.9 }}
+          >
+            <span className="hero-stars" aria-hidden="true">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <FiStar key={i} size={11} fill="currentColor" />
+              ))}
+            </span>
+            <span className="mono-label">20+ clients served · live in production</span>
+          </motion.div>
         </motion.div>
       </div>
-
-      {/* ── Shelf of live builds, drifting past on a tilted plane ── */}
-      <motion.div
-        className="hero-shelf"
-        style={{ y: shelfY }}
-        initial={{ opacity: 0, y: 60 }}
-        animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
-        transition={{ delay: T.shelf, duration: 1.2, ease: EASE }}
-      >
-        <div className="hero-shelf-tilt">
-          <Marquee speed={46}>
-            {SHELF.map((p) => (
-              <figure key={p.domain} className="shelf-card">
-                <span className="shelf-shot">
-                  <Image
-                    src={p.src}
-                    alt=""
-                    fill
-                    sizes="(max-width: 760px) 70vw, 30vw"
-                    style={{ objectFit: "cover" }}
-                  />
-                </span>
-                <figcaption className="mono-label shelf-domain">{p.domain}</figcaption>
-              </figure>
-            ))}
-          </Marquee>
-        </div>
-      </motion.div>
-
-      {/* ── One quiet line of proof ── */}
-      <motion.div
-        className="hero-proofline"
-        initial={{ opacity: 0 }}
-        animate={ready ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ delay: T.proof, duration: 0.9 }}
-      >
-        <span className="hero-stars" aria-hidden="true">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <FiStar key={i} size={11} fill="currentColor" />
-          ))}
-        </span>
-        <span className="mono-label">20+ clients served · live in production</span>
-      </motion.div>
 
       {/* Scroll cue — outer box carries the scroll-driven fade, inner the
           entrance, so the two opacities multiply instead of overwriting. */}
