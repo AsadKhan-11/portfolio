@@ -845,8 +845,8 @@ html.lenis body {
 }
 
 /* ═══════════ Hero ═══════════
-   One clear statement, dead centre, with forge embers drifting up
-   behind the type. The work itself waits in its own section. */
+   One clear statement, dead centre, over a 3D wireframe terrain
+   (HeroField). The work itself waits in its own section. */
 .hero {
   position: relative;
   min-height: 100svh;
@@ -915,52 +915,6 @@ html.lenis body {
   flex-wrap: wrap;
   gap: 1.5rem;
   margin-top: clamp(1.5rem, 3.5vh, 2.25rem);
-}
-
-/* ─── Forge embers ─── */
-.hero-embers {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.ember {
-  position: absolute;
-  bottom: -8px;
-  border-radius: 50%;
-  background: var(--flame);
-  box-shadow: 0 0 6px rgba(255, 92, 53, 0.55);
-  opacity: 0;
-  animation: ember-rise var(--ember-d) linear var(--ember-delay) infinite;
-}
-
-@keyframes ember-rise {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0) scale(1);
-  }
-
-  12% {
-    opacity: 0.85;
-  }
-
-  60% {
-    opacity: 0.5;
-    transform: translate(var(--ember-drift), -48vh) scale(0.75);
-  }
-
-  100% {
-    opacity: 0;
-    transform: translate(calc(var(--ember-drift) * -0.6), -88vh) scale(0.35);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-embers {
-    display: none;
-  }
 }
 
 .hero-proofline {

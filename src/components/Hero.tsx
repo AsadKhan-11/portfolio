@@ -4,29 +4,10 @@ import { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { FiArrowDownRight, FiStar } from "react-icons/fi";
 import { Magnetic } from "./animations";
+import HeroField from "./HeroField";
 import { useIntroDone } from "./intro";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
-
-/*
-  Forge embers drifting up behind the type — ambience, not content.
-  Values are precomputed constants: Math.random() in render would
-  disagree between server and client markup.
-*/
-const EMBERS = [
-  { x: 6, s: 3, d: 11, delay: 0, drift: -18 },
-  { x: 14, s: 2, d: 14, delay: 3.2, drift: 14 },
-  { x: 23, s: 4, d: 12.5, delay: 1.4, drift: -10 },
-  { x: 31, s: 2, d: 15.5, delay: 5.1, drift: 20 },
-  { x: 38, s: 3, d: 10.5, delay: 2.3, drift: -22 },
-  { x: 47, s: 2, d: 13, delay: 6.4, drift: 12 },
-  { x: 55, s: 4, d: 16, delay: 0.8, drift: -14 },
-  { x: 62, s: 2, d: 11.5, delay: 4.2, drift: 18 },
-  { x: 70, s: 3, d: 14.5, delay: 2.9, drift: -20 },
-  { x: 78, s: 2, d: 12, delay: 5.8, drift: 10 },
-  { x: 86, s: 3, d: 15, delay: 1.9, drift: -12 },
-  { x: 93, s: 2, d: 13.5, delay: 3.7, drift: 16 },
-];
 
 /* Entrance beats, counted from the moment the intro curtain clears */
 const T = {
@@ -93,26 +74,9 @@ export default function Hero() {
 
   return (
     <section ref={ref} id="home" className="hero">
-      {/* Embers rise behind the type — pure ambience, hidden from AT
-          and switched off entirely under reduced motion */}
-      <div className="hero-embers" aria-hidden="true">
-        {EMBERS.map((e, i) => (
-          <span
-            key={i}
-            className="ember"
-            style={
-              {
-                left: `${e.x}%`,
-                width: e.s,
-                height: e.s,
-                "--ember-d": `${e.d}s`,
-                "--ember-delay": `${e.delay}s`,
-                "--ember-drift": `${e.drift}px`,
-              } as React.CSSProperties
-            }
-          />
-        ))}
-      </div>
+      {/* A wireframe terrain flows under the type — the 3D stage that
+          says "we build things" before a word is read */}
+      <HeroField />
 
       <div className="shell" style={{ position: "relative", zIndex: 2, width: "100%" }}>
         {/* ── The pitch, centred and brief ── */}
