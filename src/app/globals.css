@@ -1506,260 +1506,136 @@ html.lenis body {
   color: var(--flame);
 }
 
-/* ═══════════ Work: rotating showcase ═══════════
-   One project on stage at a time: copy and controls on the left, a
-   browser-framed mockup on the right. The reel advances on a timer
-   (Work.tsx), pauses while hovered, and each bar fills across the
-   dwell time so the rhythm is legible. */
-.show-stage {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(2rem, 4vw, 3.5rem);
-  align-items: center;
+/* ═══════════ Work: drifting shelf ═══════════
+   Live builds glide past on a tilted plane, full bleed. The loop is a
+   CSS keyframe on a two-half track, so hovering simply freezes it
+   (animation-play-state) while the pointer picks a card. */
+.work-shelf {
   margin-top: clamp(2.5rem, 6vh, 4rem);
-}
-
-@media (min-width: 900px) {
-  .show-stage {
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: clamp(3rem, 5vw, 5rem);
-  }
-
-  /* Copy height varies per project; hold the stage steady */
-  .show-content {
-    min-height: 360px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-}
-
-.show-count {
-  color: var(--flame);
-  letter-spacing: 0.22em;
-}
-
-.show-title {
-  margin-top: 0.9rem;
-  font-family: var(--f-display), sans-serif;
-  font-weight: 800;
-  font-size: clamp(1.7rem, 3vw, 2.6rem);
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  overflow-wrap: break-word;
-}
-
-.show-blurb {
-  margin-top: 1rem;
-  max-width: 40ch;
-  font-size: 0.96rem;
-  line-height: 1.75;
-  color: var(--bone-45);
-}
-
-.show-links {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: clamp(1.5rem, 3vw, 2rem);
-}
-
-.show-nav {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  margin-top: clamp(2rem, 4vw, 2.75rem);
-}
-
-.show-bars {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.show-bar {
-  width: 56px;
-  height: 16px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* The clickable area is generous; the visible bar is a hairline */
-.show-bar-fill {
-  display: block;
-  width: 100%;
-  height: 3px;
-  border-radius: 99px;
-  background: var(--bone-08);
+  perspective: 1200px;
   overflow: hidden;
-  position: relative;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
 }
 
-.show-bar-fill::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: var(--flame);
-  transform: scaleX(0);
-  transform-origin: left;
+.work-shelf-tilt {
+  transform: rotateX(9deg);
+  transform-style: preserve-3d;
 }
 
-.show-bar[data-active="true"] .show-bar-fill::after {
-  animation: show-fill linear forwards;
-  animation-duration: inherit;
+.work-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: work-drift 48s linear infinite;
+}
+
+.work-track[data-paused="true"] {
   animation-play-state: paused;
 }
 
-.show-bar .show-bar-fill[data-running="true"]::after {
-  animation-play-state: running;
-}
-
-@keyframes show-fill {
+@keyframes work-drift {
   to {
-    transform: scaleX(1);
+    transform: translateX(-50%);
   }
 }
 
-/* ── The framed mockup ── */
-.show-mock {
-  position: relative;
+.work-track-half {
+  display: flex;
+  flex-shrink: 0;
 }
 
-.show-frame-wrap {
-  position: relative;
+.work-card {
+  display: block;
+  width: clamp(290px, 36vw, 540px);
+  margin-right: clamp(1.25rem, 2.5vw, 2.5rem);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.6s var(--ease-out-expo);
 }
 
-/* Tinted per project from Work.tsx — the gradient rides the slide
-   transition, so each brand brings its own light */
-.show-mock-glow {
-  position: absolute;
-  inset: -12%;
-  filter: blur(10px);
-  pointer-events: none;
+.work-card:hover {
+  transform: translateY(-8px);
 }
 
-.show-browser {
+.work-shot {
   position: relative;
-  overflow: hidden;
+  display: block;
+  aspect-ratio: 16 / 10;
   border: 1px solid var(--rule-strong);
-  border-radius: 12px;
-  background: var(--ink-panel);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
-}
-
-.show-browser-bar {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.7rem 1rem;
-  border-bottom: 1px solid var(--rule);
+  border-radius: 14px;
+  overflow: hidden;
   background: var(--ink-raised);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
 }
 
-.show-dots {
-  display: flex;
-  gap: 6px;
+.work-shot img {
+  transition: transform 0.9s var(--ease-out-expo);
 }
 
-.show-dots i {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--bone-15);
+.work-card:hover .work-shot img {
+  transform: scale(1.04);
 }
 
-.show-dots i:first-child {
-  background: var(--flame);
+.work-card-foot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 1rem;
+  row-gap: 0.35rem;
+  padding: 0.85rem 0.25rem 0;
 }
 
-.show-url {
-  flex: 1;
-  max-width: 260px;
-  padding: 0.3rem 0.9rem;
-  border-radius: 99px;
-  background: var(--ink);
-  border: 1px solid var(--rule);
-  font-family: var(--f-mono), monospace;
-  font-size: 0.64rem;
-  letter-spacing: 0.08em;
+.work-card-title {
+  display: block;
+  font-family: var(--f-display), sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--bone);
+}
+
+.work-card-meta {
+  grid-column: 1 / -1;
+  color: var(--bone-30);
+  white-space: nowrap;
+}
+
+.work-card-domain {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   color: var(--bone-45);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  transition: color 0.4s var(--ease-out-expo);
 }
 
-.show-browser-body {
-  position: relative;
+.work-card:hover .work-card-domain {
+  color: var(--flame);
 }
 
-/* The window the captured page scrolls through */
-.show-viewport {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  background: var(--ink-raised);
-}
-
-/* Fact line under the blurb: industry, scope, year */
-.show-meta {
+.work-hint {
   display: block;
-  margin-top: 1.1rem;
-  letter-spacing: 0.16em;
+  margin-top: clamp(1.5rem, 4vh, 2.25rem);
+  text-align: center;
   color: var(--bone-30);
 }
 
-/* ── Phone inset: overlaps the frame's lower left corner ── */
-.show-phone {
-  position: absolute;
-  left: clamp(-1.75rem, -2vw, -1rem);
-  bottom: clamp(-1.5rem, -1.5vw, -0.75rem);
-  z-index: 2;
-  width: clamp(92px, 9vw, 128px);
-  aspect-ratio: 390 / 820;
-  border: 1px solid var(--rule-strong);
-  border-radius: 18px;
-  overflow: hidden;
-  background: var(--ink-panel);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
-  pointer-events: none;
-}
-
-.show-phone-screen {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
-
-.show-phone-notch {
-  position: absolute;
-  top: 7px;
-  left: 50%;
-  translate: -50% 0;
-  z-index: 1;
-  width: 34%;
-  height: 5px;
-  border-radius: 99px;
-  background: rgba(8, 8, 10, 0.85);
-  box-shadow: inset 0 0 0 1px var(--rule);
-}
-
-/* Mockup leads on small screens, copy follows; the phone tucks in so
-   nothing hangs off the viewport edge */
-@media (max-width: 899px) {
-  .show-mock {
-    order: -1;
+/* Reduced motion: no drift — the shelf flattens into a hand-scrolled row */
+@media (prefers-reduced-motion: reduce) {
+  .work-track {
+    animation: none;
   }
 
-  .show-phone {
-    left: -0.4rem;
-    bottom: -0.6rem;
-    width: clamp(78px, 20vw, 96px);
+  .work-shelf {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .work-shelf-tilt {
+    transform: none;
   }
 }
 
