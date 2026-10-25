@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { FiArrowUp, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
 import { FaXTwitter } from "react-icons/fa6";
 import { Magnetic, Marquee } from "./animations";
@@ -28,6 +29,8 @@ export default function Footer() {
   const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
   const rippleId = useRef(0);
   const year = new Date().getFullYear();
+  // Section links target the home page; from another route they need the "/" prefix.
+  const onHome = usePathname() === "/";
 
   /*
     Material-style click ripple, centred on the click point. The
@@ -101,7 +104,7 @@ export default function Footer() {
         <div className="footer-top">
           <nav className="footer-links">
             {LINKS.map((l) => (
-              <a key={l.label} href={l.href} className="link-sweep">
+              <a key={l.label} href={onHome ? l.href : `/${l.href}`} className="link-sweep">
                 {l.label}
               </a>
             ))}

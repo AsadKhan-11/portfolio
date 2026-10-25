@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 import { Magnetic } from "./animations";
@@ -35,6 +36,14 @@ export default function Navbar() {
   const [clock, setClock] = useState("");
   const { scrollYProgress } = useScroll();
   const ready = useIntroDone();
+
+  /*
+    The menu points at sections of the home page. From any other route
+    (a case study, say) those hashes would go nowhere, so they're routed
+    through "/" — and "Index" / the logo simply mean "home".
+  */
+  const onHome = usePathname() === "/";
+  const to = (hash: string) => (onHome ? hash : hash === "#home" ? "/" : `/${hash}`);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -92,7 +101,7 @@ export default function Navbar() {
         <div className="nav-inner">
           <Magnetic strength={0.25}>
             <a
-              href="#home"
+              href={to("#home")}
               onClick={() => setOpen(false)}
               style={{
                 fontFamily: "var(--f-display)",
@@ -177,7 +186,7 @@ export default function Navbar() {
                   {NAV_ITEMS.map((item, i) => (
                     <li key={item.label} className="menu-row-wrap">
                       <motion.a
-                        href={item.href}
+                        href={to(item.href)}
                         className="menu-row"
                         onClick={() => setOpen(false)}
                         initial={{ y: "110%" }}

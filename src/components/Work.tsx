@@ -1,14 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Image from "next/image";
-import { FiArrowUpRight } from "react-icons/fi";
+import Link from "next/link";
+import { FiArrowRight, FiArrowUpRight } from "react-icons/fi";
 import { Reveal, SplitText } from "./animations";
 import { useMediaQuery } from "./useClient";
+import { CASE_STUDIES } from "@/lib/caseStudies";
 
-const PROJECTS = [
+/*
+  Two kinds of card share the shelf. A live build opens the deployed site
+  in a new tab; a case study opens its page here. Case-study cards are
+  generated from the same data that feeds the /work/[slug] route, so the
+  two can never disagree.
+*/
+interface Project {
+  key: string;
+  shot: string;
+  title: string;
+  meta: string;
+  /** Live builds */
+  url?: string;
+  domain?: string;
+  /** Case studies */
+  href?: string;
+}
+
+const LIVE_BUILDS: Project[] = [
   {
-    n: "01",
+    key: "vanta",
     shot: "/work/cards/01-vanta.jpg",
     title: "Vanta Aesthetics",
     domain: "vanta-aesthetics.vercel.app",
@@ -16,7 +36,7 @@ const PROJECTS = [
     meta: "Aesthetics clinic · 2026",
   },
   {
-    n: "02",
+    key: "lumiere",
     shot: "/work/cards/02-lumiere.jpg",
     title: "Lumière Aesthetics",
     domain: "lumi-re-aesthetics.vercel.app",
@@ -24,7 +44,7 @@ const PROJECTS = [
     meta: "Aesthetics clinic · 2026",
   },
   {
-    n: "03",
+    key: "aurelle",
     shot: "/work/cards/03-aurelle.jpg",
     title: "Aurelle",
     domain: "aurelle-mauve-two.vercel.app",
@@ -33,9 +53,66 @@ const PROJECTS = [
   },
 ];
 
+const PROJECTS: Project[] = [
+  ...CASE_STUDIES.map((c) => ({
+    key: c.slug,
+    shot: c.card,
+    title: c.title,
+    meta: c.meta,
+    href: `/work/${c.slug}`,
+  })),
+  ...LIVE_BUILDS,
+];
+
+function CardBody({ p }: { p: Project }) {
+  return (
+    <>
+      <span className="work-shot">
+        <Image
+          src={p.shot}
+          alt={`${p.title} ${p.href ? "case study" : "website"}`}
+          fill
+          sizes="(max-width: 760px) 78vw, 36vw"
+          style={{ objectFit: "cover", objectPosition: "top" }}
+        />
+      </span>
+      <span className="work-card-foot">
+        <span className="work-card-title">{p.title}</span>
+        <span className="mono-label work-card-domain">
+          {p.href ? (
+            <>
+              Case study <FiArrowRight size={13} />
+            </>
+          ) : (
+            <>
+              {p.domain} <FiArrowUpRight size={13} />
+            </>
+          )}
+        </span>
+        <span className="mono-label work-card-meta">{p.meta}</span>
+      </span>
+    </>
+  );
+}
+
+function Card({ p, hidden }: { p: Project; hidden: boolean }): ReactNode {
+  const common = {
+    className: "work-card",
+    tabIndex: hidden ? -1 : 0,
+  };
+  return p.href ? (
+    <Link href={p.href} {...common} data-cursor="Read">
+      <CardBody p={p} />
+    </Link>
+  ) : (
+    <a href={p.url} target="_blank" rel="noopener noreferrer" {...common} data-cursor="Visit">
+      <CardBody p={p} />
+    </a>
+  );
+}
+
 /*
-  The shelf: live builds glide past on a tilted plane, full bleed.
-  Each card is a straight link into the deployed site. The track is
+  The shelf: builds glide past on a tilted plane, full bleed. The track is
   two identical halves (each the project list twice, so a half always
   outspans the viewport), looping with a CSS keyframe — which is what
   lets hover simply freeze it via animation-play-state.
@@ -63,8 +140,9 @@ export default function Work() {
           </div>
           <Reveal delay={0.15}>
             <p className="lede">
-              Live builds for real brands, shipped, deployed, and holding up
-              in production. Every card opens the real thing.
+              Live builds for real brands, and full case studies of the
+              products behind them. Live cards open the real site; case
+              studies open the whole story.
             </p>
           </Reveal>
         </div>
@@ -85,32 +163,7 @@ export default function Work() {
                   aria-hidden={dup === 1}
                 >
                   {half.map((p, i) => (
-                    <a
-                      key={`${p.n}-${i}`}
-                      href={p.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="work-card"
-                      tabIndex={dup === 1 ? -1 : 0}
-                      data-cursor="Visit"
-                    >
-                      <span className="work-shot">
-                        <Image
-                          src={p.shot}
-                          alt={`${p.title} website`}
-                          fill
-                          sizes="(max-width: 760px) 78vw, 36vw"
-                          style={{ objectFit: "cover", objectPosition: "top" }}
-                        />
-                      </span>
-                      <span className="work-card-foot">
-                        <span className="work-card-title">{p.title}</span>
-                        <span className="mono-label work-card-domain">
-                          {p.domain} <FiArrowUpRight size={13} />
-                        </span>
-                        <span className="mono-label work-card-meta">{p.meta}</span>
-                      </span>
-                    </a>
+                    <Card key={`${p.key}-${i}`} p={p} hidden={dup === 1} />
                   ))}
                 </div>
               ))}
@@ -119,7 +172,7 @@ export default function Work() {
         </div>
 
         <p className="mono-label work-hint">
-          Hover to hold the reel · click any build to open it live
+          Hover to hold the reel · click a build to open it, or a case study to read it
         </p>
       </Reveal>
     </section>
