@@ -3237,15 +3237,27 @@ html.lenis body {
 /* Flow player */
 .case-flow {
   display: grid;
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 @media (min-width: 1000px) {
   .case-flow {
-    grid-template-columns: 1.7fr 1fr;
-    align-items: start;
-    gap: 2rem;
+    grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 2.25rem;
   }
+}
+
+.case-flow-side {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.case-flow-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.25rem;
 }
 
 .case-flow-list {
@@ -3254,13 +3266,39 @@ html.lenis body {
   list-style: none;
 }
 
+/* The list is the progress display: only the playing item expands to show
+   its description, and a hairline under it fills as the clip runs. */
+.case-flow-item:not([aria-current="true"]) .case-flow-blurb {
+  display: none;
+}
+
+.case-flow-item:not([aria-current="true"]) .case-flow-title {
+  color: var(--bone-70);
+}
+
+.case-flow-bar {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+}
+
+.case-flow-bar span {
+  display: block;
+  height: 100%;
+  background: var(--flame);
+  transform-origin: left;
+  transition: transform 0.3s linear;
+}
+
 .case-flow-item {
+  position: relative;
+  overflow: hidden;
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 1rem;
   align-items: start;
   width: 100%;
-  padding: 1.1rem 1.25rem;
+  padding: 1.05rem 1.25rem;
   text-align: left;
   color: var(--bone);
   background: transparent;
@@ -3535,4 +3573,37 @@ html.lenis body {
   justify-content: center;
   gap: 1rem;
   margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+/* More work */
+.case-more {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+  margin-top: clamp(3rem, 7vh, 4.5rem);
+}
+
+@media (min-width: 700px) {
+  .case-more {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .case-more {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* The shelf's cards have a fixed width and a trailing margin for the reel;
+   inside a grid they should simply fill their cell. */
+.case-more .work-card {
+  width: 100%;
+  margin-right: 0;
+}
+
+.case-more-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(2.5rem, 6vh, 3.5rem);
 }

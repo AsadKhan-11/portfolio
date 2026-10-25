@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { FiChevronLeft, FiChevronRight, FiPlay, FiX } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 import type { Clip, Shot } from "@/lib/caseStudies";
 import { useMediaQuery } from "../useClient";
 
@@ -21,94 +21,135 @@ export function Frame({ label, children }: { label: string; children: React.Reac
   );
 }
 
+/* Plays while at least `threshold` of the element is on screen, pauses otherwise. */
+function useVisible(threshold = 0.35) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [threshold]);
+  return [ref, visible] as const;
+}
+
 /*
   The hero reel: silent, looping, and only running while it's on screen.
   Reduced-motion visitors get a still poster with native controls instead
   of autoplay.
 */
 export function Reel({ clip, label }: { clip: Clip; label: string }) {
+  const [wrap, visible] = useVisible();
   const ref = useRef<HTMLVideoElement>(null);
   const still = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   useEffect(() => {
     const v = ref.current;
     if (!v || still) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) v.play().catch(() => {});
-        else v.pause();
-      },
-      { threshold: 0.35 },
-    );
-    io.observe(v);
-    return () => io.disconnect();
-  }, [still]);
+    if (visible) v.play().catch(() => {});
+    else v.pause();
+  }, [visible, still]);
 
   return (
-    <Frame label={label}>
-      <video
-        ref={ref}
-        className="case-video"
-        src={clip.src}
-        poster={clip.poster}
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        controls={still}
-        aria-label={clip.title}
-      />
-    </Frame>
-  );
-}
-
-/* One player, a list of flows. Picking a flow swaps the clip and plays it. */
-export function FlowPlayer({ clips, label }: { clips: Clip[]; label: string }) {
-  const [index, setIndex] = useState(0);
-  const [started, setStarted] = useState(false);
-  const clip = clips[index];
-
-  return (
-    <div className="case-flow">
+    <div ref={wrap}>
       <Frame label={label}>
         <video
-          key={clip.id}
+          ref={ref}
           className="case-video"
           src={clip.src}
           poster={clip.poster}
           muted
-          controls
+          loop
           playsInline
-          autoPlay={started}
           preload="metadata"
+          controls={still}
           aria-label={clip.title}
         />
       </Frame>
+    </div>
+  );
+}
 
-      <ol className="case-flow-list">
-        {clips.map((c, i) => (
-          <li key={c.id}>
-            <button
-              onClick={() => {
-                setIndex(i);
-                setStarted(true);
-              }}
-              aria-current={i === index}
-              className="case-flow-item"
-              data-cursor="Play"
-            >
-              <span className="case-flow-num mono-label">{String(i + 1).padStart(2, "0")}</span>
-              <span className="case-flow-body">
-                <span className="case-flow-title">{c.title}</span>
-                <span className="case-flow-blurb">{c.blurb}</span>
-              </span>
-              <span className="case-flow-meta mono-label">
-                <FiPlay size={12} /> {c.seconds}s
-              </span>
-            </button>
-          </li>
-        ))}
-      </ol>
+/*
+  A hands-free playlist: no player chrome. It plays while it's on screen,
+  moves to the next walkthrough when one ends, and the list on the right
+  doubles as the progress display. Clicking a walkthrough jumps to it.
+*/
+export function FlowPlayer({ clips, label }: { clips: Clip[]; label: string }) {
+  const [wrap, visible] = useVisible(0.4);
+  const ref = useRef<HTMLVideoElement>(null);
+  const still = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const [index, setIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const clip = clips[index];
+
+  // Runs after every clip change (the <video> is re-keyed) and on visibility.
+  useEffect(() => {
+    const v = ref.current;
+    if (!v || still) return;
+    if (visible) v.play().catch(() => {});
+    else v.pause();
+  }, [visible, index, still]);
+
+  const go = useCallback((i: number) => {
+    setProgress(0);
+    setIndex(i);
+  }, []);
+
+  return (
+    <div className="case-flow" ref={wrap}>
+      <Frame label={label}>
+        <video
+          key={clip.id}
+          ref={ref}
+          className="case-video"
+          src={clip.src}
+          poster={clip.poster}
+          muted
+          playsInline
+          preload="auto"
+          controls={still}
+          aria-label={clip.title}
+          onTimeUpdate={(e) => {
+            const v = e.currentTarget;
+            if (v.duration) setProgress(v.currentTime / v.duration);
+          }}
+          onEnded={() => go((index + 1) % clips.length)}
+        />
+      </Frame>
+
+      <div className="case-flow-side">
+        <p className="mono-label case-flow-head">
+          <span>Walkthroughs</span>
+          <span>
+            {String(index + 1).padStart(2, "0")} / {String(clips.length).padStart(2, "0")}
+          </span>
+        </p>
+        <ol className="case-flow-list">
+          {clips.map((c, i) => (
+            <li key={c.id}>
+              <button
+                onClick={() => go(i)}
+                aria-current={i === index}
+                className="case-flow-item"
+                data-cursor="Watch"
+              >
+                <span className="case-flow-num mono-label">{String(i + 1).padStart(2, "0")}</span>
+                <span className="case-flow-body">
+                  <span className="case-flow-title">{c.title}</span>
+                  <span className="case-flow-blurb">{c.blurb}</span>
+                </span>
+                <span className="case-flow-meta mono-label">{c.seconds}s</span>
+                <span className="case-flow-bar" aria-hidden="true">
+                  <span style={{ transform: `scaleX(${i === index ? progress : 0})` }} />
+                </span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   );
 }

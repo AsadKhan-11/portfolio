@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FiArrowLeft, FiArrowUpRight } from "react-icons/fi";
-import { Reveal, SplitText, Stagger, StaggerItem } from "../animations";
-import type { CaseStudy } from "@/lib/caseStudies";
+import { FiArrowLeft, FiArrowRight, FiArrowUpRight } from "react-icons/fi";
+import { Counter, Reveal, SplitText, Stagger, StaggerItem } from "../animations";
+import { CASE_STUDIES, LIVE_BUILDS, type CaseStudy } from "@/lib/caseStudies";
 import { FlowPlayer, Frame, Gallery, Reel } from "./CaseMedia";
 
 function Head({ eyebrow, title, em, lede }: { eyebrow: string; title: string; em: string; lede?: string }) {
@@ -30,7 +30,7 @@ function Head({ eyebrow, title, em, lede }: { eyebrow: string; title: string; em
 export function CaseHero({ study }: { study: CaseStudy }) {
   const facts = [
     ["Role", study.role],
-    ["Type", study.type],
+    ["Client", study.client],
     ["Year", study.year],
     ["Status", study.status],
   ];
@@ -56,7 +56,7 @@ export function CaseHero({ study }: { study: CaseStudy }) {
           </Reveal>
           <Reveal delay={0.35}>
             <div className="case-tags">
-              {study.stack.map((t) => (
+              {study.tags.map((t) => (
                 <span key={t} className="tag">{t}</span>
               ))}
             </div>
@@ -77,7 +77,7 @@ export function CaseHero({ study }: { study: CaseStudy }) {
         {study.liveUrl && (
           <Reveal delay={0.5}>
             <a href={study.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-solid" style={{ marginTop: "2rem" }} data-cursor="Open">
-              <span>Visit live demo</span>
+              <span>Visit the platform</span>
               <FiArrowUpRight />
             </a>
           </Reveal>
@@ -92,9 +92,8 @@ export function CaseReel({ study }: { study: CaseStudy }) {
     <section className="case-reel">
       <div className="shell">
         <Reveal y={48}>
-          <Reel clip={study.clips[0]} label={`${study.title.toLowerCase()} · ${study.clips[0].title.toLowerCase()}`} />
+          <Reel clip={study.clips[0]} label={`${study.title.toLowerCase()} · admin`} />
         </Reveal>
-        <p className="mono-label case-caption">Silent screen recording of the running product</p>
       </div>
     </section>
   );
@@ -127,7 +126,9 @@ export function CaseStory({ study }: { study: CaseStudy }) {
         <Stagger className="stat-row case-stats">
           {study.stats.map((s) => (
             <StaggerItem key={s.label} className="stat-cell">
-              <p className="stat-num">{s.value}</p>
+              <p className="stat-num">
+                <Counter to={s.value} suffix={s.suffix} />
+              </p>
               <p className="mono-label" style={{ marginTop: "0.75rem" }}>{s.label}</p>
             </StaggerItem>
           ))}
@@ -144,9 +145,9 @@ export function CaseHighlights({ study }: { study: CaseStudy }) {
       <div className="shell">
         <Head
           eyebrow="What's inside"
-          title="Six areas,"
-          em="one product"
-          lede="Each one is a working screen rather than a mock-up: the data behind it is shared, so a change in one place shows up everywhere it should."
+          title="What it"
+          em="does"
+          lede="The AI coach, nutrition, messaging and the CRM all work from the same member record, so each part makes the others more useful."
         />
 
         <div className="case-features">
@@ -189,10 +190,10 @@ export function CaseFlows({ study }: { study: CaseStudy }) {
           eyebrow="In motion"
           title="See it"
           em="working"
-          lede="Short screen recordings of real interactions. Pick a flow on the right; the cursor ring shows every click."
+          lede="Short walkthroughs of the core workflows. They play on their own, one after another, or pick one from the list."
         />
         <Reveal delay={0.1} style={{ marginTop: "clamp(2.5rem, 6vh, 4rem)" }}>
-          <FlowPlayer clips={study.clips} label={`${study.title.toLowerCase()} · flows`} />
+          <FlowPlayer clips={study.clips} label={`${study.title.toLowerCase()} · walkthroughs`} />
         </Reveal>
       </div>
     </section>
@@ -219,10 +220,10 @@ export function CasePhones({ study }: { study: CaseStudy }) {
       <div className="rule-top" />
       <div className="shell">
         <Head
-          eyebrow="Responsive"
-          title="Down to the"
+          eyebrow="Mobile"
+          title="Made for the"
           em="phone"
-          lede="The sidebar becomes a tab bar with a More sheet, tables scroll instead of wrapping, and the pipeline board turns into a swipeable row."
+          lede="Members and trainers live on their phones, so every screen adapts and navigation collapses into a tab bar with quick access to everything else."
         />
         <Stagger className="case-phones">
           {study.phones.map((p) => (
@@ -246,7 +247,7 @@ export function CaseDecisions({ study }: { study: CaseStudy }) {
     <section className="section bg-glow-bl">
       <div className="rule-top" />
       <div className="shell">
-        <Head eyebrow="Under the hood" title="Decisions" em="worth noting" lede="The engineering choices behind it, and why I made them." />
+        <Head eyebrow="How it fits together" title="Thinking" em="behind it" lede="AI that does the heavy lifting, and people who stay in control of the relationship." />
         <Stagger className="case-decisions">
           {study.decisions.map((d, i) => (
             <StaggerItem key={d.title} className="panel case-decision">
@@ -261,6 +262,71 @@ export function CaseDecisions({ study }: { study: CaseStudy }) {
   );
 }
 
+/*
+  Other work to explore. Case studies come first (everything but the one on
+  screen), then the live builds, so new case studies show up here with no
+  further changes.
+*/
+export function CaseMore({ study }: { study: CaseStudy }) {
+  const others = CASE_STUDIES.filter((c) => c.slug !== study.slug);
+  const cards = [
+    ...others.map((c) => ({ key: c.slug, shot: c.card, title: c.title, meta: c.meta, href: `/work/${c.slug}`, label: "Case study" })),
+    ...LIVE_BUILDS.map((b) => ({ key: b.key, shot: b.shot, title: b.title, meta: b.meta, href: b.url, label: b.domain })),
+  ];
+
+  return (
+    <section className="section bg-glow-tr">
+      <div className="rule-top" />
+      <div className="shell">
+        <Head
+          eyebrow="Keep exploring"
+          title="More"
+          em="selected work"
+          lede={others.length ? "Other case studies, plus the sites I've built and shipped." : "More of what I've built and shipped."}
+        />
+
+        <Stagger className="case-more">
+          {cards.map((c) => {
+            const internal = c.href.startsWith("/");
+            const body = (
+              <>
+                <span className="work-shot">
+                  <Image src={c.shot} alt={`${c.title} ${internal ? "case study" : "website"}`} fill sizes="(max-width: 760px) 92vw, 30vw" style={{ objectFit: "cover", objectPosition: "top" }} />
+                </span>
+                <span className="work-card-foot">
+                  <span className="work-card-title">{c.title}</span>
+                  <span className="mono-label work-card-domain">
+                    {c.label} {internal ? <FiArrowRight size={13} /> : <FiArrowUpRight size={13} />}
+                  </span>
+                  <span className="mono-label work-card-meta">{c.meta}</span>
+                </span>
+              </>
+            );
+            return (
+              <StaggerItem key={c.key}>
+                {internal ? (
+                  <Link href={c.href} className="work-card" data-cursor="Read">{body}</Link>
+                ) : (
+                  <a href={c.href} target="_blank" rel="noopener noreferrer" className="work-card" data-cursor="Visit">{body}</a>
+                )}
+              </StaggerItem>
+            );
+          })}
+        </Stagger>
+
+        <Reveal delay={0.1}>
+          <div className="case-more-cta">
+            <Link href="/#work" className="btn">
+              <span>View all work</span>
+              <FiArrowRight />
+            </Link>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 export function CaseOutro({ study }: { study: CaseStudy }) {
   return (
     <section className="section">
@@ -269,7 +335,7 @@ export function CaseOutro({ study }: { study: CaseStudy }) {
         <Reveal>
           <p className="eyebrow" style={{ justifyContent: "center" }}>Next step</p>
           <h2 className="case-outro-title">
-            Need a back office
+            Need a platform
             <br />
             <span className="serif-em" style={{ color: "var(--flame)" }}>like {study.title}?</span>
           </h2>

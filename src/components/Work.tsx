@@ -6,13 +6,13 @@ import Link from "next/link";
 import { FiArrowRight, FiArrowUpRight } from "react-icons/fi";
 import { Reveal, SplitText } from "./animations";
 import { useMediaQuery } from "./useClient";
-import { CASE_STUDIES } from "@/lib/caseStudies";
+import { CASE_STUDIES, LIVE_BUILDS } from "@/lib/caseStudies";
 
 /*
   Two kinds of card share the shelf. A live build opens the deployed site
-  in a new tab; a case study opens its page here. Case-study cards are
-  generated from the same data that feeds the /work/[slug] route, so the
-  two can never disagree.
+  in a new tab; a case study opens its page here. Both lists live in
+  src/lib/caseStudies.ts, the same data that feeds the /work/[slug] route
+  and its "more work" section, so they can never disagree.
 */
 interface Project {
   key: string;
@@ -25,33 +25,6 @@ interface Project {
   /** Case studies */
   href?: string;
 }
-
-const LIVE_BUILDS: Project[] = [
-  {
-    key: "vanta",
-    shot: "/work/cards/01-vanta.jpg",
-    title: "Vanta Aesthetics",
-    domain: "vanta-aesthetics.vercel.app",
-    url: "https://vanta-aesthetics.vercel.app",
-    meta: "Aesthetics clinic · 2026",
-  },
-  {
-    key: "lumiere",
-    shot: "/work/cards/02-lumiere.jpg",
-    title: "Lumière Aesthetics",
-    domain: "lumi-re-aesthetics.vercel.app",
-    url: "https://lumi-re-aesthetics.vercel.app",
-    meta: "Aesthetics clinic · 2026",
-  },
-  {
-    key: "aurelle",
-    shot: "/work/cards/03-aurelle.jpg",
-    title: "Aurelle",
-    domain: "aurelle-mauve-two.vercel.app",
-    url: "https://aurelle-mauve-two.vercel.app",
-    meta: "Skin wellness studio · 2026",
-  },
-];
 
 const PROJECTS: Project[] = [
   ...CASE_STUDIES.map((c) => ({

@@ -269,7 +269,10 @@ export function Counter({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-10%" });
+  // Vertical margin only: a "-10%" margin also trims the left and right edges,
+  // so a counter sitting in the first column (still just a narrow "0") never
+  // registered as in view and stayed at zero.
+  const inView = useInView(ref, { once: true, margin: "-10% 0px -10% 0px" });
   const [n, setN] = useState(0);
 
   useEffect(() => {

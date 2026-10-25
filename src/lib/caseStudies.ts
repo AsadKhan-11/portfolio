@@ -29,6 +29,12 @@ export interface Highlight {
   shot: Shot;
 }
 
+export interface Stat {
+  value: number;
+  suffix?: string;
+  label: string;
+}
+
 export interface CaseStudy {
   slug: string;
   n: string;
@@ -38,22 +44,61 @@ export interface CaseStudy {
   meta: string;
   year: string;
   role: string;
+  client: string;
   type: string;
   status: string;
-  stack: string[];
-  /** Only set once the demo is actually deployed. */
+  /** Capability tags shown under the title */
+  tags: string[];
+  /** Only set once the product has a public URL. */
   liveUrl?: string;
   card: string;
   summary: string;
   challenge: string[];
   approach: string[];
-  stats: { value: string; label: string }[];
+  stats: Stat[];
   highlights: Highlight[];
   clips: Clip[];
   gallery: Shot[];
   phones: Shot[];
   decisions: { title: string; body: string }[];
 }
+
+/* Live builds that open the deployed site rather than a case-study page. */
+export interface LiveBuild {
+  key: string;
+  shot: string;
+  title: string;
+  meta: string;
+  domain: string;
+  url: string;
+}
+
+export const LIVE_BUILDS: LiveBuild[] = [
+  {
+    key: "vanta",
+    shot: "/work/cards/01-vanta.jpg",
+    title: "Vanta Aesthetics",
+    domain: "vanta-aesthetics.vercel.app",
+    url: "https://vanta-aesthetics.vercel.app",
+    meta: "Aesthetics clinic · 2026",
+  },
+  {
+    key: "lumiere",
+    shot: "/work/cards/02-lumiere.jpg",
+    title: "Lumière Aesthetics",
+    domain: "lumi-re-aesthetics.vercel.app",
+    url: "https://lumi-re-aesthetics.vercel.app",
+    meta: "Aesthetics clinic · 2026",
+  },
+  {
+    key: "aurelle",
+    shot: "/work/cards/03-aurelle.jpg",
+    title: "Aurelle",
+    domain: "aurelle-mauve-two.vercel.app",
+    url: "https://aurelle-mauve-two.vercel.app",
+    meta: "Skin wellness studio · 2026",
+  },
+];
 
 const D = "/work/ironside";
 const desktop = (name: string, alt: string, caption?: string): Shot => ({
@@ -84,145 +129,146 @@ export const CASE_STUDIES: CaseStudy[] = [
     slug: "ironside-gym",
     n: "01",
     title: "Ironside",
-    tagline: "A complete gym back office, rebuilt as a front-end demo.",
+    tagline: "One platform for the gym, its trainers and every member.",
     meta: "Gym platform · 2026",
     year: "2026",
-    role: "Design & front-end engineering",
-    type: "Admin platform · 17 modules",
-    status: "Front-end demo · fictional data",
-    stack: ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS 4", "Playwright"],
+    role: "Full-stack development & AI integration",
+    client: "Strength & conditioning gym",
+    type: "Gym management platform",
+    status: "In production · details anonymised",
+    tags: ["AI coach", "GoHighLevel integration", "Trainer–client messaging", "Billing & scheduling"],
     card: "/work/cards/04-ironside.jpg",
     summary:
-      "Ironside is a front-end recreation of the kind of gym-management platform I build professionally: members, leads, class scheduling, billing, retail and community in one back office. The brand, the people and every figure are invented, so the whole product can be shown in full.",
+      "Ironside runs a gym from one place: memberships, classes, billing and retail for the owner, programmes and messaging for trainers, and an AI coach that builds each member's workouts, meal plans and grocery lists. It connects to GoHighLevel so leads and contacts flow into the CRM the gym already uses.",
     challenge: [
-      "Back-office software is the hardest kind to make look good. It is dense, stateful, and judged on a single question: does it actually work when you click it?",
-      "The brief I set myself was a product that feels like one coherent system across seventeen sections, with no backend to lean on, and with nothing in it that could be traced to a real business.",
+      "Most gyms run on a patchwork: a spreadsheet for members, a CRM for leads, DMs for trainers, one app for programmes and another for nutrition. Nothing agrees with anything else, and coaches spend their days on admin instead of coaching.",
+      "The goal was a single platform where the owner, the trainers and the members all work from the same record, and where AI takes over the planning work that eats a trainer's day.",
     ],
     approach: [
-      "I started from the structure of a real operations platform and rebuilt every screen from scratch in code, with its own name, palette and typography. No source, content or records were reused, and all of the data is generated.",
-      "Every screen is genuinely interactive. Filters filter, columns sort, forms validate, drawers open, leads drag between stages, classes take bookings and capacity updates. State that affects more than one page, like the unread and failed-payment badges, lives above the page tree so the whole product stays in agreement with itself.",
+      "The platform is built around three audiences. Owners get a back office for members, classes, billing and retail. Trainers get their clients, their programmes and a direct line to message them. Members get an AI coach in their pocket.",
+      "The coach turns a member's goals, equipment and food preferences into a workout programme, a diet plan and a grocery list. It draws on the gym's own exercise library and a verified food database, so what it suggests is something the member can actually do and actually buy. Trainers stay in the loop and can step in at any point through messaging.",
     ],
     stats: [
-      { value: "17", label: "Connected modules" },
-      { value: "184", label: "Generated members" },
-      { value: "1,900+", label: "Generated payments" },
-      { value: "0", label: "Backend calls" },
+      { value: 17, label: "Connected modules" },
+      { value: 3, label: "Audiences: owners, trainers, members" },
+      { value: 3, label: "Plans the AI builds: workouts, diets, groceries" },
+      { value: 2, label: "Core integrations: AI and GoHighLevel" },
     ],
     highlights: [
       {
-        kicker: "01 · Command centre",
-        title: "A dashboard that reads in seconds",
-        body: "Four headline KPIs, three grouped panels, a revenue spline and a live activity feed, all computed from the same dataset as every other screen, so the numbers agree wherever you look.",
+        kicker: "01 · AI coach",
+        title: "An AI coach for every member",
+        body: "Members tell the coach their goal, the equipment they have and how they like to eat. It answers with a full week: workouts, meals and a shopping list, in a conversation instead of a form.",
         points: [
-          "Rolling 30-day comparisons instead of misleading partial months",
-          "Attendance insights with a working Today / Week / 30-day switch",
-          "A live feed that keeps writing new events while you watch",
+          "Workout programmes built from the gym's own exercise library",
+          "Diet plans that respect preferences and macros",
+          "Grocery lists generated straight from the meal plan",
         ],
-        shot: desktop("dashboard", "The Ironside dashboard with KPI cards, grouped metric panels and a sidebar of 17 sections"),
+        shot: desktop("workouts", "The exercise library the AI coach draws on to build workout programmes"),
       },
       {
-        kicker: "02 · Members",
-        title: "A directory you can actually work in",
-        body: "Search, status filters with live counts, sortable columns and pagination over 184 members, plus a profile drawer whose actions change the record and every count that depends on it.",
+        kicker: "02 · Nutrition",
+        title: "From meal plan to grocery list",
+        body: "A verified food database sits behind the coach: calories and macros per 100g, barcodes, and a review step for externally sourced foods, so every plan is built from data the gym trusts.",
         points: [
-          "Freeze, unfreeze, mark paid, cancel and reactivate",
-          "Add-member form with inline validation",
-          "Keyboard and screen-reader friendly: real buttons, aria-sort, Escape to close",
+          "Macros per 100g on every food",
+          "Verify external items before they reach a plan",
+          "Meal plans and grocery lists always agree with each other",
         ],
-        shot: desktop("members-profile", "A member profile drawer open over the members table"),
+        shot: desktop("nutrition", "The nutrition database with macros per 100g and a verification workflow"),
       },
       {
-        kicker: "03 · Leads",
-        title: "Drag a lead through the pipeline",
-        body: "A five-stage board with native drag-and-drop, and a stage selector on every card so it works without a mouse. Columns hold their width and scroll sideways rather than squeezing the cards.",
+        kicker: "03 · Messaging",
+        title: "Trainers and clients, one conversation",
+        body: "Trainers and members talk inside the platform instead of across DMs and texts. Check-ins, plan tweaks and nudges happen where the member's plan already lives, so nothing gets lost between apps.",
         points: [
-          "Win rate and pipeline value recompute as leads move",
-          "Filter by source; add a lead from a validated form",
-          "Tinted column headers shared with the Tasks board",
+          "Inbox with unread tracking so no client waits",
+          "Every conversation tied to a member record",
+          "Quick replies for check-ins and plan changes",
         ],
-        shot: desktop("leads", "The leads pipeline board with five tinted stage columns"),
+        shot: desktop("messages", "The trainer and client messaging inbox"),
       },
       {
-        kicker: "04 · Classes",
-        title: "A real timetable, not a list",
-        body: "An hour-by-hour weekly calendar with a live now-line, ended classes struck through, and a waitlist panel. Opening a class shows its roster, and booking a member updates capacity everywhere.",
+        kicker: "04 · GoHighLevel",
+        title: "Leads flow into the CRM",
+        body: "The lead pipeline connects to GoHighLevel, so enquiries from the gym's marketing show up in the platform and the CRM the team already works in stays in step.",
         points: [
-          "Week navigation and class-type filters",
-          "Book and remove members; full classes block further bookings",
-          "Past classes show attended and no-show states",
+          "A pipeline from first enquiry to signed member",
+          "Source tracking on every lead",
+          "Win rate and pipeline value at a glance",
         ],
-        shot: desktop("classes-roster", "A class roster drawer open over the weekly calendar"),
+        shot: desktop("leads", "The lead pipeline board connected to GoHighLevel"),
       },
       {
-        kicker: "05 · Financial",
-        title: "Revenue you can interrogate",
-        body: "A stacked monthly chart with tooltips, a plan-mix donut and a ledger of 1,900+ payments. Retrying a failed payment moves the money, the KPI and the sidebar badge together.",
+        kicker: "05 · Operations",
+        title: "Run the floor without the spreadsheets",
+        body: "Members, classes and billing in one back office: a profile for every member, an hour-by-hour class calendar with rosters and waitlists, and payment tracking that flags failures the moment they happen.",
         points: [
-          "Charts drawn in plain SVG: no chart library",
-          "Filter, search and paginate the ledger; export what you see as CSV",
-          "Current month marked as month-to-date so it never reads as a dip",
+          "Member profiles with plan, visits and one-click actions",
+          "Class rosters, bookings and waitlists",
+          "Failed payments surfaced with a one-click retry",
         ],
-        shot: desktop("financial", "The financial page with a stacked revenue chart, plan donut and transaction filters"),
+        shot: desktop("classes-roster", "A class roster open over the weekly calendar"),
       },
       {
-        kicker: "06 · Everything else",
-        title: "The rest of the back office",
-        body: "Packages, products, orders, equipment, locations, nutrition, workouts, tasks, messages, notifications, community and team. Each one is a working screen in the same language, not a placeholder.",
+        kicker: "06 · Business",
+        title: "Know how the gym is doing",
+        body: "Revenue by month and by plan, membership tiers, retail and orders all feed a dashboard the owner can read in seconds, so decisions come from the numbers rather than a hunch.",
         points: [
-          "Plan editor with toggles, a stock manager, and an order pipeline",
-          "A two-pane inbox, an Ops board with automation rules, a community feed",
-          "Nutrition database with a verification workflow",
+          "Revenue split across memberships, training and retail",
+          "A plan editor with pricing and visibility controls",
+          "Retail catalogue and order pipeline in the same place",
         ],
-        shot: desktop("packages", "The membership plans page with plan cards, toggles and a dashed add-plan tile"),
+        shot: desktop("financial", "Revenue by month and plan, with the transaction ledger below"),
       },
     ],
     clips: [
-      clip("tour", "Product tour", "Dashboard to financials in twenty seconds: scrolling the panels, switching attendance ranges, then moving through the sidebar.", 21),
-      clip("members", "Members", "Search, filter to past-due, sort, open a profile and mark the account paid. The counts update as it happens.", 14),
-      clip("leads", "Leads", "Dragging leads between stages, then adding a new lead through the validated form.", 12),
-      clip("classes", "Classes", "Browsing weeks, opening a class and booking a member into it. Capacity goes from 7 to 8.", 15),
-      clip("financial", "Financial", "Hovering the revenue chart, filtering the ledger to failed payments and retrying one.", 16),
+      clip("tour", "Platform walkthrough", "From the dashboard to financials in twenty seconds: the owner's view of the whole gym.", 21),
+      clip("members", "Members", "Searching the directory, filtering to past-due accounts and resolving one from the member's profile.", 14),
+      clip("leads", "Leads", "Moving enquiries through the pipeline and adding a new lead.", 12),
+      clip("classes", "Classes", "Browsing the timetable, opening a class and booking a member into it.", 15),
+      clip("financial", "Financial", "Reading revenue by month, then filtering the ledger to failed payments and retrying one.", 16),
     ],
     gallery: [
-      desktop("dashboard-insights", "Attendance insights panel with coach, member and class breakdowns", "Attendance insights"),
-      desktop("members", "The members table with status filter chips and sortable columns", "Members"),
+      desktop("dashboard-insights", "Attendance insights with coach, member and class breakdowns", "Attendance insights"),
+      desktop("members", "The members directory with status filters", "Members"),
       desktop("classes", "The weekly class calendar", "Classes"),
-      desktop("financial-ledger", "The transaction ledger with status filters", "Ledger"),
-      desktop("nutrition", "The nutrition database with verification status", "Nutrition"),
-      desktop("tasks", "The Ops Center task board", "Ops Center"),
-      desktop("messages", "The two-pane messages inbox", "Messages"),
-      desktop("locations", "Location cards with generated map thumbnails", "Locations"),
+      desktop("financial-ledger", "The transaction ledger", "Billing ledger"),
+      desktop("workouts", "The exercise library", "Exercise library"),
+      desktop("nutrition", "The nutrition database", "Nutrition"),
+      desktop("tasks", "The operations task board", "Ops Center"),
+      desktop("orders", "Retail orders and pickups", "Orders"),
       desktop("community", "The community feed and challenge leaderboard", "Community"),
     ],
     phones: [
       phone("mobile-dashboard", "The dashboard on a phone", "Dashboard"),
-      phone("mobile-leads", "The leads board on a phone", "Leads"),
-      phone("mobile-more", "The More sheet listing every other section", "All sections"),
+      phone("mobile-leads", "The lead pipeline on a phone", "Leads"),
+      phone("mobile-more", "Every other section from the More menu", "All sections"),
     ],
     decisions: [
       {
-        title: "One block of tokens themes the whole product",
-        body: "Every colour comes from a single set of CSS variables. Repainting Ironside for a different brand is one edit, not a refactor, which is also how I would deliver a white-label version.",
+        title: "AI plans from the gym's own catalogue",
+        body: "The coach draws on the gym's exercise library and verified foods, and knows what equipment each location actually has, so its suggestions are things members can really do and really buy.",
       },
       {
-        title: "Data is generated, not stored",
-        body: "Members, payments, classes and leads come from a seeded random generator, so the server render and the browser always agree and nothing can drift. Rules keep it believable: nobody visits before they join, and frozen accounts belong to long-standing members.",
+        title: "Trainers stay in control",
+        body: "The AI does the first draft; trainers review, adjust and follow up through messaging. It scales the planning without taking the trainer out of the relationship.",
       },
       {
-        title: "Charts without a chart library",
-        body: "The spline, stacked bars and donut are a few hundred lines of SVG with their own tooltips. It keeps the bundle small and the behaviour fully under control.",
+        title: "Plans end at the checkout",
+        body: "A meal plan is only useful if it gets acted on. Each plan resolves into a grocery list, so members can shop for the week the same day they get it.",
       },
       {
-        title: "State lives where it is shared",
-        body: "Anything that more than one page reads, such as unread notifications or failed payments, sits above the page tree. Marking a notification read changes the sidebar badge, the bell and the list at once.",
+        title: "One record per member",
+        body: "Plan, attendance, billing and conversations all hang off a single member record, so the owner and the trainer are always looking at the same story.",
       },
       {
-        title: "Accessible by default",
-        body: "Real buttons and links, aria-pressed filters, dialog semantics with Escape to close, visible focus rings, and reduced-motion respected throughout.",
+        title: "A CRM that stays in step",
+        body: "The GoHighLevel integration connects leads and contacts with the CRM and automations the gym already runs, instead of asking the team to replace them.",
       },
       {
-        title: "Responsive, not just resized",
-        body: "On a phone the sidebar becomes a tab bar with a More sheet, tables scroll instead of wrapping mid-value, and the pipeline board becomes a swipeable row.",
+        title: "Built for three audiences",
+        body: "Owners, trainers and members each get the surface they need, and everything adapts down to the phone, which is where members spend their time.",
       },
     ],
   },
