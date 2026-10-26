@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FiArrowLeft, FiArrowRight, FiArrowUpRight } from "react-icons/fi";
 import { Counter, Reveal, SplitText, Stagger, StaggerItem } from "../animations";
 import { CASE_STUDIES, LIVE_BUILDS, type CaseStudy } from "@/lib/caseStudies";
-import { FlowPlayer, Frame, Gallery, Reel } from "./CaseMedia";
+import { FlowPlayer, Frame, Gallery, MoreGrid, Reel } from "./CaseMedia";
 
 function Head({ eyebrow, title, em, lede }: { eyebrow: string; title: string; em: string; lede?: string }) {
   return (
@@ -282,37 +282,10 @@ export function CaseMore({ study }: { study: CaseStudy }) {
           eyebrow="Keep exploring"
           title="More"
           em="selected work"
-          lede={others.length ? "Other case studies, plus the sites I've built and shipped." : "More of what I've built and shipped."}
+          lede="A few more things I've built and shipped, picked at random each visit."
         />
 
-        <Stagger className="case-more">
-          {cards.map((c) => {
-            const internal = c.href.startsWith("/");
-            const body = (
-              <>
-                <span className="work-shot">
-                  <Image src={c.shot} alt={`${c.title} ${internal ? "case study" : "website"}`} fill sizes="(max-width: 760px) 92vw, 30vw" style={{ objectFit: "cover", objectPosition: "top" }} />
-                </span>
-                <span className="work-card-foot">
-                  <span className="work-card-title">{c.title}</span>
-                  <span className="mono-label work-card-domain">
-                    {c.label} {internal ? <FiArrowRight size={13} /> : <FiArrowUpRight size={13} />}
-                  </span>
-                  <span className="mono-label work-card-meta">{c.meta}</span>
-                </span>
-              </>
-            );
-            return (
-              <StaggerItem key={c.key}>
-                {internal ? (
-                  <Link href={c.href} className="work-card" data-cursor="Read">{body}</Link>
-                ) : (
-                  <a href={c.href} target="_blank" rel="noopener noreferrer" className="work-card" data-cursor="Visit">{body}</a>
-                )}
-              </StaggerItem>
-            );
-          })}
-        </Stagger>
+        <MoreGrid cards={cards} />
 
         <Reveal delay={0.1}>
           <div className="case-more-cta">
