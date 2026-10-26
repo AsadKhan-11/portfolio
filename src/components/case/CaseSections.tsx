@@ -147,7 +147,7 @@ export function CaseHighlights({ study }: { study: CaseStudy }) {
           eyebrow="What's inside"
           title="What it"
           em="does"
-          lede="The AI coach, nutrition, messaging and the CRM all work from the same member record, so each part makes the others more useful."
+          lede={study.insideLede}
         />
 
         <div className="case-features">
@@ -223,7 +223,7 @@ export function CasePhones({ study }: { study: CaseStudy }) {
           eyebrow="Mobile"
           title="Made for the"
           em="phone"
-          lede="Members and trainers live on their phones, so every screen adapts and navigation collapses into a tab bar with quick access to everything else."
+          lede={study.phoneLede}
         />
         <Stagger className="case-phones">
           {study.phones.map((p) => (

@@ -53,6 +53,9 @@ export interface CaseStudy {
   liveUrl?: string;
   card: string;
   summary: string;
+  /** Intro lines for the "What it does" and "Mobile" sections. */
+  insideLede: string;
+  phoneLede: string;
   challenge: string[];
   approach: string[];
   stats: Stat[];
@@ -100,29 +103,34 @@ export const LIVE_BUILDS: LiveBuild[] = [
   },
 ];
 
-const D = "/work/ironside";
-const desktop = (name: string, alt: string, caption?: string): Shot => ({
-  src: `${D}/stills/${name}.webp`,
-  w: 2400,
-  h: 1350,
-  alt,
-  caption,
+/* Media helpers bound to one project's folder under public/work/. */
+const mediaFor = (dir: string) => ({
+  desktop: (name: string, alt: string, caption?: string): Shot => ({
+    src: `${dir}/stills/${name}.webp`,
+    w: 2400,
+    h: 1350,
+    alt,
+    caption,
+  }),
+  phone: (name: string, alt: string, caption?: string): Shot => ({
+    src: `${dir}/stills/${name}.webp`,
+    w: 1170,
+    h: 2532,
+    alt,
+    caption,
+  }),
+  clip: (id: string, title: string, blurb: string, seconds: number): Clip => ({
+    id,
+    title,
+    blurb,
+    seconds,
+    src: `${dir}/videos/${id}.mp4`,
+    poster: `${dir}/videos/${id}-poster.webp`,
+  }),
 });
-const phone = (name: string, alt: string, caption?: string): Shot => ({
-  src: `${D}/stills/${name}.webp`,
-  w: 1170,
-  h: 2532,
-  alt,
-  caption,
-});
-const clip = (id: string, title: string, blurb: string, seconds: number): Clip => ({
-  id,
-  title,
-  blurb,
-  seconds,
-  src: `${D}/videos/${id}.mp4`,
-  poster: `${D}/videos/${id}-poster.webp`,
-});
+
+const { desktop, phone, clip } = mediaFor("/work/ironside");
+const V = mediaFor("/work/vector-academy");
 
 export const CASE_STUDIES: CaseStudy[] = [
   {
@@ -140,6 +148,10 @@ export const CASE_STUDIES: CaseStudy[] = [
     card: "/work/cards/04-ironside.jpg",
     summary:
       "Ironside runs a gym from one place: memberships, classes, billing and retail for the owner, programmes and messaging for trainers, and an AI coach that builds each member's workouts, meal plans and grocery lists. It connects to GoHighLevel so leads and contacts flow into the CRM the gym already uses.",
+    insideLede:
+      "The AI coach, nutrition, messaging and the CRM all work from the same member record, so each part makes the others more useful.",
+    phoneLede:
+      "Members and trainers live on their phones, so every screen adapts and navigation collapses into a tab bar with quick access to everything else.",
     challenge: [
       "Most gyms run on a patchwork: a spreadsheet for members, a CRM for leads, DMs for trainers, one app for programmes and another for nutrition. Nothing agrees with anything else, and coaches spend their days on admin instead of coaching.",
       "The goal was a single platform where the owner, the trainers and the members all work from the same record, and where AI takes over the planning work that eats a trainer's day.",
@@ -269,6 +281,157 @@ export const CASE_STUDIES: CaseStudy[] = [
       {
         title: "Built for three audiences",
         body: "Owners, trainers and members each get the surface they need, and everything adapts down to the phone, which is where members spend their time.",
+      },
+    ],
+  },
+  {
+    slug: "vector-academy",
+    n: "02",
+    title: "Vector Academy",
+    tagline: "From first enquiry to first solo, on one platform.",
+    meta: "Flight-training platform · 2026",
+    year: "2026",
+    role: "Full-stack development & AI integration",
+    client: "Flight-training academy",
+    type: "Academy operations platform",
+    status: "In production · details anonymised",
+    tags: ["AI admissions co-pilot", "Aptitude scoring", "Pipeline & scheduling", "Billing & programs"],
+    card: "/work/cards/05-vector-academy.jpg",
+    summary:
+      "Vector Academy runs a flight school from one place. An AI co-pilot answers prospective students around the clock and scores their aptitude, a pipeline carries each applicant through to enrolment, and the team schedules flights, sessions, programs and payments from the same console.",
+    insideLede:
+      "The co-pilot, the pipeline, scheduling and billing all work from the same applicant record, so each part makes the others more useful.",
+    phoneLede:
+      "Instructors and admissions staff work from the apron and the open day, so every screen adapts and navigation collapses into a tab bar.",
+    challenge: [
+      "Flight schools sell a high-value, high-anxiety product. Prospective students have dozens of questions about cost, medicals and time, and the best of them go quiet if nobody answers within a day. Behind the scenes, enquiries, bookings, lessons and invoices live in separate tools.",
+      "The goal was a single platform that answers and qualifies applicants the moment they arrive, then carries them through enrolment, training and billing without anyone re-keying a record.",
+    ],
+    approach: [
+      "Everything starts with the applicant. A short aptitude quiz scores each enquiry, the AI co-pilot answers their questions from the academy's own knowledge base, and anyone scoring highly lands in a high-value alert for a same-day call.",
+      "From there the platform follows them: a drag-and-drop pipeline from enquiry to cadet, flights and open days with live capacity, instructor sessions with weather holds, program pricing, instalment billing and a pro shop. Staff curate what the co-pilot knows and stay in the loop; it hands over to a human whenever it is not sure.",
+    ],
+    stats: [
+      { value: 17, label: "Connected modules" },
+      { value: 5, label: "Pipeline stages, enquiry to cadet" },
+      { value: 4, label: "Programs, first flight to commercial" },
+      { value: 2, label: "Always-on AI jobs: answering and scoring" },
+    ],
+    highlights: [
+      {
+        kicker: "01 · AI co-pilot",
+        title: "An advisor that never sleeps",
+        body: "Prospective students ask the co-pilot about cost, medicals, timelines and aircraft, and get an answer drawn from the academy's own knowledge base. It can build a week-by-week study plan on request, and passes the conversation to an instructor when it is not confident.",
+        points: [
+          "Answers grounded in a knowledge base staff control",
+          "Approved gold answers, persona and safety rules in one place",
+          "Hands over to a human instead of guessing",
+        ],
+        shot: V.desktop("copilot", "The Co-pilot admin screen with the knowledge base and a live chat answering a cost question and building a study plan"),
+      },
+      {
+        kicker: "02 · Aptitude scoring",
+        title: "Every applicant arrives scored",
+        body: "An aptitude quiz ranks every enquiry before anyone has picked up the phone. High scorers surface in a hot-lead alert with the AI's engagement signal beside them, so the team calls the right people first.",
+        points: [
+          "A weighted aptitude score on every applicant",
+          "High-value alerts with one-click follow-up",
+          "Lead quality tracked from enquiry to enrolment",
+        ],
+        shot: V.desktop("dashboard", "The Command Center dashboard with applicant velocity, lead quality and high-value alerts"),
+      },
+      {
+        kicker: "03 · Pipeline",
+        title: "From enquiry to cadet in five stages",
+        body: "A board shows every opportunity by stage, with aptitude, track and source on each card. Moving someone forward is a drag, and a new opportunity takes seconds to add.",
+        points: [
+          "Drag-and-drop stages from New to Enrolled",
+          "Source tracking on every applicant",
+          "Average aptitude per stage at a glance",
+        ],
+        shot: V.desktop("pipeline", "The applicant pipeline board across five stages"),
+      },
+      {
+        kicker: "04 · Flights & sessions",
+        title: "Open days, fly-outs and lessons, scheduled",
+        body: "Events carry live capacity so a full workshop is obvious at a glance, and one-to-one lessons are scheduled against an instructor and an aircraft, with weather holds handled as a first-class status.",
+        points: [
+          "Open days, workshops and fly-outs with capacity bars",
+          "Lessons tied to an instructor and an aircraft",
+          "Weather holds tracked, not lost in a spreadsheet",
+        ],
+        shot: V.desktop("flights", "The flights and events page with capacity and revenue stats"),
+      },
+      {
+        kicker: "05 · Programs & billing",
+        title: "Programs, instalments and a clean ledger",
+        body: "Four programs from a first flight to a commercial foundation are priced and published from one screen. Every instalment, shop order and event booking lands in one ledger, with pending and failed payments separated out.",
+        points: [
+          "Programs switched on or off for the public site",
+          "A single ledger across programs, shop and events",
+          "Pending, refunded and failed payments called out",
+        ],
+        shot: V.desktop("programs-cards", "The training programs as pricing cards"),
+      },
+      {
+        kicker: "06 · Curriculum & community",
+        title: "Training that keeps cadets coming back",
+        body: "Ground-school modules are organised by pillar with completion and score data, and a leaderboard and community feed keep cadets engaged between lessons, so the academy sees who is progressing and who has gone quiet.",
+        points: [
+          "Modules grouped by pillar, from airmanship to regulations",
+          "Completion and average scores for every module",
+          "A leaderboard that rewards consistent progress",
+        ],
+        shot: V.desktop("curriculum", "The curriculum hub with completion and scores per module"),
+      },
+    ],
+    clips: [
+      V.clip("tour", "Platform walkthrough", "From the dashboard through the pipeline, flights, programs and the co-pilot in twenty seconds.", 21),
+      V.clip("pipeline", "Pipeline", "Moving applicants through the stages and adding a new opportunity.", 14),
+      V.clip("copilot", "Co-pilot", "Browsing the knowledge base and safety rules, then testing the assistant with real questions and a study plan.", 21),
+      V.clip("flights", "Flights & sessions", "Switching the events view, then searching the session schedule.", 12),
+      V.clip("billing", "Billing", "Filtering the ledger to pending payments, then drilling into revenue.", 9),
+    ],
+    gallery: [
+      V.desktop("dashboard-engagement", "Portal engagement, top performers and recent applicants", "Engagement"),
+      V.desktop("applicants", "The applicants directory with aptitude scores", "Applicants"),
+      V.desktop("sessions", "The session schedule with instructors and aircraft", "Sessions"),
+      V.desktop("billing", "The billing ledger", "Billing"),
+      V.desktop("reports-revenue", "A revenue report broken down by source", "Reports"),
+      V.desktop("messages", "The applicant and cadet inbox", "Messages"),
+      V.desktop("products", "The pro shop catalogue", "Pro shop"),
+      V.desktop("orders", "Shop orders and fulfilment", "Orders"),
+      V.desktop("community", "The cadet leaderboard and community feed", "Community"),
+    ],
+    phones: [
+      V.phone("mobile-dashboard", "The dashboard on a phone", "Dashboard"),
+      V.phone("mobile-applicants", "The applicants directory on a phone", "Applicants"),
+      V.phone("mobile-copilot", "The co-pilot admin on a phone", "Co-pilot"),
+    ],
+    decisions: [
+      {
+        title: "Answers from the academy's own knowledge",
+        body: "The co-pilot only answers from entries staff have written and approved, so it never invents a price, a policy or a promise about a medical.",
+      },
+      {
+        title: "Hand over, don't guess",
+        body: "When the co-pilot is not confident it says so, flags the question for an instructor and moves on. Staff review what it could not answer and turn the best of those into new knowledge.",
+      },
+      {
+        title: "Score before the first call",
+        body: "Every enquiry gets an aptitude score on arrival, so a small admissions team spends its time on the applicants most likely to enrol.",
+      },
+      {
+        title: "One record from applicant to cadet",
+        body: "The person who asked a question on Monday is the same record that books a lesson in March and pays an instalment in April, with their messages attached.",
+      },
+      {
+        title: "Weather is a status, not an exception",
+        body: "Flying is cancelled by the sky, not the schedule. Weather holds are tracked as their own state, so cadets are told early and nothing slips through.",
+      },
+      {
+        title: "Made for instructors on the move",
+        body: "The console adapts down to the phone, because instructors check the day's sessions from the apron, not from a desk.",
       },
     ],
   },
