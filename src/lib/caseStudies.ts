@@ -131,6 +131,7 @@ const mediaFor = (dir: string) => ({
 
 const { desktop, phone, clip } = mediaFor("/work/ironside");
 const V = mediaFor("/work/vector-academy");
+const VL = mediaFor("/work/veloura");
 
 export const CASE_STUDIES: CaseStudy[] = [
   {
@@ -432,6 +433,158 @@ export const CASE_STUDIES: CaseStudy[] = [
       {
         title: "Made for instructors on the move",
         body: "The console adapts down to the phone, because instructors check the day's sessions from the apron, not from a desk.",
+      },
+    ],
+  },
+  {
+    slug: "veloura",
+    n: "03",
+    title: "Veloura",
+    tagline: "The operating system for a modern med spa.",
+    meta: "Med-spa platform · 2026",
+    year: "2026",
+    role: "Product design & full-stack development",
+    client: "Medical aesthetics clinics",
+    type: "Practice management platform",
+    status: "Live · built for aesthetic clinics",
+    tags: ["Online booking", "E-signed consent", "Role-based access", "Client portal"],
+    liveUrl: "https://veloura-omega-roan.vercel.app",
+    card: "/work/cards/06-veloura.jpg",
+    summary:
+      "Veloura runs an aesthetics clinic from one place. Clients create an account, sign their consent form electronically and book their own visits; the team schedules providers and rooms, keeps rich client records, sells memberships, manages stock and runs marketing, each person seeing exactly the workspace their role needs.",
+    insideLede:
+      "Booking, consent, records, payments and marketing all hang off the same client record, so each part makes the others more useful.",
+    phoneLede:
+      "Clients book from their phones and the team works between treatments, so every screen adapts and navigation collapses into a tab bar.",
+    challenge: [
+      "A typical clinic stitches its business together from a booking app, a spreadsheet for stock, paper consent forms and a separate email tool. Clients get a patchy experience, front-desk staff re-key the same details, and the owner can never see the whole business in one place.",
+      "The goal was one platform that gives clients a beautiful way to book and sign up, and gives every member of the team a workspace that matches their job, without anyone leaving the system to get something done.",
+    ],
+    approach: [
+      "Veloura has two front doors. Clients get a portal where they sign up, review and e-sign their consent and medical history, book a treatment with live availability, and manage visits, memberships and billing. The team gets a console with a workspace for each of five roles: owner, practice manager, provider, front desk and marketing.",
+      "Everything runs on a real database with row-level security, so permissions and double-booking rules are enforced at the data layer, not just hidden in the interface. A client sees only their own records, a provider sees their own schedule, and the owner sees the whole practice.",
+    ],
+    stats: [
+      { value: 12, label: "Back-office modules" },
+      { value: 5, label: "Staff roles, each with its own workspace" },
+      { value: 2, label: "Portals: the team console and the client portal" },
+      { value: 24, suffix: "/7", label: "Online booking and e-signing" },
+    ],
+    highlights: [
+      {
+        kicker: "01 · Online booking",
+        title: "Clients book themselves, any time",
+        body: "Clients choose a treatment, a provider and a time from live availability worked out from provider hours, rooms and existing bookings. Confirming takes one tap, and the visit lands in their account and on the team's calendar straight away.",
+        points: [
+          "First available, or a preferred provider",
+          "Open slots calculated, never typed in by hand",
+          "Free to change or cancel up to 24 hours before",
+        ],
+        shot: VL.desktop("portal-book", "The booking page with provider choice, a day strip, a time grid and a live visit summary"),
+      },
+      {
+        kicker: "02 · E-signed consent",
+        title: "From sign-up to signed consent in a minute",
+        body: "New clients create an account, then review and sign their consent and medical history electronically before their first treatment. The signed form is filed on their record, and the team can see at a glance who is cleared and who is not.",
+        points: [
+          "Self-service sign-up with a password-strength check",
+          "Consent and intake signed on any device",
+          "Consent status visible on every client profile",
+        ],
+        shot: VL.desktop("consent", "The consent and medical history form ready to be signed electronically"),
+      },
+      {
+        kicker: "03 · Scheduling",
+        title: "A calendar that knows the clinic",
+        body: "A day, week and month calendar that understands providers, rooms and treatments. Double-bookings are refused by the database itself, and appointments can be dragged to a new time when plans change.",
+        points: [
+          "Provider, room and treatment-aware booking",
+          "Conflicts blocked at the data layer",
+          "Filter by treatment category or status",
+        ],
+        shot: VL.desktop("calendar-week", "The weekly calendar across four providers"),
+      },
+      {
+        kicker: "04 · Client records",
+        title: "Every client, one living profile",
+        body: "Visit history, favourite treatments, upcoming appointments, consent status, notes and follow-up tasks all live on one profile, with before-and-after photo records alongside. Whoever opens it sees the whole story.",
+        points: [
+          "Lifetime value, visits and next appointment at a glance",
+          "Clinical and preference notes with follow-up tasks",
+          "Before-and-after photo records per treatment",
+        ],
+        shot: VL.desktop("client-profile", "A client profile with history, consent, notes and upcoming visits"),
+      },
+      {
+        kicker: "05 · Growth",
+        title: "Campaigns, memberships and referrals that pay back",
+        body: "Campaigns go to client segments and report opens, clicks, bookings and revenue. Memberships, reviews and referrals sit alongside, so the clinic can see which marketing actually fills the calendar.",
+        points: [
+          "Campaigns with opens, clicks, bookings and revenue",
+          "Segments built from opted-in clients only",
+          "Reviews, referrals and automated follow-ups",
+        ],
+        shot: VL.desktop("marketing", "Marketing campaigns with performance results"),
+      },
+      {
+        kicker: "06 · Control",
+        title: "The right view for every role",
+        body: "The owner, practice manager, provider, front desk and marketing coordinator each see different pages, widgets and actions. Permissions are enforced in the database, so a provider can't open payments and a client can only ever see their own record.",
+        points: [
+          "Five roles with distinct pages and capabilities",
+          "Team directory with schedules and performance",
+          "Payments, refunds, inventory and reports for the owner",
+        ],
+        shot: VL.desktop("team", "The team directory with roles, schedules and production"),
+      },
+    ],
+    clips: [
+      VL.clip("tour", "Platform walkthrough", "The owner's view: the dashboard, calendar, clients, payments and reports in seventeen seconds.", 17),
+      VL.clip("journey", "Sign-up to booking", "A new client creates an account, signs the consent form electronically and books a visit, all in about forty seconds.", 39),
+      VL.clip("calendar", "Scheduling", "Day, week and month views, a treatment filter and the new-appointment form.", 16),
+      VL.clip("clients", "Clients", "Searching and filtering the directory, then moving through a client's appointments, purchases, notes and photo records.", 19),
+      VL.clip("marketing", "Marketing", "Campaigns, client segments, reviews and referrals, and automations.", 12),
+    ],
+    gallery: [
+      VL.desktop("dashboard-insights", "Revenue by category and provider production on the owner dashboard", "Insights"),
+      VL.desktop("leads", "The lead pipeline from first inquiry to converted client", "Leads"),
+      VL.desktop("treatments", "The treatment menu with pricing and providers", "Treatments"),
+      VL.desktop("payments", "Transactions, outstanding balances and gift cards", "Payments"),
+      VL.desktop("memberships", "Membership plans and members", "Memberships"),
+      VL.desktop("inventory", "Stock levels with low-stock alerts", "Inventory"),
+      VL.desktop("reports", "Revenue reporting across the practice", "Reports"),
+      VL.desktop("signup", "The client sign-up page", "Sign-up"),
+      VL.desktop("portal-billing", "A client's billing page in the portal", "Client billing"),
+    ],
+    phones: [
+      VL.phone("mobile-portal", "The client portal home on a phone", "Client portal"),
+      VL.phone("mobile-book", "Booking a visit on a phone", "Booking"),
+      VL.phone("mobile-dashboard", "The owner dashboard on a phone", "Dashboard"),
+    ],
+    decisions: [
+      {
+        title: "Rules live in the database",
+        body: "Double-bookings and permissions are enforced by the data layer, so the rules hold no matter how a request arrives, not just where the interface happens to hide a button.",
+      },
+      {
+        title: "Availability is calculated",
+        body: "Open slots come from provider hours, room availability and existing appointments, so clients only ever see times the clinic can really honour.",
+      },
+      {
+        title: "Consent before treatment",
+        body: "Clients are asked to sign before their first visit, and the status sits on their profile, so nothing depends on someone remembering to chase a form.",
+      },
+      {
+        title: "One record per client",
+        body: "History, notes, consent, purchases and photos hang off a single profile, so the front desk, the provider and the owner are always looking at the same story.",
+      },
+      {
+        title: "Every role gets its own workspace",
+        body: "Five roles see different pages and widgets, so people are shown what their job needs and nothing that isn't theirs to touch.",
+      },
+      {
+        title: "Beautiful on both sides of the desk",
+        body: "The client portal feels like the clinic's brand, and the team console is built for speed. Both adapt down to the phone.",
       },
     ],
   },
