@@ -110,9 +110,42 @@ export function CaseStory({ study }: { study: CaseStudy }) {
     <section className="section">
       <div className="rule-top" />
       <div className="shell">
-        <Reveal>
-          <p className="case-summary">{study.summary}</p>
-        </Reveal>
+        <div className="case-lead">
+          <Reveal>
+            <p className="case-summary">{study.summary}</p>
+          </Reveal>
+          <Reveal className="case-lead-art" delay={0.2} y={30}>
+            <figure className="case-lead-fig">
+              <span className="case-lead-glow" aria-hidden="true" />
+              <Image
+                src="/brand/avatar.webp"
+                alt="Asad Khan, illustrated portrait"
+                width={640}
+                height={1037}
+                sizes="(max-width: 900px) 220px, 340px"
+                className="case-lead-img"
+              />
+              <svg className="case-lead-arrow" viewBox="0 0 220 120" fill="none" aria-hidden="true">
+                <path
+                  className="case-lead-arrow-line"
+                  d="M214 84 C 170 112, 96 108, 54 60 C 40 44, 30 34, 14 28"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeDasharray="6 7"
+                />
+                <path
+                  d="M8 44 L12 24 L32 26"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <figcaption className="mono-label case-lead-tag">The short version</figcaption>
+            </figure>
+          </Reveal>
+        </div>
 
         <div className="case-story">
           <Reveal>
