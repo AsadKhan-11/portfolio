@@ -3607,3 +3607,111 @@ html.lenis body {
   justify-content: center;
   margin-top: clamp(2.5rem, 6vh, 3.5rem);
 }
+
+/* ─────────────────────────────────────────────
+   Mobile-app case studies: phone frames
+   ───────────────────────────────────────────── */
+.case-device {
+  position: relative;
+  width: 100%;
+  max-width: 330px;
+  margin-inline: auto;
+  padding: 9px;
+  border-radius: 46px;
+  background: var(--ink-panel);
+  border: 1px solid var(--rule-strong);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), inset 0 0 0 1.5px rgba(255, 255, 255, 0.05);
+}
+
+/* The captures already include the status bar and island. */
+.case-device-island {
+  display: none;
+}
+
+.case-device img,
+.case-device .case-video {
+  display: block;
+  border-radius: 38px;
+  background: var(--ink);
+}
+
+.case-video[data-device] {
+  aspect-ratio: 1206 / 2622;
+  object-fit: cover;
+}
+
+.case-phonereel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.5rem, 3vw, 3rem);
+  align-items: center;
+  max-width: 1000px;
+  margin-inline: auto;
+}
+
+.case-phonereel-item {
+  display: grid;
+  gap: 1.1rem;
+  justify-items: center;
+}
+
+.case-phonereel .case-device {
+  max-width: 320px;
+  padding: clamp(4px, 0.8vw, 9px);
+  border-radius: clamp(18px, 3.6vw, 46px);
+}
+
+.case-phonereel .case-device img,
+.case-phonereel .case-device .case-video {
+  border-radius: clamp(14px, 2.9vw, 38px);
+}
+
+@media (min-width: 760px) {
+  .case-phonereel-item[data-mid="true"] {
+    transform: translateY(-2.5rem);
+  }
+}
+
+.case-phonereel-cap {
+  text-align: center;
+  color: var(--bone-45);
+}
+
+@media (min-width: 1000px) {
+  .case-flow[data-device] {
+    grid-template-columns: minmax(0, 330px) minmax(0, 1fr);
+    justify-content: center;
+    gap: clamp(2.5rem, 6vw, 5rem);
+  }
+}
+
+@media (min-width: 900px) {
+  .case-feature[data-device] {
+    grid-template-columns: 6fr 5fr;
+  }
+
+  .case-feature[data-device][data-flip="true"] {
+    grid-template-columns: 5fr 6fr;
+  }
+}
+
+.case-feature[data-device] .case-feature-shot {
+  width: 100%;
+  max-width: 330px;
+  margin-inline: auto;
+}
+
+.case-gallery[data-device] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 760px) {
+  .case-gallery[data-device] {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.case-gallery[data-device] .case-gallery-shot {
+  aspect-ratio: 1206 / 2622;
+  border-radius: 22px;
+}

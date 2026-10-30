@@ -37,6 +37,10 @@ export interface Stat {
 
 export interface CaseStudy {
   slug: string;
+  /** Defaults to "web". Mobile studies are presented in phone frames. */
+  platform?: "web" | "mobile";
+  /** Overrides the default lede on the "Thinking behind it" section. */
+  decisionsLede?: string;
   n: string;
   title: string;
   tagline: string;
@@ -132,6 +136,21 @@ const mediaFor = (dir: string) => ({
 const { desktop, phone, clip } = mediaFor("/work/ironside");
 const V = mediaFor("/work/vector-academy");
 const VL = mediaFor("/work/veloura");
+
+/* Simulator captures are 1206 x 2622. */
+const CB = (() => {
+  const base = mediaFor("/work/curbly");
+  return {
+    clip: base.clip,
+    shot: (name: string, alt: string, caption?: string): Shot => ({
+      src: `/work/curbly/stills/${name}.webp`,
+      w: 1206,
+      h: 2622,
+      alt,
+      caption,
+    }),
+  };
+})();
 
 export const CASE_STUDIES: CaseStudy[] = [
   {
@@ -587,6 +606,136 @@ export const CASE_STUDIES: CaseStudy[] = [
         body: "The client portal feels like the clinic's brand, and the team console is built for speed. Both adapt down to the phone.",
       },
     ],
+  },
+  {
+    slug: "curbly",
+    platform: "mobile",
+    n: "04",
+    title: "Curbly",
+    tagline: "Order from the truck down the street, before you get there.",
+    meta: "Mobile app · Concept · 2026",
+    year: "2026",
+    role: "Product design & mobile development",
+    client: "Self-initiated concept",
+    type: "Mobile app for iOS & Android",
+    status: "Concept build · working prototype with sample data",
+    tags: ["React Native", "Live map", "Pickup ordering", "Vendor mode", "Order tracking"],
+    card: "/work/cards/07-curbly.jpg",
+    summary:
+      "Curbly is a two-sided mobile marketplace for food trucks. Customers see which trucks are serving right now, order ahead and walk up to a pickup code. Truck owners run their day from the same app: a live queue, a menu with stock levels, earnings and a route for the week. It is a working prototype built to explore what a calmer, more premium take on the category could look like.",
+    insideLede:
+      "Two experiences share one app. Customers get discovery, ordering and tracking. Vendors get a console that fits in a pocket and survives a lunch rush.",
+    phoneLede: "",
+    challenge: [
+      "Food trucks move, sell out and change their hours, so most people find them by luck or by scrolling an Instagram story. Ordering ahead is rare, and the owners are too busy at the window to manage another tool.",
+      "The goal was an app that answers three questions fast: what is open near me, how long will it take, and how do I skip the line. And a vendor side simple enough to use with flour on your hands.",
+    ],
+    approach: [
+      "Discovery is feed-first rather than map-first. A warm editorial home surfaces who is live, with the map as a card you can expand when you need it, instead of a full-screen grid of pins.",
+      "Ordering is built around pickup: choose a time, tip the crew, get a four-character code. The vendor sees the same order arrive in a live queue and moves it from new to preparing to ready with one tap, and the customer's tracking screen follows along.",
+    ],
+    stats: [
+      { value: 2, label: "Experiences in one app: customer and vendor" },
+      { value: 20, label: "Screens designed and built" },
+      { value: 45, label: "Dishes across 10 sample trucks" },
+      { value: 1, label: "Codebase for iOS and Android" },
+    ],
+    highlights: [
+      {
+        kicker: "01 · Discover",
+        title: "See who is serving right now",
+        body: "The home screen leads with trucks that are live, with ETA, distance and rating on every card. Categories, search and an expandable map are one tap away.",
+        points: [
+          "Live-now carousel with pickup ETA and distance",
+          "Photo-led category shortcuts and fast search",
+          "Map card that expands when you want to browse by location",
+        ],
+        shot: CB.shot("explore", "The Curbly home screen with categories and live trucks"),
+      },
+      {
+        kicker: "02 · Order",
+        title: "A menu worth browsing",
+        body: "Each truck gets a proper page: story, hours, a map pin, its most-loved dishes and a full menu with customisation. Adding to the order never leaves the page.",
+        points: [
+          "Most-loved row and category filters",
+          "Size and add-on options with a live price",
+          "Floating order bar that follows you around the app",
+        ],
+        shot: CB.shot("truck-menu", "A food truck's menu with popular dishes and categories"),
+      },
+      {
+        kicker: "03 · Pickup",
+        title: "Skip the line with a pickup code",
+        body: "Once an order is placed, the tracking screen shows the walk to the truck, a progress bar, the order status and a four-character code to show at the window.",
+        points: [
+          "Live route from you to the truck",
+          "Step-by-step status from confirmed to picked up",
+          "Large pickup code with a scannable QR",
+        ],
+        shot: CB.shot("tracking", "The order tracking screen with a map and pickup code"),
+      },
+      {
+        kicker: "04 · Vendor mode",
+        title: "Run the truck from your pocket",
+        body: "Owners switch into a dashboard built for speed: go live with one switch, watch the day's revenue, accept orders and keep an eye on stock.",
+        points: [
+          "Go-live switch with location and closing time",
+          "Revenue, orders, average ticket and an hourly sales chart",
+          "Low-stock alerts and a next-stop route card",
+        ],
+        shot: CB.shot("vendor-today", "The vendor dashboard showing today's revenue and sales by hour"),
+      },
+    ],
+    clips: [
+      CB.clip("tour", "Customer tour", "From the welcome screen to the live map, a truck's page and its menu.", 25),
+      CB.clip("order", "Placing an order", "Customise a dish, check out with Apple Pay and follow the order to pickup.", 16),
+      CB.clip("vendor", "A day as the vendor", "Go live, accept orders through the queue, manage the menu and check earnings.", 15),
+    ],
+    gallery: [
+      CB.shot("welcome", "The Curbly welcome screen", "Welcome"),
+      CB.shot("explore-live", "Trucks that are live near you", "Live near you"),
+      CB.shot("explore-map", "The map card with live and closed trucks", "On the map"),
+      CB.shot("search", "Search with filters, trending dishes and results", "Search"),
+      CB.shot("truck", "A truck's page with stats and map", "Truck page"),
+      CB.shot("item", "Customising a dish with size and add-ons", "Customise"),
+      CB.shot("cart", "The order summary with pickup time, tip and payment", "Checkout"),
+      CB.shot("orders", "Active and past orders", "Activity"),
+      CB.shot("saved", "Saved trucks", "Saved"),
+      CB.shot("profile", "The profile and Curbly Pass", "Profile"),
+      CB.shot("vendor-queue", "The vendor's live order queue", "Order queue"),
+      CB.shot("vendor-menu", "Menu management with stock levels", "Menu & stock"),
+      CB.shot("vendor-earnings", "Weekly earnings and payouts", "Earnings"),
+      CB.shot("vendor-route", "The day's route with stops on a map", "Route planner"),
+      CB.shot("vendor-schedule", "The weekly schedule of stops", "Schedule"),
+    ],
+    phones: [],
+    decisions: [
+      {
+        title: "Warm, not loud",
+        body: "A cream canvas, deep forest green and a single citrus accent give the category a more premium feel than the usual dark map with neon pins.",
+      },
+      {
+        title: "The map is a card",
+        body: "Most people want to know what is good, not where the pins are. Discovery leads with photography and ETAs, and the map expands when you ask for it.",
+      },
+      {
+        title: "Pickup, not payment at the window",
+        body: "Orders are paid in the app and collected with a code, so the truck's window stays fast and nobody fumbles with a card in the rain.",
+      },
+      {
+        title: "One app, two modes",
+        body: "Owners are customers too. A single switch moves between the two experiences, which keeps the codebase and the design system shared.",
+      },
+      {
+        title: "Built for thumbs",
+        body: "A floating tab bar, big tap targets and bottom sheets for secondary actions keep every common action within reach of one hand.",
+      },
+      {
+        title: "Sample data that reads as real",
+        body: "Ten trucks, forty-five dishes, reviews, orders and payouts make every screen feel lived-in, so the design is judged on its merits and not on empty states.",
+      },
+    ],
+    decisionsLede: "The design choices that shape how Curbly looks, reads and feels in the hand.",
   },
 ];
 

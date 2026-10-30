@@ -3,7 +3,9 @@ import Link from "next/link";
 import { FiArrowLeft, FiArrowRight, FiArrowUpRight } from "react-icons/fi";
 import { Counter, Reveal, SplitText, Stagger, StaggerItem } from "../animations";
 import { CASE_STUDIES, LIVE_BUILDS, type CaseStudy } from "@/lib/caseStudies";
-import { FlowPlayer, Frame, Gallery, MoreGrid, Reel } from "./CaseMedia";
+import { Device, FlowPlayer, Frame, Gallery, MoreGrid, PhoneReel, Reel } from "./CaseMedia";
+
+const isMobile = (s: CaseStudy) => s.platform === "mobile";
 
 function Head({ eyebrow, title, em, lede }: { eyebrow: string; title: string; em: string; lede?: string }) {
   return (
@@ -92,7 +94,11 @@ export function CaseReel({ study }: { study: CaseStudy }) {
     <section className="case-reel">
       <div className="shell">
         <Reveal y={48}>
-          <Reel clip={study.clips[0]} label={`${study.title.toLowerCase()} · admin`} />
+          {isMobile(study) ? (
+            <PhoneReel clips={study.clips} />
+          ) : (
+            <Reel clip={study.clips[0]} label={`${study.title.toLowerCase()} · admin`} />
+          )}
         </Reveal>
       </div>
     </section>
@@ -152,7 +158,7 @@ export function CaseHighlights({ study }: { study: CaseStudy }) {
 
         <div className="case-features">
           {study.highlights.map((h, i) => (
-            <article key={h.title} className="case-feature" data-flip={i % 2 === 1}>
+            <article key={h.title} className="case-feature" data-flip={i % 2 === 1} data-device={isMobile(study) || undefined}>
               <Reveal className="case-feature-copy">
                 <p className="mono-label" style={{ color: "var(--flame)" }}>{h.kicker}</p>
                 <h3 className="case-feature-title">{h.title}</h3>
@@ -162,16 +168,29 @@ export function CaseHighlights({ study }: { study: CaseStudy }) {
                 </ul>
               </Reveal>
               <Reveal className="case-feature-shot" delay={0.1} y={40}>
-                <Frame label={study.title.toLowerCase()}>
-                  <Image
-                    src={h.shot.src}
-                    alt={h.shot.alt}
-                    width={h.shot.w}
-                    height={h.shot.h}
-                    sizes="(max-width: 900px) 92vw, 52vw"
-                    style={{ width: "100%", height: "auto", display: "block" }}
-                  />
-                </Frame>
+                {isMobile(study) ? (
+                  <Device label={h.shot.alt}>
+                    <Image
+                      src={h.shot.src}
+                      alt={h.shot.alt}
+                      width={h.shot.w}
+                      height={h.shot.h}
+                      sizes="(max-width: 900px) 70vw, 340px"
+                      style={{ width: "100%", height: "auto", display: "block" }}
+                    />
+                  </Device>
+                ) : (
+                  <Frame label={study.title.toLowerCase()}>
+                    <Image
+                      src={h.shot.src}
+                      alt={h.shot.alt}
+                      width={h.shot.w}
+                      height={h.shot.h}
+                      sizes="(max-width: 900px) 92vw, 52vw"
+                      style={{ width: "100%", height: "auto", display: "block" }}
+                    />
+                  </Frame>
+                )}
               </Reveal>
             </article>
           ))}
@@ -190,10 +209,10 @@ export function CaseFlows({ study }: { study: CaseStudy }) {
           eyebrow="In motion"
           title="See it"
           em="working"
-          lede="Short walkthroughs of the core workflows. They play on their own, one after another, or pick one from the list."
+          lede={isMobile(study) ? "Short screen recordings of the core flows, captured from the running app. They play on their own, one after another, or pick one from the list." : "Short walkthroughs of the core workflows. They play on their own, one after another, or pick one from the list."}
         />
         <Reveal delay={0.1} style={{ marginTop: "clamp(2.5rem, 6vh, 4rem)" }}>
-          <FlowPlayer clips={study.clips} label={`${study.title.toLowerCase()} · walkthroughs`} />
+          <FlowPlayer clips={study.clips} label={`${study.title.toLowerCase()} · walkthroughs`} device={isMobile(study)} />
         </Reveal>
       </div>
     </section>
@@ -205,9 +224,9 @@ export function CaseGallery({ study }: { study: CaseStudy }) {
     <section className="section bg-glow-tr">
       <div className="rule-top" />
       <div className="shell">
-        <Head eyebrow="Gallery" title="More" em="screens" lede="Click any screen to see it full size, then use the arrow keys to move through the set." />
+        <Head eyebrow="Gallery" title={isMobile(study) ? "Screen by" : "More"} em={isMobile(study) ? "screen" : "screens"} lede="Click any screen to see it full size, then use the arrow keys to move through the set." />
         <Reveal delay={0.1} style={{ marginTop: "clamp(2.5rem, 6vh, 4rem)" }}>
-          <Gallery shots={study.gallery} />
+          <Gallery shots={study.gallery} device={isMobile(study)} />
         </Reveal>
       </div>
     </section>
@@ -215,6 +234,7 @@ export function CaseGallery({ study }: { study: CaseStudy }) {
 }
 
 export function CasePhones({ study }: { study: CaseStudy }) {
+  if (isMobile(study) || study.phones.length === 0) return null;
   return (
     <section className="section">
       <div className="rule-top" />
@@ -247,7 +267,7 @@ export function CaseDecisions({ study }: { study: CaseStudy }) {
     <section className="section bg-glow-bl">
       <div className="rule-top" />
       <div className="shell">
-        <Head eyebrow="How it fits together" title="Thinking" em="behind it" lede="AI that does the heavy lifting, and people who stay in control of the relationship." />
+        <Head eyebrow="How it fits together" title="Thinking" em="behind it" lede={study.decisionsLede ?? "AI that does the heavy lifting, and people who stay in control of the relationship."} />
         <Stagger className="case-decisions">
           {study.decisions.map((d, i) => (
             <StaggerItem key={d.title} className="panel case-decision">
@@ -308,7 +328,7 @@ export function CaseOutro({ study }: { study: CaseStudy }) {
         <Reveal>
           <p className="eyebrow" style={{ justifyContent: "center" }}>Next step</p>
           <h2 className="case-outro-title">
-            Need a platform
+            {isMobile(study) ? "Need an app" : "Need a platform"}
             <br />
             <span className="serif-em" style={{ color: "var(--flame)" }}>like {study.title}?</span>
           </h2>
