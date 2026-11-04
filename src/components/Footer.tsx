@@ -7,11 +7,10 @@ import { FaXTwitter } from "react-icons/fa6";
 import { Magnetic, Marquee } from "./animations";
 
 const LINKS = [
-  { label: "Profile", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Stack", href: "#skills" },
-  { label: "Packages", href: "#packages" },
   { label: "Work", href: "#work" },
+  { label: "Services", href: "#services" },
+  { label: "Packages", href: "#packages" },
+  { label: "Profile", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
 

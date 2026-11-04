@@ -4,9 +4,9 @@ import { Counter, Stagger, StaggerItem } from "./animations";
 
 const STATS = [
   { n: 10, s: "+", label: "Projects shipped" },
-  { n: 20, s: "+", label: "Clients served" },
-  { n: 1, s: "+", label: "Years building" },
-  { n: 100, s: "%", label: "Satisfaction" },
+  { n: 3, s: "+", label: "Years building" },
+  { n: 30, s: "", label: "Days of post-launch support" },
+  { n: 24, s: "h", label: "Typical reply time" },
 ];
 
 /*

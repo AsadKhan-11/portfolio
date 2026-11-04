@@ -39,7 +39,7 @@ export default function About() {
           </Reveal>
 
           <div className="profile-body">
-            <p className="eyebrow">01 · Profile</p>
+            <p className="eyebrow">04 · Profile</p>
 
             <h2 className="section-title" style={{ marginTop: "1.5rem" }}>
               <SplitText text="Meet the guy" />

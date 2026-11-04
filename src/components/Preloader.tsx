@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { INTRO_EVENT, INTRO_KEY as SESSION_KEY } from "./intro";
+import { INTRO_EVENT, INTRO_KEY as SESSION_KEY, skipIntro } from "./intro";
 
 /*
   Intro sequence, in three beats:
@@ -20,12 +20,12 @@ import { INTRO_EVENT, INTRO_KEY as SESSION_KEY } from "./intro";
   Runs once per browser session so repeat navigation isn't punished.
 */
 
-const COUNT_MS = 1600;
+const COUNT_MS = 650;
 /* Spin tail overlaps the flight's start — the portrait is still
    finishing its last degrees of rotation as it leaves for the hero,
    so there's no static beat between spin-up and departure. */
-const SPIN_MS = 1700;
-const FLY_MS = 850;
+const SPIN_MS = 800;
+const FLY_MS = 550;
 
 const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
 const EASE_QUART = [0.76, 0, 0.24, 1] as const;
@@ -55,8 +55,7 @@ export default function Preloader() {
     bail out of the second, leaving the panel stuck on screen.
   */
   useEffect(() => {
-    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (sessionStorage.getItem(SESSION_KEY) || still) return;
+    if (skipIntro()) return;
 
     /*
       Deliberate: sessionStorage has no change event to subscribe to, and
@@ -131,7 +130,7 @@ export default function Preloader() {
     const failsafe = window.setTimeout(() => {
       sessionStorage.setItem(SESSION_KEY, "1");
       finalize();
-    }, COUNT_MS + FLY_MS + 2200);
+    }, COUNT_MS + FLY_MS + 1500);
 
     return () => {
       cancelAnimationFrame(raf);
@@ -150,7 +149,7 @@ export default function Preloader() {
         <motion.div
           className="preloader"
           exit={{ opacity: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
         >
           {/* ── Centre stage: the anvil mark on a 3D turntable ── */}
           <div className="preloader-stage" aria-hidden="true">

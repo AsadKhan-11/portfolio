@@ -15,7 +15,7 @@
   /* ── Type ── */
   --bone: #f4f1ea;
   --bone-70: rgba(244, 241, 234, 0.7);
-  --bone-45: rgba(244, 241, 234, 0.45);
+  --bone-45: rgba(244, 241, 234, 0.58);
   --bone-30: rgba(244, 241, 234, 0.3);
   --bone-15: rgba(244, 241, 234, 0.15);
   --bone-08: rgba(244, 241, 234, 0.08);
@@ -113,6 +113,13 @@ body[data-cursor-active] * {
 
 /* ═══════════ Smooth scroll (Lenis) ═══════════ */
 html.lenis,
+/* Rotated cards and glows can poke a few pixels past the screen edge, which makes
+   phones widen the whole layout. `clip` (unlike `hidden`) leaves scrolling and
+   sticky positioning alone. */
+html {
+  overflow-x: clip;
+}
+
 html.lenis body {
   height: auto;
 }
@@ -649,6 +656,93 @@ html.lenis body {
   min-width: 0;
 }
 
+.nav-links {
+  display: none;
+}
+
+@media (min-width: 960px) {
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 2.2vw, 2.25rem);
+  }
+}
+
+.nav-link {
+  font-family: var(--f-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--bone-70);
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: var(--bone);
+}
+
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.7rem 1.25rem;
+  border-radius: 99px;
+  background: var(--flame);
+  color: var(--ink);
+  font-family: var(--f-mono), monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.3s;
+}
+
+.nav-cta:hover {
+  background: var(--bone);
+}
+
+.nav-cta {
+  flex-shrink: 0;
+}
+
+.nav-cta-short {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .nav-cta {
+    padding: 0.6rem 0.95rem;
+    font-size: 0.62rem;
+  }
+
+  .nav-cta-long {
+    display: none;
+  }
+
+  .nav-cta-short {
+    display: inline;
+  }
+}
+
+/* Very narrow phones: the logo gives up its wordmark before it collides with the button. */
+@media (max-width: 370px) {
+  .nav-digital {
+    display: none;
+  }
+}
+
+.nav-clock {
+  display: none;
+}
+
+@media (min-width: 1200px) {
+  .nav-clock {
+    display: inline;
+  }
+}
+
 .nav-progress {
   position: absolute;
   left: 0;
@@ -922,7 +1016,7 @@ html.lenis body {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.8rem;
+  gap: 0.6rem 1.75rem;
   margin-top: clamp(2rem, 6vh, 3.25rem);
 }
 
@@ -945,9 +1039,18 @@ html.lenis body {
   color: var(--bone-70);
 }
 
-.hero-stars {
+.hero-trust {
   display: inline-flex;
-  gap: 2px;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--f-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bone-70);
+}
+
+.hero-trust svg {
   color: var(--flame);
 }
 
@@ -1598,7 +1701,7 @@ html.lenis body {
 
 .work-card-meta {
   grid-column: 1 / -1;
-  color: var(--bone-30);
+  color: var(--bone-45);
   white-space: nowrap;
 }
 
@@ -1619,7 +1722,7 @@ html.lenis body {
   display: block;
   margin-top: clamp(1.5rem, 4vh, 2.25rem);
   text-align: center;
-  color: var(--bone-30);
+  color: var(--bone-45);
 }
 
 /* Reduced motion: no drift — the shelf flattens into a hand-scrolled row */
@@ -1674,7 +1777,7 @@ html.lenis body {
   top: 1.25rem;
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--bone-30);
+  color: var(--bone-45);
   pointer-events: none;
   transform-origin: left top;
   transition: transform 0.4s var(--ease-out-expo),
@@ -1836,7 +1939,7 @@ html.lenis body {
   font-family: var(--f-mono), monospace;
   font-size: 0.6rem;
   letter-spacing: 0.1em;
-  color: var(--bone-30);
+  color: var(--bone-45);
 }
 
 /* Visually hidden but available to screen readers */
@@ -1914,7 +2017,7 @@ html.lenis body {
   min-width: 15rem;
   font-size: 0.78rem;
   line-height: 1.6;
-  color: var(--bone-30);
+  color: var(--bone-45);
 }
 
 /* Sent confirmation */
@@ -3120,7 +3223,7 @@ html.lenis body {
   display: block;
   margin-top: 1.1rem;
   text-align: center;
-  color: var(--bone-30);
+  color: var(--bone-45);
 }
 
 /* Story */
@@ -3133,28 +3236,74 @@ html.lenis body {
   letter-spacing: -0.035em;
 }
 
-/* Summary: the pitch on the left, the avatar on the right pointing at it. */
+/* The short version: a pitch and three points, with the portrait
+   standing beside them and pointing at the copy. */
 .case-lead {
   display: grid;
-  gap: clamp(2rem, 5vw, 3.5rem);
+  gap: clamp(2rem, 5vw, 3rem);
   align-items: center;
 }
 
 @media (min-width: 900px) {
   .case-lead {
-    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-    gap: clamp(2.5rem, 6vw, 6rem);
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
   }
+}
 
-  .case-lead .case-summary {
-    max-width: none;
-  }
+.case-lead-copy {
+  display: grid;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.case-pitch {
+  margin-top: 1.25rem;
+  max-width: 24ch;
+  text-wrap: balance;
+  font-family: var(--f-display), sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.7rem, 3.4vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.case-brief {
+  display: grid;
+}
+
+.case-brief-item {
+  display: flex;
+  gap: 1.25rem;
+  padding-block: 1.1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.case-brief-n {
+  padding-top: 0.15rem;
+  color: var(--flame);
+}
+
+.case-brief-label {
+  font-family: var(--f-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bone);
+}
+
+.case-brief-text {
+  margin-top: 0.45rem;
+  max-width: 48ch;
+  text-wrap: pretty;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--bone-70);
 }
 
 .case-lead-art {
   justify-self: center;
   width: 100%;
-  max-width: 340px;
+  max-width: 420px;
 }
 
 .case-lead-fig {
@@ -3164,11 +3313,11 @@ html.lenis body {
 
 .case-lead-glow {
   position: absolute;
-  inset: 8% -8% 0;
+  inset: 12% -12% 0;
   border-radius: 50%;
   background: radial-gradient(closest-side, var(--flame-line), transparent 72%);
-  opacity: 0.75;
-  filter: blur(18px);
+  opacity: 0.55;
+  filter: blur(26px);
 }
 
 .case-lead-img {
@@ -3176,84 +3325,90 @@ html.lenis body {
   display: block;
   width: 100%;
   height: auto;
-  /* Mirrored so the gaze lands on the text. */
-  transform: scaleX(-1);
-  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.55));
-  animation: case-lead-float 7s ease-in-out infinite;
-}
-
-.case-lead-arrow {
-  position: absolute;
-  left: -46%;
-  top: 6%;
-  width: 52%;
-  height: auto;
-  color: var(--flame);
-  transform: scaleY(-1);
-  overflow: visible;
-  animation: case-lead-nudge 2.6s ease-in-out infinite;
-}
-
-.case-lead-arrow-line {
-  animation: case-lead-draw 1.4s 0.5s both var(--ease-out-expo);
-}
-
-.case-lead-tag {
-  position: absolute;
-  left: -40%;
-  top: -9%;
-  padding: 0.45rem 0.8rem;
-  border: 1px solid var(--flame-line);
-  border-radius: 999px;
-  background: var(--ink-panel);
-  color: var(--flame);
-  white-space: nowrap;
+  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.5));
+  /* The photo is cut off at the knees; fade it out rather than end on a hard edge. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
 }
 
 @media (max-width: 899px) {
   .case-lead-art {
-    max-width: 230px;
+    max-width: 240px;
+    justify-self: end;
   }
 
-  /* Avatar sits under the copy on small screens, so the arrow goes. */
-  .case-lead-fig {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .case-lead-arrow {
-    display: none;
-  }
-
-  .case-lead-tag {
-    position: static;
-    order: -1;
-    margin-bottom: 0.9rem;
+  /* Stay inside the gutter: a glow that pokes past the screen edge widens the whole page on phones. */
+  .case-lead-glow {
+    inset: 12% -4% 0;
   }
 }
 
-@keyframes case-lead-float {
-  0%, 100% { translate: 0 0; }
-  50% { translate: 0 -10px; }
+/* "Read the full story": the long copy, there for anyone who wants it. */
+.case-full {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  border-block: 1px solid var(--rule);
 }
 
-@keyframes case-lead-nudge {
-  0%, 100% { translate: 0 0; }
-  50% { translate: -8px 0; }
+.case-full > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1.4rem;
+  list-style: none;
+  cursor: pointer;
+  color: var(--bone-70);
+  transition: color 0.3s;
 }
 
-@keyframes case-lead-draw {
-  from { stroke-dashoffset: 260; opacity: 0; }
-  to { stroke-dashoffset: 0; opacity: 1; }
+.case-full > summary::-webkit-details-marker {
+  display: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .case-lead-img,
-  .case-lead-arrow,
-  .case-lead-arrow-line {
-    animation: none;
-  }
+.case-full > summary:hover {
+  color: var(--bone);
+}
+
+.case-full > summary svg {
+  color: var(--flame);
+  transition: transform 0.35s var(--ease-out-expo);
+}
+
+.case-full[open] > summary svg {
+  transform: rotate(45deg);
+}
+
+.case-full-body {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+  padding-block: 0.5rem clamp(2rem, 4vw, 3rem);
+}
+
+.case-full-body .case-summary {
+  max-width: 60ch;
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+/* Under the facts: what has been changed, said plainly. */
+.case-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  max-width: 62ch;
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--bone-70);
+}
+
+.case-note svg {
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+  color: var(--flame);
 }
 
 .case-story {

@@ -19,16 +19,23 @@ const MENU_SOCIALS = [
 
 const NAV_ITEMS = [
   { label: "Index", href: "#home" },
-  { label: "Profile", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Stack", href: "#skills" },
-  { label: "Packages", href: "#packages" },
   { label: "Work", href: "#work" },
+  { label: "Services", href: "#services" },
+  { label: "Packages", href: "#packages" },
+  { label: "Profile", href: "#about" },
   { label: "Path", href: "#experience" },
   { label: "Contact", href: "#contact" },
 ];
 
 const EASE = [0.76, 0, 0.24, 1] as const;
+
+/* The few places a first-time visitor actually wants to go. */
+const PRIMARY = [
+  { label: "Work", href: "#work" },
+  { label: "Services", href: "#services" },
+  { label: "Pricing", href: "#packages" },
+  { label: "About", href: "#about" },
+];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -137,8 +144,19 @@ export default function Navbar() {
           </Magnetic>
 
           <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+            <nav className="nav-links" aria-label="Primary">
+              {PRIMARY.map((l) => (
+                <a key={l.label} href={to(l.href)} className="nav-link">
+                  {l.label}
+                </a>
+              ))}
+            </nav>
+            <a href={to("#contact")} className="nav-cta" data-cursor="Talk">
+              <span className="nav-cta-long">Start a project</span>
+              <span className="nav-cta-short">Get a quote</span>
+            </a>
             <span
-              className="mono-label"
+              className="mono-label nav-clock"
               style={{ letterSpacing: "0.18em" }}
               suppressHydrationWarning
             >

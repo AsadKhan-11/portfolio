@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FiArrowLeft, FiArrowRight, FiArrowUpRight } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiArrowUpRight, FiInfo, FiPlus } from "react-icons/fi";
 import { Counter, Reveal, SplitText, Stagger, StaggerItem } from "../animations";
 import { CASE_STUDIES, LIVE_BUILDS, type CaseStudy } from "@/lib/caseStudies";
 import { Device, FlowPlayer, Frame, Gallery, MoreGrid, PhoneReel, Reel } from "./CaseMedia";
@@ -76,6 +76,15 @@ export function CaseHero({ study }: { study: CaseStudy }) {
           </dl>
         </Reveal>
 
+        {study.note && (
+          <Reveal delay={0.5}>
+            <p className="case-note">
+              <FiInfo size={14} aria-hidden="true" />
+              {study.note}
+            </p>
+          </Reveal>
+        )}
+
         {study.liveUrl && (
           <Reveal delay={0.5}>
             <a href={study.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-solid" style={{ marginTop: "2rem" }} data-cursor="Open">
@@ -111,54 +120,36 @@ export function CaseStory({ study }: { study: CaseStudy }) {
       <div className="rule-top" />
       <div className="shell">
         <div className="case-lead">
-          <Reveal>
-            <p className="case-summary">{study.summary}</p>
-          </Reveal>
+          <div className="case-lead-copy">
+            <Reveal>
+              <p className="eyebrow">The short version</p>
+              <p className="case-pitch">{study.pitch}</p>
+            </Reveal>
+            <Stagger className="case-brief" gap={0.12}>
+              {study.brief.map((b, i) => (
+                <StaggerItem key={b.label} className="case-brief-item">
+                  <span className="case-brief-n mono-label">0{i + 1}</span>
+                  <div>
+                    <p className="case-brief-label">{b.label}</p>
+                    <p className="case-brief-text">{b.text}</p>
+                  </div>
+                </StaggerItem>
+              ))}
+            </Stagger>
+          </div>
+
           <Reveal className="case-lead-art" delay={0.2} y={30}>
             <figure className="case-lead-fig">
               <span className="case-lead-glow" aria-hidden="true" />
               <Image
-                src="/brand/avatar.webp"
-                alt="Asad Khan, illustrated portrait"
-                width={640}
-                height={1037}
-                sizes="(max-width: 900px) 220px, 340px"
+                src="/brand/pointing.webp"
+                alt="Asad Khan pointing at the summary of the project"
+                width={900}
+                height={1200}
+                sizes="(max-width: 900px) 240px, 420px"
                 className="case-lead-img"
               />
-              <svg className="case-lead-arrow" viewBox="0 0 220 120" fill="none" aria-hidden="true">
-                <path
-                  className="case-lead-arrow-line"
-                  d="M214 84 C 170 112, 96 108, 54 60 C 40 44, 30 34, 14 28"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeDasharray="6 7"
-                />
-                <path
-                  d="M8 44 L12 24 L32 26"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <figcaption className="mono-label case-lead-tag">The short version</figcaption>
             </figure>
-          </Reveal>
-        </div>
-
-        <div className="case-story">
-          <Reveal>
-            <p className="eyebrow">The challenge</p>
-            <div className="case-prose">
-              {study.challenge.map((p) => <p key={p}>{p}</p>)}
-            </div>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <p className="eyebrow">The approach</p>
-            <div className="case-prose">
-              {study.approach.map((p) => <p key={p}>{p}</p>)}
-            </div>
           </Reveal>
         </div>
 
@@ -172,6 +163,30 @@ export function CaseStory({ study }: { study: CaseStudy }) {
             </StaggerItem>
           ))}
         </Stagger>
+
+        <details className="case-full">
+          <summary>
+            <span className="mono-label">Read the full story</span>
+            <FiPlus size={16} aria-hidden="true" />
+          </summary>
+          <div className="case-full-body">
+            <p className="case-summary">{study.summary}</p>
+            <div className="case-story">
+              <div>
+                <p className="eyebrow">The challenge</p>
+                <div className="case-prose">
+                  {study.challenge.map((p) => <p key={p}>{p}</p>)}
+                </div>
+              </div>
+              <div>
+                <p className="eyebrow">The approach</p>
+                <div className="case-prose">
+                  {study.approach.map((p) => <p key={p}>{p}</p>)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
       </div>
     </section>
   );

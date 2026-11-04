@@ -56,6 +56,12 @@ export interface CaseStudy {
   /** Only set once the product has a public URL. */
   liveUrl?: string;
   card: string;
+  /** One line, shown large beside the portrait. Keep it under ~15 words. */
+  pitch: string;
+  /** Three short points (problem, what was built, why it works), under ~20 words each. */
+  brief: { label: string; text: string }[];
+  /** Shown under the facts, e.g. when client details have been changed. */
+  note?: string;
   summary: string;
   /** Intro lines for the "What it does" and "Mobile" sections. */
   insideLede: string;
@@ -155,6 +161,13 @@ const CB = (() => {
 export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: "ironside-gym",
+    pitch: "An AI coach, trainer messaging and the whole gym back office, in one place.",
+    brief: [
+      { label: "The problem", text: "Spreadsheets, a CRM, DMs and separate apps. Nothing agrees, and trainers drown in admin." },
+      { label: "What I built", text: "One platform for owners, trainers and members, with an AI coach that plans workouts, meals and groceries." },
+      { label: "Why it works", text: "Everything hangs off one member record, and GoHighLevel keeps leads and the CRM in step." },
+    ],
+    note: "Rebuilt from a confidential client platform. Names, branding and data have been changed.",
     n: "01",
     title: "Ironside",
     tagline: "One platform for the gym, its trainers and every member.",
@@ -163,7 +176,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     role: "Full-stack development & AI integration",
     client: "Strength & conditioning gym",
     type: "Gym management platform",
-    status: "In production · details anonymised",
+    status: "Confidential client work",
     tags: ["AI coach", "GoHighLevel integration", "Trainer–client messaging", "Billing & scheduling"],
     card: "/work/cards/04-ironside.jpg",
     summary:
@@ -306,6 +319,13 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: "vector-academy",
+    pitch: "An AI co-pilot that answers and scores every applicant, then carries them to enrolment.",
+    brief: [
+      { label: "The problem", text: "Prospective students go quiet if nobody replies within a day, while bookings and invoices live in separate tools." },
+      { label: "What I built", text: "An AI co-pilot, aptitude scoring, a drag-and-drop pipeline, scheduling and billing in one console." },
+      { label: "Why it works", text: "It answers only from knowledge staff approve, and hands over to a human when it is unsure." },
+    ],
+    note: "Rebuilt from a confidential client platform. Names, branding and data have been changed.",
     n: "02",
     title: "Vector Academy",
     tagline: "From first enquiry to first solo, on one platform.",
@@ -314,7 +334,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     role: "Full-stack development & AI integration",
     client: "Flight-training academy",
     type: "Academy operations platform",
-    status: "In production · details anonymised",
+    status: "Confidential client work",
     tags: ["AI admissions co-pilot", "Aptitude scoring", "Pipeline & scheduling", "Billing & programs"],
     card: "/work/cards/05-vector-academy.jpg",
     summary:
@@ -457,6 +477,12 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: "veloura",
+    pitch: "Clients book and sign for themselves. The team runs the whole clinic from one place.",
+    brief: [
+      { label: "The problem", text: "Booking apps, stock spreadsheets, paper consent forms and a separate email tool, none of them talking." },
+      { label: "What I built", text: "A client portal with online booking and e‑signed consent, plus a console with a workspace for each of five roles." },
+      { label: "Why it works", text: "Rules like double-booking and permissions are enforced in the database, not just the interface." },
+    ],
     n: "03",
     title: "Veloura",
     tagline: "The operating system for a modern med spa.",
@@ -609,6 +635,12 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: "curbly",
+    pitch: "Customers order ahead and walk up to a pickup code. Vendors run the day from the same app.",
+    brief: [
+      { label: "The problem", text: "Trucks move and sell out, so people find them by luck, and owners have no time for another tool." },
+      { label: "What I built", text: "A two-sided mobile app: live discovery and ordering for customers, a queue and menu console for vendors." },
+      { label: "Why it works", text: "Feed-first discovery, pickup codes and a one-tap order queue keep both sides fast." },
+    ],
     platform: "mobile",
     n: "04",
     title: "Curbly",

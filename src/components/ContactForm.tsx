@@ -8,6 +8,15 @@ import Select from "./Select";
 
 const EMAIL = "mrasad10khan@gmail.com";
 
+/*
+  Optional form service (Web3Forms, Formspree, a Worker of your own…).
+  Set NEXT_PUBLIC_FORM_ENDPOINT, plus NEXT_PUBLIC_FORM_KEY if the service
+  wants an access key, and enquiries are delivered straight to the inbox.
+  Without it the form falls back to opening the visitor's mail client.
+*/
+const ENDPOINT = process.env.NEXT_PUBLIC_FORM_ENDPOINT;
+const FORM_KEY = process.env.NEXT_PUBLIC_FORM_KEY;
+
 const PROJECT_TYPES = [
   "AI integration",
   "Chatbot",
@@ -56,7 +65,7 @@ export default function ContactForm() {
   const [types, setTypes] = useState<string[]>([]);
   const [errors, setErrors] = useState<Partial<Record<keyof Fields, string>>>({});
   const [touched, setTouched] = useState<Partial<Record<keyof Fields, boolean>>>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [honey, setHoney] = useState("");
 
   const set = (k: keyof Fields) => (v: string) => {
@@ -110,11 +119,32 @@ export default function ContactForm() {
     }
 
     setStatus("sending");
-    /*
-      No backend on this site yet, so the enquiry is handed to the visitor's
-      mail client fully composed rather than being silently dropped. Swap
-      for a POST to an API route once one exists.
-    */
+
+    if (ENDPOINT) {
+      fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          ...(FORM_KEY ? { access_key: FORM_KEY } : {}),
+          subject: `Project enquiry: ${f.name.trim() || "Website"}`,
+          name: f.name.trim(),
+          email: f.email.trim(),
+          phone: f.phone.trim(),
+          budget: f.budget,
+          project_type: types.join(", "),
+          message: f.message.trim(),
+        }),
+      })
+        .then(async (res) => {
+          const body = await res.json().catch(() => ({}));
+          setStatus(res.ok && body.success !== false ? "sent" : "error");
+        })
+        .catch(() => setStatus("error"));
+      return;
+    }
+
+    /* No form service configured: hand the enquiry to the visitor's mail
+       client fully composed, rather than silently dropping it. */
     window.location.href = mailto;
     window.setTimeout(() => setStatus("sent"), 700);
   };
@@ -138,10 +168,13 @@ export default function ContactForm() {
         <span className="form-sent-badge">
           <FiCheck size={20} />
         </span>
-        <h3 className="form-sent-title">Your mail client is open</h3>
+        <h3 className="form-sent-title">
+          {ENDPOINT ? "Message sent" : "Your mail client is open"}
+        </h3>
         <p className="form-sent-copy">
-          Everything is filled in. Just hit send. If nothing opened, email me
-          directly at{" "}
+          {ENDPOINT
+            ? "Thanks, I have it. I reply within a day. If it is urgent, email me directly at"
+            : "Everything is filled in. Just hit send. If nothing opened, email me directly at"}{" "}
           <a href={`mailto:${EMAIL}`} className="link-sweep" style={{ color: "var(--bone)" }}>
             {EMAIL}
           </a>
@@ -290,13 +323,22 @@ export default function ContactForm() {
       <div className="form-footer">
         <Magnetic strength={0.25}>
           <button type="submit" className="btn btn-solid" disabled={status === "sending"}>
-            <span>{status === "sending" ? "Opening mail…" : "Send message"}</span>
+            <span>{status === "sending" ? (ENDPOINT ? "Sending…" : "Opening mail…") : "Send message"}</span>
             <FiArrowUpRight />
           </button>
         </Magnetic>
-        <p className="form-note">
-          Your details go straight to my inbox. Never shared, never added to a
-          mailing list.
+        <p className="form-note" role={status === "error" ? "alert" : undefined}>
+          {status === "error" ? (
+            <>
+              That did not go through. Please email me directly at{" "}
+              <a href={`mailto:${EMAIL}`} className="link-sweep" style={{ color: "var(--bone)" }}>
+                {EMAIL}
+              </a>
+              .
+            </>
+          ) : (
+            "Your details go straight to my inbox. Never shared, never added to a mailing list."
+          )}
         </p>
       </div>
     </form>

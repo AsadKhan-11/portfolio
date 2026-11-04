@@ -2,12 +2,16 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { FiArrowDownRight, FiStar } from "react-icons/fi";
+import { FiArrowDownRight, FiCheck } from "react-icons/fi";
 import { Magnetic } from "./animations";
-import HeroField from "./HeroField";
+import { IdleHeroField } from "./LazyFields";
 import { useIntroDone } from "./intro";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+
+/* The offer, in four short promises, so the first screen answers
+   "what do I get and how risky is it?" without any scrolling. */
+const TRUST = ["Fixed quote up front", "Live in 2–6 weeks", "You own the code", "Reply within a day"];
 
 /* Entrance beats, counted from the moment the intro curtain clears */
 const T = {
@@ -76,7 +80,7 @@ export default function Hero() {
     <section ref={ref} id="home" className="hero">
       {/* A wireframe terrain flows under the type — the 3D stage that
           says "we build things" before a word is read */}
-      <HeroField />
+      <IdleHeroField />
 
       <div className="shell" style={{ position: "relative", zIndex: 2, width: "100%" }}>
         {/* ── The pitch, centred and brief ── */}
@@ -105,8 +109,8 @@ export default function Hero() {
             animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
             transition={{ delay: T.lede, duration: 0.9, ease: EASE }}
           >
-            Designed, engineered, and launched by one studio. A fixed quote up
-            front, and a finished product that is fully yours.
+            One developer for the whole job: design, build and launch. You deal
+            with the person doing the work, and the finished product is yours.
           </motion.p>
 
           <motion.div
@@ -131,12 +135,12 @@ export default function Hero() {
             animate={ready ? { opacity: 1 } : { opacity: 0 }}
             transition={{ delay: T.proof, duration: 0.9 }}
           >
-            <span className="hero-stars" aria-hidden="true">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <FiStar key={i} size={11} fill="currentColor" />
-              ))}
-            </span>
-            <span className="mono-label">20+ clients served · live in production</span>
+            {TRUST.map((t) => (
+              <span key={t} className="hero-trust">
+                <FiCheck size={12} aria-hidden="true" />
+                {t}
+              </span>
+            ))}
           </motion.div>
         </motion.div>
       </div>

@@ -4,8 +4,9 @@ import "./globals.css";
 import Cursor from "@/components/Cursor";
 import MotionProvider from "@/components/MotionProvider";
 import Preloader from "@/components/Preloader";
-import ShaderField from "@/components/ShaderField";
+import { IdleShaderField } from "@/components/LazyFields";
 import SmoothScroll from "@/components/SmoothScroll";
+import { SITE_URL, SOCIALS } from "@/lib/site";
 
 /* Display — geometric, characterful. Carries every headline. */
 const syne = Syne({
@@ -37,6 +38,8 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "/" },
   title: "WebForge Digital · Full Stack Web Studio",
   description:
     "WebForge Digital is the full stack studio of Asad Khan. Design and engineering under one roof: fast, considered web products built with React, Next.js, Node.js, and MongoDB.",
@@ -76,6 +79,20 @@ export const metadata: Metadata = {
   },
 };
 
+/* Structured data: tells search engines who and what this site is. Static, so safe to inline. */
+const JSON_LD = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "WebForge Digital",
+  url: SITE_URL,
+  description:
+    "Full stack web studio: websites, client portals and web apps, designed, built and launched by one developer with a fixed quote.",
+  founder: { "@type": "Person", name: "Asad Khan" },
+  areaServed: "Worldwide",
+  address: { "@type": "PostalAddress", addressLocality: "Lahore", addressCountry: "PK" },
+  sameAs: SOCIALS,
+}).replace(/</g, "\\u003c");
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -87,10 +104,14 @@ export default function RootLayout({
       className={`${syne.variable} ${instrument.variable} ${inter.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON_LD }}
+        />
         <MotionProvider>
           <SmoothScroll />
           <Preloader />
-          <ShaderField />
+          <IdleShaderField />
           <div className="vignette" aria-hidden="true" />
           <div className="grain" aria-hidden="true" />
           <Cursor />

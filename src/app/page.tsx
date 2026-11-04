@@ -4,7 +4,6 @@ import Stats from "@/components/Stats";
 import Ticker from "@/components/Ticker";
 import About from "@/components/About";
 import Services from "@/components/Services";
-import Skills from "@/components/Skills";
 import Packages from "@/components/Packages";
 import Band from "@/components/Band";
 import Work from "@/components/Work";
@@ -22,13 +21,12 @@ export default function Home() {
       <main className="flex-1 relative" style={{ zIndex: 2 }}>
         <Hero />
         <Stats />
-        <About />
+        <Work />
         <Ticker />
         <Services />
-        <Skills />
         <Packages />
         <Band />
-        <Work />
+        <About />
         <Experience />
         <Process />
         <Testimonials />

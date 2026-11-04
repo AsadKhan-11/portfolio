@@ -102,7 +102,7 @@ export default function Work() {
       <div className="shell">
         <div className="section-head">
           <div>
-            <p className="eyebrow">05 · Work</p>
+            <p className="eyebrow">01 · Work</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="Selected" />
               <br />
@@ -113,9 +113,9 @@ export default function Work() {
           </div>
           <Reveal delay={0.15}>
             <p className="lede">
-              Live builds for real brands, and full case studies of the
-              products behind them. Live cards open the real site; case
-              studies open the whole story.
+              Sites I have shipped, plus case studies of platforms built for
+              confidential clients and rebuilt here with new names and data.
+              Live cards open the real site; case studies tell the whole story.
             </p>
           </Reveal>
         </div>
