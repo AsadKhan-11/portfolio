@@ -145,7 +145,7 @@ export default function Work() {
         </div>
 
         <p className="mono-label work-hint">
-          Hover to hold the reel · click a build to open it, or a case study to read it
+          Hover to hold the reel · click any project to read its case study
         </p>
       </Reveal>
     </section>

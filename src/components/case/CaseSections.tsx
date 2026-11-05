@@ -6,6 +6,7 @@ import { CASE_STUDIES, LIVE_BUILDS, type CaseStudy } from "@/lib/caseStudies";
 import { Device, FlowPlayer, Frame, Gallery, MoreGrid, PhoneReel, Reel } from "./CaseMedia";
 
 const isMobile = (s: CaseStudy) => s.platform === "mobile";
+const nounFor = (s: CaseStudy) => s.noun ?? (isMobile(s) ? "app" : "platform");
 
 function Head({ eyebrow, title, em, lede }: { eyebrow: string; title: string; em: string; lede?: string }) {
   return (
@@ -88,7 +89,7 @@ export function CaseHero({ study }: { study: CaseStudy }) {
         {study.liveUrl && (
           <Reveal delay={0.5}>
             <a href={study.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-solid" style={{ marginTop: "2rem" }} data-cursor="Open">
-              <span>Visit the platform</span>
+              <span>Visit the {nounFor(study)}</span>
               <FiArrowUpRight />
             </a>
           </Reveal>
@@ -379,7 +380,7 @@ export function CaseOutro({ study }: { study: CaseStudy }) {
         <Reveal>
           <p className="eyebrow" style={{ justifyContent: "center" }}>Next step</p>
           <h2 className="case-outro-title">
-            {isMobile(study) ? "Need an app" : "Need a platform"}
+            {`Need a${"aeiou".includes(nounFor(study)[0]) ? "n" : ""} ${nounFor(study)}`}
             <br />
             <span className="serif-em" style={{ color: "var(--flame)" }}>like {study.title}?</span>
           </h2>

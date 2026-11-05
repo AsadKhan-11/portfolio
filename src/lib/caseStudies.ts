@@ -47,6 +47,12 @@ export interface CaseStudy {
    * reads better with its domain.
    */
   reelLabel?: string;
+  /**
+   * What to call this build in prose — "Visit the ___" and the closing
+   * "Need a ___ like X?". Defaults to "app" for mobile studies and
+   * "platform" otherwise; the marketing sites are neither.
+   */
+  noun?: string;
   n: string;
   title: string;
   tagline: string;
@@ -92,16 +98,13 @@ export interface LiveBuild {
   url: string;
 }
 
-export const LIVE_BUILDS: LiveBuild[] = [
-  {
-    key: "aurelle",
-    shot: "/work/cards/03-aurelle.jpg",
-    title: "Aurelle",
-    domain: "aurelle-mauve-two.vercel.app",
-    url: "https://aurelle-mauve-two.vercel.app",
-    meta: "Skin wellness studio · 2026",
-  },
-];
+/*
+  Empty: every project now has a case study. The shelf and the "more work"
+  rail still read this, so a build that ships before its study is written
+  can be listed here as a card that opens the site, then moved across to
+  CASE_STUDIES once there is something to show.
+*/
+export const LIVE_BUILDS: LiveBuild[] = [];
 
 /* Media helpers bound to one project's folder under public/work/. */
 const mediaFor = (dir: string) => ({
@@ -134,6 +137,7 @@ const V = mediaFor("/work/vector-academy");
 const VL = mediaFor("/work/veloura");
 const VA = mediaFor("/work/vanta");
 const LU = mediaFor("/work/lumiere");
+const AU = mediaFor("/work/aurelle");
 
 /* Simulator captures are 1206 x 2622. */
 const CB = (() => {
@@ -782,6 +786,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tags: ["Scroll-driven 3D", "Editorial layout", "Before-and-after compare", "Enquiry capture"],
     liveUrl: "https://vanta-aesthetics.vercel.app",
     reelLabel: "vanta-aesthetics.vercel.app",
+    noun: "site",
     card: "/work/cards/01-vanta.jpg",
     summary:
       "Vanta is a concept site for a high-end aesthetics clinic, built to look like somewhere expensive rather than somewhere eager. Eleven sections move from a full-bleed opening through a tabbed treatment menu, a device render that turns as you scroll, a before-and-after compare and an enquiry form that asks what someone is interested in before it asks anything else.",
@@ -938,6 +943,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tags: ["Scroll-driven carousel", "Drag-to-compare", "Editorial layout", "Consultation capture"],
     liveUrl: "https://lumi-re-aesthetics.vercel.app",
     reelLabel: "lumi-re-aesthetics.vercel.app",
+    noun: "site",
     card: "/work/cards/02-lumiere.jpg",
     summary:
       "Lumière is the warm answer to the same brief that produced Vanta. Thirteen sections move from a hero through a scroll-driven treatment carousel, a sequenced signature plan, a drag-to-compare before-and-after, a practitioner profile and a consultation request. Where Vanta withholds, Lumière explains — and says out loud when the right answer is not yet, or not at all.",
@@ -1076,6 +1082,167 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
     ],
     decisionsLede: "The same restraint as Vanta, turned warm — and the choices that made the difference.",
+  },
+  {
+    slug: "aurelle",
+    pitch: "A clinic site built for the person who is nervous about walking in.",
+    brief: [
+      { label: "The problem", text: "Aesthetics is a trust purchase made by someone quietly worried. Most clinic sites answer none of the worry." },
+      { label: "What I built", text: "An editorial site that answers first: named practitioners, durations on every treatment, honest results and nine FAQs." },
+      { label: "Why it works", text: "Every call to action asks for a conversation, never a card. It is the only thing a clinic can honestly sell online." },
+    ],
+    note: "A self-initiated concept build. The clinic, its practitioners and every photograph are fictional — the contact details use reserved example addresses — and the before-and-after comparisons carry a visible individual-results notice.",
+    n: "07",
+    title: "Aurelle",
+    tagline: "Considered, never excessive — advanced aesthetics for someone who has not decided yet.",
+    meta: "Skin wellness clinic · 2026",
+    year: "2026",
+    role: "Design & front-end development",
+    client: "Concept build",
+    type: "Clinic marketing site",
+    status: "Live · self-initiated",
+    tags: ["Editorial layout", "Scroll-driven sequence", "Before-and-after compare", "Structured enquiry"],
+    liveUrl: "https://aurelle-mauve-two.vercel.app",
+    reelLabel: "aurelle-mauve-two.vercel.app",
+    noun: "site",
+    card: "/work/cards/03-aurelle.jpg",
+    summary:
+      "Aurelle is the third answer to the brief that produced Vanta and Lumière, and the only one aimed squarely at the visitor who has not decided yet. Fourteen sections move from a hero through a five-point position, a fifteen-treatment edit with a duration on every entry, a before-and-after documented in consistent light, a four-stage account of what an appointment is actually like, three named practitioners with their qualifications, and nine questions answered before anyone has to ask them.",
+    insideLede:
+      "Ivory, sand and espresso, with no accent colour anywhere — the display serif and its italic do all the emphasis the page needs.",
+    phoneLede:
+      "A clinic enquiry usually starts on a phone, in private, late. The page rebuilds to one column with the consultation button pinned to the bottom of the screen the whole way down.",
+    challenge: [
+      "Aesthetics is a trust purchase made by someone who is quietly worried — about looking overdone, about being upsold, about who is actually holding the needle. Most clinic sites answer none of that. They show a price list, a stock smile and a booking button, which is a sales page for a decision nobody makes from a sales page.",
+      "Vanta answered this brief by withholding and Lumière by warming up. The third answer was the one neither of them took: build the whole page around the worry. Not reassurance in a paragraph somewhere, but every section doing a job the nervous visitor actually needs done.",
+    ],
+    approach: [
+      "The palette is ivory, sand and espresso with no accent colour at all. A high-contrast display serif and its italic carry every piece of emphasis, and four of the fourteen sections invert to espresso — that tonal shift is the only other emphasis device the layout has. It is the hardest of the three sites to make work and the quietest when it does.",
+      "What is unusual is how much of the page is load-bearing. The treatment edit attaches an approximate duration to all fifteen treatments. The practitioners are named with their qualifications. The comparisons say they were shot in consistent light and carry an individual-results notice. Nine FAQs answer the questions a clinic normally waits for a phone call to answer. None of it is decoration; all of it exists to make the enquiry easier to send.",
+    ],
+    stats: [
+      { value: 15, label: "Treatments, each with a duration" },
+      { value: 4, label: "Stages, consultation to aftercare" },
+      { value: 9, label: "Questions answered before anyone asks" },
+      { value: 3, label: "Practitioners named, with qualifications" },
+    ],
+    highlights: [
+      {
+        kicker: "01 · The opening",
+        title: "A promise about the person, not the procedure",
+        body: "Your most radiant self, set in a display serif beside an arched portrait, with one line of support copy under it. Nothing on the first screen names a treatment or a price.",
+        points: [
+          "Two words of proposition and a single sentence",
+          "Book a consultation, or just explore the treatments",
+          "Skin · science · self as the whole positioning",
+        ],
+        shot: AU.desktop("hero", "The Aurelle hero: Your most radiant self, beside an arched portrait"),
+      },
+      {
+        kicker: "02 · The position",
+        title: "Five words the clinic will be held to",
+        body: "The first section to invert to espresso is a five-point manifesto — personalized, precision, natural, considered, human — with the heading pinned on the left while the points scroll past it.",
+        points: [
+          "Considered, never excessive, as the governing line",
+          "Each point is a commitment rather than a benefit",
+          "Sticky heading holds while the list advances",
+        ],
+        shot: AU.desktop("why", "The why-Aurelle section in espresso, showing personalized, precision and natural"),
+      },
+      {
+        kicker: "03 · The treatment edit",
+        title: "Fifteen treatments, and how long each one takes",
+        body: "Four categories as pill tabs, each opening a panel of treatments as a disclosure list. Expanding a row reveals its description, an approximate duration and a prompt to discuss it — and swaps the photograph alongside.",
+        points: [
+          "Skin, injectables, devices and body",
+          "An approximate duration on every treatment",
+          "The photograph changes with the open row",
+        ],
+        shot: AU.desktop("treatments-skin", "The skin category with skin rejuvenation expanded and its duration showing"),
+      },
+      {
+        kicker: "04 · The results",
+        title: "Before and after, under the same light",
+        body: "One compare frame rather than a wall of pairs, with the method stated beside it: each case documented honestly, in consistent light. The individual-results notice sits with the images instead of in a footer.",
+        points: [
+          "One case at a time, in a single frame",
+          "Consistent light stated as the standard",
+          "The divider is a labelled range input, so it works from the keyboard",
+        ],
+        shot: AU.desktop("results", "The before-and-after compare with the divider down the centre of a portrait"),
+      },
+      {
+        kicker: "05 · The experience",
+        title: "What actually happens, in four stages",
+        body: "Consultation, personalization, treatment, aftercare — carried sideways through a pinned frame as you scroll down the page. It answers the question a first-timer will not ask out loud, which is what the appointment is going to be like.",
+        points: [
+          "Vertical scroll drives the track horizontally",
+          "No pressure to decide, said at stage one",
+          "Aftercare treated as part of the work",
+        ],
+        shot: AU.desktop("experience-steps", "The experience track mid-move, with consultation and personalization in frame"),
+      },
+      {
+        kicker: "06 · The enquiry",
+        title: "A form that asks how you would like to be reached",
+        body: "Name, email and an interest are the only fields anyone must fill. Phone, contact method, date, time and message are all the visitor's to skip, and the interest list is the same fifteen treatments the edit offers.",
+        points: [
+          "Email, phone or WhatsApp, as a stated preference",
+          "Not sure yet, I'd like advice, as a first-class option",
+          "Three required fields on a nine-field form",
+        ],
+        shot: AU.desktop("contact", "The enquiry form with its required fields and the preferred-contact-method choices"),
+      },
+    ],
+    clips: [
+      AU.clip("tour", "The full page", "Hero to closing in ten stops: the philosophy, the five-point position, the treatment edit, the results, the experience track, the clinic, the team and the enquiry.", 16),
+      AU.clip("experience", "The experience track", "Scrolling the experience section carries the four stages sideways through a pinned frame, consultation through to aftercare.", 16),
+      AU.clip("treatments", "The treatment edit", "Working down the skin accordion — each row expanding with its duration and swapping the photograph — then switching category to body.", 15),
+    ],
+    gallery: [
+      AU.desktop("philosophy", "The philosophy section with a pull quote beside a portrait", "The philosophy"),
+      AU.desktop("treatments", "The treatment edit header with its four category tabs", "Treatment edit"),
+      AU.desktop("results-compare", "A second before-and-after case, divided down the centre", "Results"),
+      AU.desktop("space-grid", "The clinic interior as a two-image composition", "The clinic"),
+      AU.desktop("team", "Three named practitioners with their roles and qualifications", "The team"),
+      AU.desktop("testimonials", "Testimonial cards in a horizontal row under the section heading", "Kind words"),
+      AU.desktop("faq", "The FAQ accordion with the first question open", "Questions"),
+      AU.desktop("closing", "The closing call to action over a darkened portrait", "Closing"),
+    ],
+    phones: [
+      AU.phone("mobile-hero", "The hero on a phone, with the consultation button pinned to the bottom"),
+      AU.phone("mobile-treatments", "The treatment edit on a phone, categories as a scrolling row of pills"),
+      AU.phone("mobile-results", "The before-and-after compare sized to a phone screen"),
+      AU.phone("mobile-space", "The clinic section stacked into a single column"),
+      AU.phone("mobile-contact", "The contact details above the enquiry form"),
+    ],
+    decisions: [
+      {
+        title: "No accent colour at all",
+        body: "Vanta spends gold four times; Lumière has one green panel. Aurelle has neither. The display serif and its italic carry every piece of emphasis, and the four inverted sections do the rest. Take the accent away and the typography has to be right, which is the point.",
+      },
+      {
+        title: "A duration on every treatment",
+        body: "Fifteen treatments, fifteen approximate durations. It costs a line each and it answers the question sitting behind a lot of hesitation — how much of my day is this — without anyone having to ask it.",
+      },
+      {
+        title: "One source of truth for the treatment list",
+        body: "The enquiry form's interest list is the same fifteen treatments as the edit, plus an explicit not-sure-yet. Nobody has to translate between what they read and what they pick, and there is no second list to fall out of date.",
+      },
+      {
+        title: "The people are named",
+        body: "Three practitioners with their roles and qualifications, rather than a stock line about our team. For a trust purchase this is the highest-value section on the page, which is why it gets real portraits and real space.",
+      },
+      {
+        title: "Nine FAQs is not too many",
+        body: "Every one of them is a question a clinic actually fields by phone — what happens on a first visit, how to prepare, whether treatments combine. Answering them on the page costs a scroll and saves the visitor the call they were never going to make.",
+      },
+      {
+        title: "Honest about what the images are",
+        body: "The comparisons state they were documented in consistent light, and the individual-results notice sits next to the picture rather than in the footer. A clinic site that implies results it cannot evidence is a liability, and saying so plainly costs nothing.",
+      },
+    ],
+    decisionsLede: "Why a page this long reads as careful rather than exhausting.",
   },
 ];
 
