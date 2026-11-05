@@ -3370,11 +3370,48 @@ html.lenis body {
 
 .case-full > summary svg {
   color: var(--flame);
-  transition: transform 0.35s var(--ease-out-expo);
+  transition: transform 0.45s var(--ease-out-expo);
 }
 
 .case-full[open] > summary svg {
   transform: rotate(45deg);
+}
+
+/*
+  A native <details> snaps open, dropping ~770px of prose in a single
+  frame and shoving the rest of the page down with it. These three
+  primitives let the content height animate to `auto` instead.
+  `interpolate-size` is inherited, so scoping it to .case-full leaves
+  intrinsic sizing untouched everywhere else. Browsers without support
+  keep the instant toggle, which is the behaviour this replaces, so the
+  rule is purely additive.
+*/
+.case-full {
+  interpolate-size: allow-keywords;
+}
+
+.case-full::details-content {
+  block-size: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: block-size 0.5s var(--ease-out-expo), opacity 0.4s ease 0.05s,
+    content-visibility 0.5s allow-discrete;
+}
+
+.case-full[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-full::details-content,
+  .case-full > summary svg {
+    transition: none;
+  }
+
+  .case-full::details-content {
+    opacity: 1;
+  }
 }
 
 .case-full-body {
