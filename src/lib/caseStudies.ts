@@ -41,6 +41,12 @@ export interface CaseStudy {
   platform?: "web" | "mobile";
   /** Overrides the default lede on the "Thinking behind it" section. */
   decisionsLede?: string;
+  /**
+   * Caption on the hero reel's frame. Defaults to "<title> · admin",
+   * which only makes sense for the platform studies — a marketing site
+   * reads better with its domain.
+   */
+  reelLabel?: string;
   n: string;
   title: string;
   tagline: string;
@@ -88,22 +94,6 @@ export interface LiveBuild {
 
 export const LIVE_BUILDS: LiveBuild[] = [
   {
-    key: "vanta",
-    shot: "/work/cards/01-vanta.jpg",
-    title: "Vanta Aesthetics",
-    domain: "vanta-aesthetics.vercel.app",
-    url: "https://vanta-aesthetics.vercel.app",
-    meta: "Aesthetics clinic · 2026",
-  },
-  {
-    key: "lumiere",
-    shot: "/work/cards/02-lumiere.jpg",
-    title: "Lumière Aesthetics",
-    domain: "lumi-re-aesthetics.vercel.app",
-    url: "https://lumi-re-aesthetics.vercel.app",
-    meta: "Aesthetics clinic · 2026",
-  },
-  {
     key: "aurelle",
     shot: "/work/cards/03-aurelle.jpg",
     title: "Aurelle",
@@ -142,6 +132,8 @@ const mediaFor = (dir: string) => ({
 const { desktop, phone, clip } = mediaFor("/work/ironside");
 const V = mediaFor("/work/vector-academy");
 const VL = mediaFor("/work/veloura");
+const VA = mediaFor("/work/vanta");
+const LU = mediaFor("/work/lumiere");
 
 /* Simulator captures are 1206 x 2622. */
 const CB = (() => {
@@ -768,6 +760,322 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
     ],
     decisionsLede: "The design choices that shape how Curbly looks, reads and feels in the hand.",
+  },
+  {
+    slug: "vanta-aesthetics",
+    pitch: "A clinic site that sells restraint, built around one scroll-driven centrepiece.",
+    brief: [
+      { label: "The problem", text: "Aesthetics sites all look alike: stock smiles, pastel gradients, a price list. None of them read as expensive." },
+      { label: "What I built", text: "A dark editorial site with a scroll-driven device render, a tabbed treatment menu and a before-and-after compare." },
+      { label: "Why it works", text: "The design withholds. Restraint is what this kind of clinic sells, so the site has to sell it first." },
+    ],
+    note: "A self-initiated concept build. The clinic, the practitioner and every photograph are fictional, and the device render and results are labelled illustrative throughout the site.",
+    n: "05",
+    title: "Vanta Aesthetics",
+    tagline: "Precision, refined — a luxury aesthetics clinic with nothing to prove.",
+    meta: "Aesthetics clinic · 2026",
+    year: "2026",
+    role: "Design & front-end development",
+    client: "Concept build",
+    type: "Clinic marketing site",
+    status: "Live · self-initiated",
+    tags: ["Scroll-driven 3D", "Editorial layout", "Before-and-after compare", "Enquiry capture"],
+    liveUrl: "https://vanta-aesthetics.vercel.app",
+    reelLabel: "vanta-aesthetics.vercel.app",
+    card: "/work/cards/01-vanta.jpg",
+    summary:
+      "Vanta is a concept site for a high-end aesthetics clinic, built to look like somewhere expensive rather than somewhere eager. Eleven sections move from a full-bleed opening through a tabbed treatment menu, a device render that turns as you scroll, a before-and-after compare and an enquiry form that asks what someone is interested in before it asks anything else.",
+    insideLede:
+      "Every section is doing one job, and the page is arranged so each one lands on its own screen rather than competing for attention.",
+    phoneLede:
+      "Most clinic traffic arrives on a phone, so the editorial layout rebuilds itself for a single column without losing the restraint that makes it work.",
+    challenge: [
+      "Open five aesthetics clinic sites and you will see the same one: a smiling stock portrait, a soft gradient, a grid of treatment cards and a price list. They all signal the same thing, which is that the clinic wants your booking. None of them signal that the clinic is worth the money.",
+      "The brief I set myself was to build the opposite. A site that holds back — dark, quiet, mostly empty — and lets a small number of deliberate moments do the persuading. If restraint is what the clinic is selling in the treatment room, the site has to demonstrate it first.",
+    ],
+    approach: [
+      "The page is built as a sequence of full-height sections, each with a single idea. Black stone and bone type carry most of it; gold appears perhaps four times in the whole document, which is what makes it mean anything when it does. Treatments live in a vertical tab menu rather than a card grid, so the visitor reads one at a time instead of scanning a price list.",
+      "The centrepiece is a device render that rotates through a full turn as you scroll past it, with four callouts annotating the hardware as it comes round. It is the one piece of spectacle on the site, and it earns its place by explaining something — the technology section is where a clinic usually hand-waves, and here it is the part that holds you longest.",
+    ],
+    stats: [
+      { value: 11, label: "Sections, hero to enquiry" },
+      { value: 5, label: "Treatment categories, one panel each" },
+      { value: 360, suffix: "°", label: "Of scroll-linked rotation on the render" },
+      { value: 4, label: "Before-and-after categories" },
+    ],
+    highlights: [
+      {
+        kicker: "01 · The opening",
+        title: "A first screen that withholds",
+        body: "Full-bleed portrait, two words of type and a single gold full stop. No value proposition, no badges, no scrolling marquee of logos. The only instruction on the screen is to keep going.",
+        points: [
+          "Type set large enough to be the whole composition",
+          "One accent colour, used once",
+          "Location and coordinates as quiet editorial furniture",
+        ],
+        shot: VA.desktop("hero", "The Vanta hero: Precision, Refined. over a full-bleed portrait"),
+      },
+      {
+        kicker: "02 · The treatment menu",
+        title: "One treatment at a time, not a price grid",
+        body: "Five categories sit as collapsed vertical panels. Opening one expands it to fill the frame with its own photograph and copy while the others compress to spines, so the visitor reads rather than scans.",
+        points: [
+          "Injectables, skin, laser, body and wellness",
+          "Vertical spines keep the whole menu visible at once",
+          "Each panel carries its own consultation prompt",
+        ],
+        shot: VA.desktop("treatments", "The treatment menu with Injectables open and the other four categories collapsed to spines"),
+      },
+      {
+        kicker: "03 · The device",
+        title: "A render that turns as you read",
+        body: "The technology section pins while a device render rotates through a full turn, driven entirely by scroll position. Four callouts annotate the optics, the emitter ring, the control base and the sensor array as each comes into view.",
+        points: [
+          "Rotation tied to scroll, with a live degree readout",
+          "Four hardware callouts timed to the turn",
+          "Labelled an illustrative render, not a product claim",
+        ],
+        shot: VA.desktop("technology-detail", "The device render part-way through its rotation with the controlled-energy callout showing"),
+      },
+      {
+        kicker: "04 · Platforms",
+        title: "The part most clinics hand-wave",
+        body: "Laser, RF and skin analysis each get a plain-language explanation beside an animated diagram showing focal point, depth and region of interest. It is the section that answers what the machine actually does.",
+        points: [
+          "Three platforms, selectable from a list",
+          "Diagram redraws for each platform",
+          "Written to be understood, not to impress",
+        ],
+        shot: VA.desktop("platforms", "The platforms section with the laser diagram showing focal point and depth"),
+      },
+      {
+        kicker: "05 · The protocol",
+        title: "Assess, refine, maintain",
+        body: "The clinic's method as three steps against a single portrait, scrolled through one at a time. It replaces the usual bullet list of promises with something that reads like a position: nothing rushed, nothing overdone.",
+        points: [
+          "Three stages, each on its own screen",
+          "Portrait held steady while the copy advances",
+          "Ends on a consultation, not a booking button",
+        ],
+        shot: VA.desktop("protocol", "The Vanta Protocol section with the assess step and a held portrait"),
+      },
+      {
+        kicker: "06 · The enquiry",
+        title: "Ask what they want before asking who they are",
+        body: "The contact form opens with the treatments someone is interested in as selectable chips — including an honest \"not sure yet\" — then collects name, email and an optional phone number. Three fields are required and the rest can be skipped.",
+        points: [
+          "Interest captured as chips, not a dropdown",
+          "A deliberate not-sure-yet option",
+          "Phone optional, message free-form",
+        ],
+        shot: VA.desktop("contact-form", "The enquiry form with treatment interest chips and three required fields"),
+      },
+    ],
+    clips: [
+      VA.clip("tour", "The full page", "Hero to closing in ten stops: the treatment menu, the device render, the platforms diagram, the protocol and the enquiry form.", 16),
+      VA.clip("technology", "The device render", "Scrolling the technology section turns the render through a full rotation while the four hardware callouts come round.", 11),
+      VA.clip("treatments", "The treatment menu", "Opening each of the five categories in turn, with the panels expanding and compressing as the selection moves.", 11),
+    ],
+    gallery: [
+      VA.desktop("treatments-menu", "The treatment menu header with all five categories collapsed", "Treatment menu"),
+      VA.desktop("technology", "The device render at the start of its rotation", "Technology"),
+      VA.desktop("protocol-steps", "The refine and maintain steps of the protocol", "Protocol"),
+      VA.desktop("results", "The before-and-after compare with a draggable divider and category filter", "Results"),
+      VA.desktop("provider", "The practitioner profile with an illustrative portrait", "The practitioner"),
+      VA.desktop("clinic-grid", "The clinic space as a staggered photographic grid", "The space"),
+      VA.desktop("experience", "The consultation-to-care section with discover and design", "The experience"),
+      VA.desktop("closing", "The closing call to action over a darkened interior", "Closing"),
+    ],
+    phones: [
+      VA.phone("mobile-hero", "The hero on a phone, type stacked over the portrait"),
+      VA.phone("mobile-treatments", "The treatment menu as stacked panels"),
+      VA.phone("mobile-protocol", "The protocol steps in a single column"),
+      VA.phone("mobile-clinic", "The clinic space grid on a phone"),
+      VA.phone("mobile-contact", "The enquiry form with interest chips wrapped to the width"),
+    ],
+    decisions: [
+      {
+        title: "Gold, four times",
+        body: "The accent appears on the hero full stop, the active treatment rule, the rotation readout and the primary button. Spending it anywhere else would have made it decoration instead of signal.",
+      },
+      {
+        title: "Tabs instead of cards",
+        body: "A card grid invites comparison shopping on price. A vertical tab menu makes the visitor open one treatment at a time and actually read it, which is the behaviour a consultation-led clinic wants.",
+      },
+      {
+        title: "The render had to explain something",
+        body: "A spinning object for its own sake is a gimmick. Tying the rotation to four hardware callouts turns it into the clearest section on the page, which is why it sits where a clinic usually says the least.",
+      },
+      {
+        title: "Everything illustrative is labelled",
+        body: "The render, the before-and-afters and the practitioner portrait all carry a visible label saying so. A clinic site that implies real patient results it does not have is a liability, and the labels cost nothing.",
+      },
+      {
+        title: "One idea per screen",
+        body: "Sections are sized so each lands on its own viewport. It makes the page longer than it strictly needs to be, and it is the main reason the site reads as unhurried rather than busy.",
+      },
+    ],
+    decisionsLede: "Why a clinic site that says less ends up being more convincing.",
+  },
+  {
+    slug: "lumiere-aesthetics",
+    pitch: "The warm counterpart to Vanta: the same restraint, read as welcome rather than exclusive.",
+    brief: [
+      { label: "The problem", text: "A med spa has to feel clinical enough to trust and warm enough to walk into. Most pick one and lose the other." },
+      { label: "What I built", text: "A light editorial site with a scroll-driven treatment carousel, a drag-to-compare slider and a consultation request form." },
+      { label: "Why it works", text: "Warm stone and serif type carry the welcome; the plain, specific copy carries the credibility." },
+    ],
+    note: "A self-initiated concept build. Dr. Amelia Hart is a fictional practitioner, labelled as such on the site, and all imagery and testimonials are illustrative.",
+    n: "06",
+    title: "Lumière Aesthetics",
+    tagline: "Enhance what makes you, you — a med spa that sounds like a person.",
+    meta: "Aesthetics clinic · 2026",
+    year: "2026",
+    role: "Design & front-end development",
+    client: "Concept build",
+    type: "Clinic marketing site",
+    status: "Live · self-initiated",
+    tags: ["Scroll-driven carousel", "Drag-to-compare", "Editorial layout", "Consultation capture"],
+    liveUrl: "https://lumi-re-aesthetics.vercel.app",
+    reelLabel: "lumi-re-aesthetics.vercel.app",
+    card: "/work/cards/02-lumiere.jpg",
+    summary:
+      "Lumière is the warm answer to the same brief that produced Vanta. Thirteen sections move from a hero through a scroll-driven treatment carousel, a sequenced signature plan, a drag-to-compare before-and-after, a practitioner profile and a consultation request. Where Vanta withholds, Lumière explains — and says out loud when the right answer is not yet, or not at all.",
+    insideLede:
+      "Warm stone, serif display type and a lot of air, with the interactive moments placed where a visitor is deciding rather than browsing.",
+    phoneLede:
+      "The carousel, the compare slider and the form are all built for a thumb first, since this is the kind of site people open in bed at eleven at night.",
+    challenge: [
+      "A med spa sits in an awkward middle. Lean too clinical and it reads as a dermatology waiting room; lean too soft and it reads as a beauty salon that might not know what it is injecting. The site has to earn clinical trust and still feel like somewhere you would want to spend an afternoon.",
+      "Vanta answered a version of this brief by withholding. I wanted the opposite answer to the same question: what does restraint look like when it is warm? Lumière is that build — same discipline about what to leave out, completely different temperature.",
+    ],
+    approach: [
+      "The palette is warm stone, cream and a deep forest green used for the one dark panel on the page. Display type is a serif, which does most of the work of making a clinical subject feel unhurried. Nearly every section is built around a single photograph and a short paragraph, with enough air that nothing feels like it is being sold at you.",
+      "Two interactions carry the persuading. The treatment carousel is driven by vertical scroll, so six treatments pass sideways through a pinned frame as you read down the page. The before-and-after is a drag-to-compare slider rather than two images side by side, which makes the difference something the visitor discovers themselves instead of something the clinic asserts.",
+    ],
+    stats: [
+      { value: 13, label: "Sections, hero to FAQ" },
+      { value: 6, label: "Treatments in the scroll-driven carousel" },
+      { value: 4, label: "Stages in the signature plan" },
+      { value: 3, label: "Journal articles seeded" },
+    ],
+    highlights: [
+      {
+        kicker: "01 · The opening",
+        title: "A hero that makes a promise, not a claim",
+        body: "Serif display type set against a warm portrait, with the whole proposition in four words and a paragraph that talks about how someone wants to feel rather than what the clinic sells.",
+        points: [
+          "Enhance what makes you, you",
+          "Two calls to action, neither of them urgent",
+          "Location set as a quiet eyebrow above the headline",
+        ],
+        shot: LU.desktop("hero", "The Lumière hero with serif display type over a warm portrait"),
+      },
+      {
+        kicker: "02 · Treatments",
+        title: "Six treatments that move as you read",
+        body: "The treatments section pins while six cards travel sideways through the frame, driven by vertical scroll. Each one carries its own photograph and a sentence that describes the result rather than the procedure.",
+        points: [
+          "Vertical scroll drives horizontal movement",
+          "Botox through to wellness and IV therapy",
+          "Copy written about outcomes, not technique",
+        ],
+        shot: LU.desktop("treatments-cards", "The treatment carousel part-way through, with four cards visible"),
+      },
+      {
+        kicker: "03 · The Signature",
+        title: "A plan, sequenced, not a package",
+        body: "The clinic's flagship offer is presented as four stages — consultation, written plan, conservative delivery, scheduled follow-up — which quietly makes the point that it is not a one-visit purchase.",
+        points: [
+          "Four stages, numbered and ordered",
+          "Explicitly not a one-size package",
+          "Follow-up framed as part of the work",
+        ],
+        shot: LU.desktop("signature", "The Natural Refresh signature section with its four numbered stages"),
+      },
+      {
+        kicker: "04 · Refresh, don't reinvent",
+        title: "A difference you find yourself",
+        body: "A drag-to-compare slider over a single portrait. Nothing is claimed in the copy beyond the standard the clinic holds itself to — the visitor drags the divider and decides what they think, which is considerably more persuasive than a pair of images.",
+        points: [
+          "Draggable divider with before and after labels",
+          "Marked as an illustrative example",
+          "Copy argues for restraint, not for the treatment",
+        ],
+        shot: LU.desktop("compare", "The before-and-after compare slider with the divider near the centre"),
+      },
+      {
+        kicker: "05 · Why Lumière",
+        title: "The one dark panel on the page",
+        body: "Four pillars on deep forest green, placed at the point where a visitor has stopped browsing and started deciding. The single tonal shift on the whole site marks it as the section that matters.",
+        points: [
+          "Personalised plans, natural results, modern technique, privacy",
+          "The only inverted panel in the document",
+          "Sits immediately before the proof and the practitioner",
+        ],
+        shot: LU.desktop("why", "The why-Lumière panel in deep green with its four pillars"),
+      },
+      {
+        kicker: "06 · The consultation request",
+        title: "A form that reads like a conversation",
+        body: "Full name, phone, email, a treatment of interest and an open field for anything else. The heading asks whether someone is ready to feel like themselves again, and the copy promises an honest plan including whether the answer is to do nothing.",
+        points: [
+          "Five fields, most of them optional",
+          "Treatment of interest as a select, not a quiz",
+          "Explicitly no-obligation, no-pressure framing",
+        ],
+        shot: LU.desktop("contact", "The consultation request form beside its invitation copy"),
+      },
+    ],
+    clips: [
+      LU.clip("tour", "The full page", "Hero to FAQ in ten stops: the approach, the carousel, the signature plan, the compare slider, the space and the consultation form.", 16),
+      LU.clip("treatments", "The treatment carousel", "Scrolling down moves six treatment cards sideways through a pinned frame.", 12),
+      LU.clip("compare", "Drag to compare", "The before-and-after divider pulled across the portrait and back.", 8),
+    ],
+    gallery: [
+      LU.desktop("approach", "The approach section with its three principles", "The approach"),
+      LU.desktop("treatments", "The treatment carousel at the start of its travel", "Treatments"),
+      LU.desktop("stats", "Practice figures set as three large numerals", "By the numbers"),
+      LU.desktop("space-grid", "The studio photographed as an offset collage", "The space"),
+      LU.desktop("about", "The practitioner profile for Dr. Amelia Hart", "The practitioner"),
+      LU.desktop("testimonial", "A sample client experience set as a centred pull quote", "In their words"),
+      LU.desktop("journal", "Three journal articles as a card row", "Journal"),
+      LU.desktop("closing", "The closing invitation over the studio interior", "Closing"),
+    ],
+    phones: [
+      LU.phone("mobile-hero", "The hero on a phone with the portrait below the headline"),
+      LU.phone("mobile-treatments", "The treatment carousel as a single-column scroll"),
+      LU.phone("mobile-space", "The studio collage restacked for a phone"),
+      LU.phone("mobile-about", "The practitioner profile on a phone"),
+      LU.phone("mobile-contact", "The consultation request form on a phone"),
+    ],
+    decisions: [
+      {
+        title: "Same brief, opposite temperature",
+        body: "Lumière exists because Vanta answered the question one way. Building the warm version of the same discipline was the point — it is the clearest way to show that restraint is a method, not a colour palette.",
+      },
+      {
+        title: "Serif for a clinical subject",
+        body: "A serif display face does most of the work of making injectables feel unhurried. Pair it with a neutral sans for body copy and the page reads as considered rather than medical.",
+      },
+      {
+        title: "Scroll drives the carousel",
+        body: "Horizontal scrollers get missed on desktop and fought with on mobile. Pinning the section and moving the cards with vertical scroll means the whole set is seen without anyone having to discover a gesture.",
+      },
+      {
+        title: "Let them drag it",
+        body: "A side-by-side before-and-after is a claim. A slider the visitor moves themselves is an experience, and it fits a clinic whose whole argument is that the best result is the one nobody can name.",
+      },
+      {
+        title: "One dark panel, placed deliberately",
+        body: "The single inverted section lands where browsing turns into deciding. Using the tonal shift once makes it function as punctuation; using it three times would have made it a pattern.",
+      },
+      {
+        title: "Say when the answer is no",
+        body: "The approach copy says some of the best advice is not yet, or not at all. For a category built on upselling, a clinic willing to say that in writing is the most credible thing on the page.",
+      },
+    ],
+    decisionsLede: "The same restraint as Vanta, turned warm — and the choices that made the difference.",
   },
 ];
 

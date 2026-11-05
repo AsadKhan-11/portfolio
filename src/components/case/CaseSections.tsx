@@ -106,7 +106,10 @@ export function CaseReel({ study }: { study: CaseStudy }) {
           {isMobile(study) ? (
             <PhoneReel clips={study.clips} />
           ) : (
-            <Reel clip={study.clips[0]} label={`${study.title.toLowerCase()} · admin`} />
+            <Reel
+              clip={study.clips[0]}
+              label={study.reelLabel ?? `${study.title.toLowerCase()} · admin`}
+            />
           )}
         </Reveal>
       </div>
