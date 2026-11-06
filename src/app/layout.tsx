@@ -55,6 +55,22 @@ export const metadata: Metadata = {
     "Pakistan",
   ],
   authors: [{ name: "Asad Khan" }],
+  /*
+    Default for every route. `large` lets Search show a full-width image
+    preview instead of a thumbnail, which is what a portfolio wants; the
+    snippet and video caps are lifted because nothing here is gated.
+  */
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     title: "WebForge Digital · Full Stack Web Studio",
     description:
@@ -79,18 +95,38 @@ export const metadata: Metadata = {
   },
 };
 
-/* Structured data: tells search engines who and what this site is. Static, so safe to inline. */
+/*
+  Structured data: who and what this site is. Static, so safe to inline.
+
+  The WebSite node is what Search reads to render the site name beside a
+  result, which is why the case study <title>s no longer spend characters
+  repeating the brand.
+*/
 const JSON_LD = JSON.stringify({
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: "WebForge Digital",
-  url: SITE_URL,
-  description:
-    "Full stack web studio: websites, client portals and web apps, designed, built and launched by one developer with a fixed quote.",
-  founder: { "@type": "Person", name: "Asad Khan" },
-  areaServed: "Worldwide",
-  address: { "@type": "PostalAddress", addressLocality: "Lahore", addressCountry: "PK" },
-  sameAs: SOCIALS,
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: "WebForge Digital",
+      alternateName: "WebForge",
+      inLanguage: "en",
+      publisher: { "@id": `${SITE_URL}/#webforge` },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${SITE_URL}/#webforge`,
+      name: "WebForge Digital",
+      url: SITE_URL,
+      description:
+        "Full stack web studio: websites, client portals and web apps, designed, built and launched by one developer with a fixed quote.",
+      founder: { "@type": "Person", "@id": `${SITE_URL}/#asad-khan`, name: "Asad Khan" },
+      areaServed: "Worldwide",
+      address: { "@type": "PostalAddress", addressLocality: "Lahore", addressCountry: "PK" },
+      sameAs: SOCIALS,
+    },
+  ],
 }).replace(/</g, "\\u003c");
 
 export default function RootLayout({

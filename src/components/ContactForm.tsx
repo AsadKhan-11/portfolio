@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
-import { FiArrowUpRight, FiCheck } from "react-icons/fi";
+import { FiArrowUpRight, FiCheck, FiX } from "react-icons/fi";
 import { Magnetic } from "./animations";
 import Select from "./Select";
+import { CASE_STUDIES } from "@/lib/caseStudies";
 
 const EMAIL = "mrasad10khan@gmail.com";
 
@@ -49,6 +50,17 @@ const EMPTY: Fields = { name: "", email: "", phone: "", budget: "", message: "" 
 /* Deliberately permissive — just enough to catch a genuine typo. */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+/*
+  Every CTA on a case study carries ?ref=<slug>. The query string is an
+  external source, so it is read through useSyncExternalStore rather than
+  an effect: the server snapshot is null, hydration matches, and there is
+  no cascading render. Nothing can change the query without a navigation
+  that remounts this form, so the subscription is a no-op.
+*/
+const subscribeToUrl = () => () => {};
+const readRef = () => new URLSearchParams(window.location.search).get("ref");
+const noRefOnServer = () => null;
+
 function validate(f: Fields): Partial<Record<keyof Fields, string>> {
   const e: Partial<Record<keyof Fields, string>> = {};
   if (!f.name.trim()) e.name = "Please add your name";
@@ -67,6 +79,24 @@ export default function ContactForm() {
   const [touched, setTouched] = useState<Partial<Record<keyof Fields, boolean>>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [honey, setHoney] = useState("");
+  const [refDropped, setRefDropped] = useState(false);
+
+  /*
+    Where the enquiry came from. Carrying it does two jobs: the visitor
+    sees their context was kept, and the enquiry lands saying which piece
+    of work sold it — otherwise a lead off eighteen screens of Aurelle is
+    indistinguishable from a cold one.
+
+    Not useSearchParams: the home page is statically prerendered, and that
+    hook would push it behind a Suspense boundary for what is only ever a
+    prefill.
+  */
+  const refSlug = useSyncExternalStore(subscribeToUrl, readRef, noRefOnServer);
+  const source = useMemo(() => {
+    if (refDropped || !refSlug) return null;
+    const study = CASE_STUDIES.find((c) => c.slug === refSlug);
+    return study ? { slug: study.slug, title: study.title } : null;
+  }, [refSlug, refDropped]);
 
   const set = (k: keyof Fields) => (v: string) => {
     setF((prev) => ({ ...prev, [k]: v }));
@@ -87,14 +117,19 @@ export default function ContactForm() {
   const remaining = MESSAGE_MAX - f.message.length;
   const showErr = (k: keyof Fields) => (touched[k] ? errors[k] : undefined);
 
+  /* Named once so the inbox subject line and the service payload agree. */
+  const subject = source
+    ? `Project enquiry (via ${source.title}): ${f.name.trim() || "Website"}`
+    : `Project enquiry: ${f.name.trim() || "Website"}`;
+
   const mailto = useMemo(() => {
-    const subject = `Project enquiry: ${f.name.trim() || "Website"}`;
     const body = [
       `Name: ${f.name.trim()}`,
       `Email: ${f.email.trim()}`,
       f.phone ? `Phone: ${f.phone.trim()}` : null,
       types.length ? `Project type: ${types.join(", ")}` : null,
       f.budget ? `Budget: ${f.budget}` : null,
+      source ? `Came from: ${source.title} case study (/work/${source.slug})` : null,
       "",
       f.message.trim(),
     ]
@@ -103,7 +138,7 @@ export default function ContactForm() {
     return `mailto:${EMAIL}?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(body)}`;
-  }, [f, types]);
+  }, [f, types, source, subject]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,12 +161,14 @@ export default function ContactForm() {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           ...(FORM_KEY ? { access_key: FORM_KEY } : {}),
-          subject: `Project enquiry: ${f.name.trim() || "Website"}`,
+          subject,
           name: f.name.trim(),
           email: f.email.trim(),
           phone: f.phone.trim(),
           budget: f.budget,
           project_type: types.join(", "),
+          /* Which case study produced the lead, if any. */
+          came_from: source ? `${source.title} (/work/${source.slug})` : "Direct",
           message: f.message.trim(),
         }),
       })
@@ -189,6 +226,31 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
+      {/*
+        Shown, not silent. The visitor can see the context came with them,
+        and can drop it if they landed here about something else — a hidden
+        field that quietly tags the enquiry would be the wrong trade.
+      */}
+      {source && (
+        <motion.p
+          className="form-source"
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span>
+            About something like <strong>{source.title}</strong>
+          </span>
+          <button
+            type="button"
+            onClick={() => setRefDropped(true)}
+            aria-label={`Remove the ${source.title} reference from this enquiry`}
+          >
+            <FiX size={13} />
+          </button>
+        </motion.p>
+      )}
+
       {/* Honeypot — invisible to people, tempting to bots */}
       <input
         type="text"

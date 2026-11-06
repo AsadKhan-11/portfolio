@@ -2,11 +2,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { FiArrowLeft, FiArrowRight, FiArrowUpRight, FiInfo, FiPlus } from "react-icons/fi";
 import { Counter, Reveal, SplitText, Stagger, StaggerItem } from "../animations";
-import { CASE_STUDIES, LIVE_BUILDS, type CaseStudy } from "@/lib/caseStudies";
+import { CASE_STUDIES, LIVE_BUILDS, roleInSentence, type CaseStudy } from "@/lib/caseStudies";
 import { Device, FlowPlayer, Frame, Gallery, MoreGrid, PhoneReel, Reel } from "./CaseMedia";
 
 const isMobile = (s: CaseStudy) => s.platform === "mobile";
 const nounFor = (s: CaseStudy) => s.noun ?? (isMobile(s) ? "app" : "platform");
+
+/*
+  Every "start a project" link out of a case study carries the slug, so the
+  contact form can say what the enquiry came from and the enquiry itself
+  arrives attributed. Without it a lead from this page is indistinguishable
+  from one off the home page.
+*/
+export const enquiryHref = (s: CaseStudy) => `/?ref=${s.slug}#contact`;
+
+/* Anchors for the jump nav. Sections that can be absent are filtered out. */
+const SECTION_IDS = {
+  overview: "overview",
+  features: "features",
+  walkthroughs: "walkthroughs",
+  gallery: "gallery",
+  mobile: "mobile",
+  decisions: "decisions",
+} as const;
 
 function Head({ eyebrow, title, em, lede }: { eyebrow: string; title: string; em: string; lede?: string }) {
   return (
@@ -40,14 +58,26 @@ export function CaseHero({ study }: { study: CaseStudy }) {
   return (
     <section id="home" className="case-hero bg-glow-tr">
       <div className="shell">
+        {/*
+          Visible trail, not just JSON-LD: Google's structured data policy
+          says markup must not describe information the visitor cannot see.
+        */}
         <Reveal>
-          <Link href="/#work" className="case-back mono-label" data-cursor="Back">
-            <FiArrowLeft size={14} /> All work
-          </Link>
+          <nav className="case-crumbs mono-label" aria-label="Breadcrumb">
+            <ol>
+              <li>
+                <Link href="/" data-cursor="Home">Home</Link>
+              </li>
+              <li>
+                <Link href="/#work" data-cursor="Back">Work</Link>
+              </li>
+              <li aria-current="page">{study.title}</li>
+            </ol>
+          </nav>
         </Reveal>
 
         <p className="eyebrow" style={{ marginTop: "clamp(2rem, 5vh, 3.5rem)" }}>
-          Case study · {study.n}
+          Case study · {study.n} · {study.type}
         </p>
         <h1 className="case-title">
           <SplitText text={study.title} delay={0.1} />
@@ -86,16 +116,60 @@ export function CaseHero({ study }: { study: CaseStudy }) {
           </Reveal>
         )}
 
-        {study.liveUrl && (
-          <Reveal delay={0.5}>
-            <a href={study.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-solid" style={{ marginTop: "2rem" }} data-cursor="Open">
-              <span>Visit the {nounFor(study)}</span>
-              <FiArrowUpRight />
-            </a>
-          </Reveal>
-        )}
+        {/*
+          The only conversion point used to be the outro, eighteen screens
+          down. Anyone sold by the facts alone now has somewhere to go.
+        */}
+        <Reveal delay={0.5}>
+          <div className="case-hero-actions">
+            {study.liveUrl && (
+              <a href={study.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-solid" data-cursor="Open">
+                <span>Visit the {nounFor(study)}</span>
+                <FiArrowUpRight />
+              </a>
+            )}
+            <Link href={enquiryHref(study)} className="btn" data-cursor="Talk">
+              <span>Start something like this</span>
+              <FiArrowRight />
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
+  );
+}
+
+/*
+  Jump nav. An eighteen-screen page with no way to skip to the part you
+  came for is a page people leave. Doubles as real internal anchors, which
+  is what Google's AI-features guidance asks for ("make content easy to
+  find with internal links").
+*/
+export function CaseJump({ study }: { study: CaseStudy }) {
+  const links = [
+    { id: SECTION_IDS.overview, label: "Overview" },
+    { id: SECTION_IDS.features, label: "What it does" },
+    { id: SECTION_IDS.walkthroughs, label: "Walkthroughs" },
+    { id: SECTION_IDS.gallery, label: isMobile(study) ? "Screens" : "Gallery" },
+    ...(!isMobile(study) && study.phones.length
+      ? [{ id: SECTION_IDS.mobile, label: "Mobile" }]
+      : []),
+    { id: SECTION_IDS.decisions, label: "Decisions" },
+  ];
+
+  return (
+    <nav className="case-jump" aria-label="Sections of this case study">
+      <div className="shell">
+        <p className="mono-label case-jump-head">In this case study</p>
+        <ul>
+          {links.map((l) => (
+            <li key={l.id}>
+              <a href={`#${l.id}`} data-cursor="Jump">{l.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
   );
 }
 
@@ -120,7 +194,7 @@ export function CaseReel({ study }: { study: CaseStudy }) {
 
 export function CaseStory({ study }: { study: CaseStudy }) {
   return (
-    <section className="section">
+    <section id={SECTION_IDS.overview} className="section">
       <div className="rule-top" />
       <div className="shell">
         <div className="case-lead">
@@ -168,13 +242,23 @@ export function CaseStory({ study }: { study: CaseStudy }) {
           ))}
         </Stagger>
 
+        {/*
+          The summary is the page's own meta description and the densest
+          plain-language account of the build, so it stays visible. Google
+          says accordion content carries full ranking weight, but the
+          counter-evidence is live enough that hiding the one paragraph
+          that matters most is a bad trade. The long prose still collapses.
+        */}
+        <Reveal>
+          <p className="case-summary-lead">{study.summary}</p>
+        </Reveal>
+
         <details className="case-full">
           <summary>
             <span className="mono-label">Read the full story</span>
             <FiPlus size={16} aria-hidden="true" />
           </summary>
           <div className="case-full-body">
-            <p className="case-summary">{study.summary}</p>
             <div className="case-story">
               <div>
                 <p className="eyebrow">The challenge</p>
@@ -198,7 +282,7 @@ export function CaseStory({ study }: { study: CaseStudy }) {
 
 export function CaseHighlights({ study }: { study: CaseStudy }) {
   return (
-    <section className="section bg-glow-bl">
+    <section id={SECTION_IDS.features} className="section bg-glow-bl">
       <div className="rule-top" />
       <div className="shell">
         <Head
@@ -254,7 +338,7 @@ export function CaseHighlights({ study }: { study: CaseStudy }) {
 
 export function CaseFlows({ study }: { study: CaseStudy }) {
   return (
-    <section className="section">
+    <section id={SECTION_IDS.walkthroughs} className="section">
       <div className="rule-top" />
       <div className="shell">
         <Head
@@ -273,7 +357,7 @@ export function CaseFlows({ study }: { study: CaseStudy }) {
 
 export function CaseGallery({ study }: { study: CaseStudy }) {
   return (
-    <section className="section bg-glow-tr">
+    <section id={SECTION_IDS.gallery} className="section bg-glow-tr">
       <div className="rule-top" />
       <div className="shell">
         <Head eyebrow="Gallery" title={isMobile(study) ? "Screen by" : "More"} em={isMobile(study) ? "screen" : "screens"} lede="Click any screen to see it full size, then use the arrow keys to move through the set." />
@@ -288,7 +372,7 @@ export function CaseGallery({ study }: { study: CaseStudy }) {
 export function CasePhones({ study }: { study: CaseStudy }) {
   if (isMobile(study) || study.phones.length === 0) return null;
   return (
-    <section className="section">
+    <section id={SECTION_IDS.mobile} className="section">
       <div className="rule-top" />
       <div className="shell">
         <Head
@@ -316,7 +400,7 @@ export function CasePhones({ study }: { study: CaseStudy }) {
 
 export function CaseDecisions({ study }: { study: CaseStudy }) {
   return (
-    <section className="section bg-glow-bl">
+    <section id={SECTION_IDS.decisions} className="section bg-glow-bl">
       <div className="rule-top" />
       <div className="shell">
         <Head eyebrow="How it fits together" title="Thinking" em="behind it" lede={study.decisionsLede ?? "AI that does the heavy lifting, and people who stay in control of the relationship."} />
@@ -331,6 +415,73 @@ export function CaseDecisions({ study }: { study: CaseStudy }) {
         </Stagger>
       </div>
     </section>
+  );
+}
+
+/*
+  Mid-page CTA, placed straight after the walkthroughs — the point where a
+  visitor has seen the thing actually work and is as convinced as the page
+  will make them. Everything below this is reassurance; making them scroll
+  all of it to find a way to get in touch loses the ones already sold.
+*/
+export function CaseMidCta({ study }: { study: CaseStudy }) {
+  return (
+    <aside className="case-midcta" aria-label="Enquire about a project like this">
+      <div className="shell">
+        <Reveal>
+          <div className="case-midcta-inner">
+            <div>
+              <p className="eyebrow">Seen enough?</p>
+              <p className="case-midcta-copy">
+                {study.title} took {roleInSentence(study)}, start to finish.
+                If you want something built to this standard, tell me what you
+                have in mind and I&rsquo;ll come back with a fixed quote.
+              </p>
+            </div>
+            <Link href={enquiryHref(study)} className="btn btn-solid" data-cursor="Talk">
+              <span>Get a fixed quote</span>
+              <FiArrowUpRight />
+            </Link>
+          </div>
+        </Reveal>
+      </div>
+    </aside>
+  );
+}
+
+/*
+  Previous / next through the shelf order. "More selected work" below is
+  deliberately random, which is good for discovery and useless for anyone
+  working through the set — this is the one that keeps a reader moving.
+*/
+export function CaseNeighbours({ study }: { study: CaseStudy }) {
+  const i = CASE_STUDIES.findIndex((c) => c.slug === study.slug);
+  if (i === -1) return null;
+  const prev = CASE_STUDIES[i - 1];
+  const next = CASE_STUDIES[i + 1];
+  if (!prev && !next) return null;
+
+  return (
+    <nav className="case-neighbours" aria-label="Other case studies">
+      <div className="shell">
+        <div className="case-neighbours-row">
+          {prev ? (
+            <Link href={`/work/${prev.slug}`} className="case-neighbour" data-dir="prev" data-cursor="Read">
+              <span className="mono-label"><FiArrowLeft size={13} /> Previous</span>
+              <span className="case-neighbour-title">{prev.title}</span>
+              <span className="case-neighbour-meta mono-label">{prev.meta}</span>
+            </Link>
+          ) : <span />}
+          {next ? (
+            <Link href={`/work/${next.slug}`} className="case-neighbour" data-dir="next" data-cursor="Read">
+              <span className="mono-label">Next <FiArrowRight size={13} /></span>
+              <span className="case-neighbour-title">{next.title}</span>
+              <span className="case-neighbour-meta mono-label">{next.meta}</span>
+            </Link>
+          ) : <span />}
+        </div>
+      </div>
+    </nav>
   );
 }
 
@@ -385,7 +536,7 @@ export function CaseOutro({ study }: { study: CaseStudy }) {
             <span className="serif-em" style={{ color: "var(--flame)" }}>like {study.title}?</span>
           </h2>
           <div className="case-outro-actions">
-            <Link href="/#contact" className="btn btn-solid" data-cursor="Talk">
+            <Link href={enquiryHref(study)} className="btn btn-solid" data-cursor="Talk">
               <span>Start a project</span>
               <FiArrowUpRight />
             </Link>

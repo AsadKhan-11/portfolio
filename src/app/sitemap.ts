@@ -3,12 +3,19 @@ import { CASE_STUDIES } from "@/lib/caseStudies";
 import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  /* Newest study stands in for the home page, which lists them all. */
+  const newest = CASE_STUDIES.reduce(
+    (latest, c) => ((c.updated ?? c.published) > latest ? c.updated ?? c.published : latest),
+    CASE_STUDIES[0]?.published ?? "2026-01-01"
+  );
+
   return [
-    { url: SITE_URL, changeFrequency: "monthly", priority: 1 },
+    { url: SITE_URL, lastModified: new Date(newest), changeFrequency: "monthly", priority: 1 },
     ...CASE_STUDIES.map((c) => ({
       url: `${SITE_URL}/work/${c.slug}`,
+      lastModified: new Date(c.updated ?? c.published),
       changeFrequency: "yearly" as const,
-      priority: 0.7,
+      priority: 0.8,
     })),
   ];
 }

@@ -59,6 +59,14 @@ export interface CaseStudy {
   /** Short line used on the work shelf */
   meta: string;
   year: string;
+  /**
+   * ISO date the study went live. Feeds datePublished on the Article and
+   * uploadDate on each clip's VideoObject, both of which Google wants in
+   * ISO 8601. Taken from the commit that added the study.
+   */
+  published: string;
+  /** ISO date of the last substantive edit. Defaults to `published`. */
+  updated?: string;
   role: string;
   client: string;
   type: string;
@@ -169,6 +177,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tagline: "One platform for the gym, its trainers and every member.",
     meta: "Gym platform · 2026",
     year: "2026",
+    published: "2026-10-25",
     role: "Full-stack development & AI integration",
     client: "Strength & conditioning gym",
     type: "Gym management platform",
@@ -327,6 +336,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tagline: "From first enquiry to first solo, on one platform.",
     meta: "Flight-training platform · 2026",
     year: "2026",
+    published: "2026-10-27",
     role: "Full-stack development & AI integration",
     client: "Flight-training academy",
     type: "Academy operations platform",
@@ -484,6 +494,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tagline: "The operating system for a modern med spa.",
     meta: "Med-spa platform · 2026",
     year: "2026",
+    published: "2026-10-28",
     role: "Product design & full-stack development",
     client: "Medical aesthetics clinics",
     type: "Practice management platform",
@@ -643,6 +654,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tagline: "Order from the truck down the street, before you get there.",
     meta: "Mobile app · Concept · 2026",
     year: "2026",
+    published: "2026-10-31",
     role: "Product design & mobile development",
     client: "Self-initiated concept",
     type: "Mobile app for iOS & Android",
@@ -779,6 +791,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tagline: "Precision, refined — a luxury aesthetics clinic with nothing to prove.",
     meta: "Aesthetics clinic · 2026",
     year: "2026",
+    published: "2026-11-06",
     role: "Design & front-end development",
     client: "Concept build",
     type: "Clinic marketing site",
@@ -936,6 +949,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tagline: "Enhance what makes you, you — a med spa that sounds like a person.",
     meta: "Aesthetics clinic · 2026",
     year: "2026",
+    published: "2026-11-06",
     role: "Design & front-end development",
     client: "Concept build",
     type: "Clinic marketing site",
@@ -1097,6 +1111,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     tagline: "Considered, never excessive — advanced aesthetics for someone who has not decided yet.",
     meta: "Skin wellness clinic · 2026",
     year: "2026",
+    published: "2026-11-06",
     role: "Design & front-end development",
     client: "Concept build",
     type: "Clinic marketing site",
@@ -1247,3 +1262,16 @@ export const CASE_STUDIES: CaseStudy[] = [
 ];
 
 export const getCaseStudy = (slug: string) => CASE_STUDIES.find((c) => c.slug === slug);
+
+/*
+  Dropping a field into the middle of a sentence. Only the first letter
+  lowers: toLowerCase() on the whole string turns "iOS & Android" into
+  "ios & android" and "AI integration" into "ai integration".
+*/
+const midSentence = (text: string) => text.charAt(0).toLowerCase() + text.slice(1);
+
+/** "Curbly — mobile app for iOS & Android case study" */
+export const typeInSentence = (s: CaseStudy) => midSentence(s.type);
+
+/** "Veloura took product design & full-stack development, start to finish." */
+export const roleInSentence = (s: CaseStudy) => midSentence(s.role);
