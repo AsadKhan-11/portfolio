@@ -3162,12 +3162,13 @@ html.lenis body {
   color: var(--bone-70);
 }
 
-/* Visit the build, or start one — the hero's two ways forward. */
-.case-hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.85rem;
-  margin-top: 2rem;
+/*
+  The hero's one call to action, sitting under the tagline rather than in
+  a row of its own below a facts table. `align-items: end` on the row
+  would otherwise pin it to the baseline of the tags beside it.
+*/
+.case-hero-cta {
+  margin-top: clamp(1.5rem, 3vh, 2.25rem);
 }
 
 .case-title {
@@ -3220,28 +3221,6 @@ html.lenis body {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-}
-
-.case-facts {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem 2rem;
-  margin-top: clamp(2.25rem, 5vh, 3.5rem);
-  padding-top: clamp(1.5rem, 3vh, 2rem);
-  border-top: 1px solid var(--rule);
-}
-
-@media (min-width: 900px) {
-  .case-facts {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.case-facts dd {
-  margin-top: 0.55rem;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--bone-70);
 }
 
 /* Browser-style frame */
@@ -3504,12 +3483,13 @@ html.lenis body {
    .case-summary-lead — nothing inside .case-full-body uses .case-summary. */
 
 /* Under the facts: what has been changed, said plainly. */
+/* Sits under the summary in the overview, not in the hero. */
 .case-note {
   display: flex;
   align-items: flex-start;
   gap: 0.65rem;
   max-width: 62ch;
-  margin-top: 1.5rem;
+  margin-top: clamp(1.75rem, 3.5vh, 2.5rem);
   padding: 0.75rem 1rem;
   border: 1px solid var(--rule);
   border-radius: 12px;

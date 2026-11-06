@@ -109,11 +109,17 @@ export function caseStudyJsonLd(study: CaseStudy) {
       alternateName: study.tagline,
       description: study.pitch,
       creator: { "@id": PERSON["@id"] },
-      dateCreated: study.year,
       genre: study.type,
       keywords: study.tags.join(", "),
       ...(study.liveUrl ? { url: study.liveUrl } : {}),
-      ...(study.client ? { sourceOrganization: { "@type": "Organization", name: study.client } } : {}),
+      /*
+        No dateCreated or sourceOrganization. The hero used to print a
+        Role / Client / Year / Status table and no longer does, so both
+        would be asserting facts the page never shows — which is exactly
+        what Google's structured data policy rules out. The Article's own
+        datePublished still carries the date, as page metadata rather
+        than a claim about the work.
+      */
     },
     ...study.clips.map((c) => videoNode(study, c, pageUrl)),
   ];

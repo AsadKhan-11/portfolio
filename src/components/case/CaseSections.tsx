@@ -65,12 +65,6 @@ function Head({ eyebrow, title, em, lede }: { eyebrow: string; title: string; em
 }
 
 export function CaseHero({ study }: { study: CaseStudy }) {
-  const facts = [
-    ["Role", study.role],
-    ["Client", study.client],
-    ["Year", study.year],
-    ["Status", study.status],
-  ];
   return (
     <section id="home" className="case-hero bg-glow-tr">
       <div className="shell">
@@ -107,9 +101,19 @@ export function CaseHero({ study }: { study: CaseStudy }) {
           <SplitText text={study.title} delay={0.1} />
         </h1>
 
+        {/*
+          Tagline and its call to action on the left, capability tags on
+          the right. The hero used to carry a four-column facts table and
+          the disclosure note underneath as well, which left it cluttered
+          — the facts are gone and the note now sits with the overview.
+        */}
         <div className="case-hero-row">
           <Reveal delay={0.25}>
             <p className="case-tagline">{study.tagline}</p>
+            <Link href={enquiryHref(study)} className="btn btn-solid case-hero-cta" data-cursor="Talk">
+              <span>Start something like this</span>
+              <FiArrowRight />
+            </Link>
           </Reveal>
           <Reveal delay={0.35}>
             <div className="case-tags">
@@ -119,45 +123,6 @@ export function CaseHero({ study }: { study: CaseStudy }) {
             </div>
           </Reveal>
         </div>
-
-        <Reveal delay={0.45}>
-          <dl className="case-facts">
-            {facts.map(([k, v]) => (
-              <div key={k}>
-                <dt className="mono-label">{k}</dt>
-                <dd>{v}</dd>
-              </div>
-            ))}
-          </dl>
-        </Reveal>
-
-        {study.note && (
-          <Reveal delay={0.5}>
-            <p className="case-note">
-              <FiInfo size={14} aria-hidden="true" />
-              {study.note}
-            </p>
-          </Reveal>
-        )}
-
-        {/*
-          The only conversion point used to be the outro, eighteen screens
-          down. Anyone sold by the facts alone now has somewhere to go.
-        */}
-        <Reveal delay={0.5}>
-          <div className="case-hero-actions">
-            {study.liveUrl && (
-              <a href={study.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-solid" data-cursor="Open">
-                <span>Visit the {nounFor(study)}</span>
-                <FiArrowUpRight />
-              </a>
-            )}
-            <Link href={enquiryHref(study)} className="btn" data-cursor="Talk">
-              <span>Start something like this</span>
-              <FiArrowRight />
-            </Link>
-          </div>
-        </Reveal>
       </div>
     </section>
   );
@@ -293,6 +258,22 @@ export function CaseStory({ study }: { study: CaseStudy }) {
         <Reveal>
           <p className="case-summary-lead">{study.summary}</p>
         </Reveal>
+
+        {/*
+          Moved down from the hero, which it was crowding. It stays on the
+          page: on the concept builds it is the line saying the clinic,
+          the practitioner and the photography are invented, and a
+          portfolio that shows fictional clients without saying so is
+          making a claim it cannot back.
+        */}
+        {study.note && (
+          <Reveal delay={0.1}>
+            <p className="case-note">
+              <FiInfo size={14} aria-hidden="true" />
+              {study.note}
+            </p>
+          </Reveal>
+        )}
 
         <details className="case-full">
           <summary>
