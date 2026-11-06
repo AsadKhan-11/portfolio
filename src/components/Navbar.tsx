@@ -29,12 +29,19 @@ const NAV_ITEMS = [
 
 const EASE = [0.76, 0, 0.24, 1] as const;
 
-/* The few places a first-time visitor actually wants to go. */
+/*
+  The desktop nav. From 960px up this is the only navigation — the burger
+  is hidden there — so it has to cover everywhere the overlay goes. The
+  logo handles #home and the button handles #contact; "Path" is here
+  because #experience appears in no other link on the page, footer
+  included, and would otherwise be reachable only by scrolling to it.
+*/
 const PRIMARY = [
   { label: "Work", href: "#work" },
   { label: "Services", href: "#services" },
   { label: "Pricing", href: "#packages" },
   { label: "About", href: "#about" },
+  { label: "Path", href: "#experience" },
 ];
 
 export default function Navbar() {
@@ -87,9 +94,20 @@ export default function Navbar() {
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
+
+    /*
+      The burger is gone from 960px up, so a window widening past it
+      while the overlay is open would strip the only control that closes
+      it — and leave body scroll locked behind it.
+    */
+    const desktop = window.matchMedia("(min-width: 960px)");
+    const onWiden = (e: MediaQueryListEvent) => e.matches && setOpen(false);
+    desktop.addEventListener("change", onWiden);
+
     return () => {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
+      desktop.removeEventListener("change", onWiden);
     };
   }, [open]);
 
@@ -164,21 +182,30 @@ export default function Navbar() {
               {clock}
             </span>
 
-            <Magnetic strength={0.2}>
-              {/* The open/close transform lives in CSS next to the bars'
-                  own positioning — the two have to agree on the exact
-                  gap to converge into a clean X. */}
-              <button
-                className="burger"
-                data-open={open}
-                onClick={() => setOpen((v) => !v)}
-                aria-label={open ? "Close menu" : "Open menu"}
-                aria-expanded={open}
-              >
-                <span />
-                <span />
-              </button>
-            </Magnetic>
+            {/*
+              A plain wrapper carries the hide, for two reasons: hiding
+              only the button would leave its Magnetic div in the flex
+              row with the 1.5rem gap still reserved beside the button,
+              and Magnetic writes display:inline-block as an inline
+              style, which no stylesheet rule can override.
+            */}
+            <div className="burger-wrap">
+              <Magnetic strength={0.2}>
+                {/* The open/close transform lives in CSS next to the bars'
+                    own positioning — the two have to agree on the exact
+                    gap to converge into a clean X. */}
+                <button
+                  className="burger"
+                  data-open={open}
+                  onClick={() => setOpen((v) => !v)}
+                  aria-label={open ? "Close menu" : "Open menu"}
+                  aria-expanded={open}
+                >
+                  <span />
+                  <span />
+                </button>
+              </Magnetic>
+            </div>
           </div>
         </div>
 

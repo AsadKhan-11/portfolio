@@ -917,6 +917,28 @@ html.lenis body {
   cursor: pointer;
 }
 
+/*
+  Hidden from 960px — the same breakpoint where .nav-links appears, so
+  there is exactly one way to navigate at every width and never two. The
+  overlay it opens only duplicated the links already on screen.
+
+  The hide sits on a plain wrapper around the Magnetic div, not on the
+  button: hiding the button alone left the Magnetic div in the flex row
+  with its 1.5rem gap still reserved beside the call to action, and
+  Magnetic writes its own display inline, where a stylesheet cannot
+  reach it.
+*/
+.burger-wrap {
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 960px) {
+  .burger-wrap {
+    display: none;
+  }
+}
+
 .burger span {
   position: absolute;
   left: 9px;
