@@ -133,7 +133,7 @@ export default function Navbar() {
                 priority
                 style={{ display: "block" }}
               />
-              WebForge
+              <span className="nav-word">WebForge</span>
               <span
                 className="nav-digital"
                 style={{ color: "var(--bone-45)", fontWeight: 600 }}

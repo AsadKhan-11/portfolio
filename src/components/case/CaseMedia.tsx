@@ -124,6 +124,13 @@ export function PhoneReel({ clips }: { clips: Clip[] }) {
             />
           </Device>
           <p className="mono-label case-phonereel-cap">{c.title}</p>
+          {/*
+            On a mobile study this reel plays every clip, so "See it
+            working" below would repeat it and is dropped. The blurbs went
+            with it, so they belong here — they are the only prose saying
+            what each flow actually does.
+          */}
+          <p className="case-phonereel-blurb">{c.blurb}</p>
         </div>
       ))}
     </div>

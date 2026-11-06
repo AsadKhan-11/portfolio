@@ -1,6 +1,7 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FiArrowLeft, FiArrowRight, FiArrowUpRight, FiInfo, FiPlus } from "react-icons/fi";
+import { FiArrowRight, FiArrowUpRight, FiInfo, FiPlus } from "react-icons/fi";
 import { Counter, Reveal, SplitText, Stagger, StaggerItem } from "../animations";
 import { CASE_STUDIES, LIVE_BUILDS, roleInSentence, type CaseStudy } from "@/lib/caseStudies";
 import { Device, FlowPlayer, Frame, Gallery, MoreGrid, PhoneReel, Reel } from "./CaseMedia";
@@ -15,6 +16,21 @@ const nounFor = (s: CaseStudy) => s.noun ?? (isMobile(s) ? "app" : "platform");
   from one off the home page.
 */
 export const enquiryHref = (s: CaseStudy) => `/?ref=${s.slug}#contact`;
+
+/* Characters in the longest word — what the hero title has to fit. */
+const longestWord = (title: string) =>
+  title.split(" ").reduce((a, b) => (b.length > a.length ? b : a)).length;
+
+/*
+  Clips the hero reel is not already playing.
+
+  The first clip is always the overview — "Platform walkthrough", "The
+  full page", "Customer tour" — and the reel at the top of the page plays
+  it. Listing it again in "See it working" meant the same file ran twice
+  on one page, which is the repetition that stood out most. The phone
+  reel carries three, so a mobile study skips that many.
+*/
+const flowClips = (s: CaseStudy) => s.clips.slice(isMobile(s) ? 3 : 1);
 
 /* Anchors for the jump nav. Sections that can be absent are filtered out. */
 const SECTION_IDS = {
@@ -79,7 +95,15 @@ export function CaseHero({ study }: { study: CaseStudy }) {
         <p className="eyebrow" style={{ marginTop: "clamp(2rem, 5vh, 3.5rem)" }}>
           Case study · {study.n} · {study.type}
         </p>
-        <h1 className="case-title">
+        {/*
+          The title wraps between words but a single word cannot break, so
+          the type has to be sized to the longest one. "Aesthetics" is the
+          widest in the set and overflowed the column at every viewport.
+        */}
+        <h1
+          className="case-title"
+          style={{ "--case-chars": longestWord(study.title) } as CSSProperties}
+        >
           <SplitText text={study.title} delay={0.1} />
         </h1>
 
@@ -149,7 +173,10 @@ export function CaseJump({ study }: { study: CaseStudy }) {
   const links = [
     { id: SECTION_IDS.overview, label: "Overview" },
     { id: SECTION_IDS.features, label: "What it does" },
-    { id: SECTION_IDS.walkthroughs, label: "Walkthroughs" },
+    /* Absent when the hero reel already plays every clip. */
+    ...(flowClips(study).length
+      ? [{ id: SECTION_IDS.walkthroughs, label: "Walkthroughs" }]
+      : []),
     { id: SECTION_IDS.gallery, label: isMobile(study) ? "Screens" : "Gallery" },
     ...(!isMobile(study) && study.phones.length
       ? [{ id: SECTION_IDS.mobile, label: "Mobile" }]
@@ -174,6 +201,7 @@ export function CaseJump({ study }: { study: CaseStudy }) {
 }
 
 export function CaseReel({ study }: { study: CaseStudy }) {
+  const hero = study.clips[0];
   return (
     <section className="case-reel">
       <div className="shell">
@@ -181,10 +209,23 @@ export function CaseReel({ study }: { study: CaseStudy }) {
           {isMobile(study) ? (
             <PhoneReel clips={study.clips} />
           ) : (
-            <Reel
-              clip={study.clips[0]}
-              label={study.reelLabel ?? `${study.title.toLowerCase()} · admin`}
-            />
+            <figure className="case-reel-fig">
+              <Reel
+                clip={hero}
+                label={study.reelLabel ?? `${study.title.toLowerCase()} · admin`}
+              />
+              {/*
+                Says what is playing. The reel used to carry the title only
+                as an aria-label, which left the video unlabelled on screen
+                — and since this clip no longer appears in the walkthrough
+                list, its VideoObject markup would have been describing
+                something no visitor could read.
+              */}
+              <figcaption className="case-reel-cap">
+                <span className="mono-label">{hero.title}</span>
+                <span>{hero.blurb}</span>
+              </figcaption>
+            </figure>
           )}
         </Reveal>
       </div>
@@ -337,6 +378,9 @@ export function CaseHighlights({ study }: { study: CaseStudy }) {
 }
 
 export function CaseFlows({ study }: { study: CaseStudy }) {
+  const clips = flowClips(study);
+  if (clips.length === 0) return null;
+
   return (
     <section id={SECTION_IDS.walkthroughs} className="section">
       <div className="rule-top" />
@@ -345,10 +389,14 @@ export function CaseFlows({ study }: { study: CaseStudy }) {
           eyebrow="In motion"
           title="See it"
           em="working"
-          lede={isMobile(study) ? "Short screen recordings of the core flows, captured from the running app. They play on their own, one after another, or pick one from the list." : "Short walkthroughs of the core workflows. They play on their own, one after another, or pick one from the list."}
+          lede={
+            isMobile(study)
+              ? "Screen recordings from the running app, past the three playing above. They play on their own, one after another, or pick one from the list."
+              : "The full tour is playing at the top of the page; these are the parts worth slowing down for. They play on their own, one after another, or pick one from the list."
+          }
         />
         <Reveal delay={0.1} style={{ marginTop: "clamp(2.5rem, 6vh, 4rem)" }}>
-          <FlowPlayer clips={study.clips} label={`${study.title.toLowerCase()} · walkthroughs`} device={isMobile(study)} />
+          <FlowPlayer clips={clips} label={`${study.title.toLowerCase()} · walkthroughs`} device={isMobile(study)} />
         </Reveal>
       </div>
     </section>
@@ -446,42 +494,6 @@ export function CaseMidCta({ study }: { study: CaseStudy }) {
         </Reveal>
       </div>
     </aside>
-  );
-}
-
-/*
-  Previous / next through the shelf order. "More selected work" below is
-  deliberately random, which is good for discovery and useless for anyone
-  working through the set — this is the one that keeps a reader moving.
-*/
-export function CaseNeighbours({ study }: { study: CaseStudy }) {
-  const i = CASE_STUDIES.findIndex((c) => c.slug === study.slug);
-  if (i === -1) return null;
-  const prev = CASE_STUDIES[i - 1];
-  const next = CASE_STUDIES[i + 1];
-  if (!prev && !next) return null;
-
-  return (
-    <nav className="case-neighbours" aria-label="Other case studies">
-      <div className="shell">
-        <div className="case-neighbours-row">
-          {prev ? (
-            <Link href={`/work/${prev.slug}`} className="case-neighbour" data-dir="prev" data-cursor="Read">
-              <span className="mono-label"><FiArrowLeft size={13} /> Previous</span>
-              <span className="case-neighbour-title">{prev.title}</span>
-              <span className="case-neighbour-meta mono-label">{prev.meta}</span>
-            </Link>
-          ) : <span />}
-          {next ? (
-            <Link href={`/work/${next.slug}`} className="case-neighbour" data-dir="next" data-cursor="Read">
-              <span className="mono-label">Next <FiArrowRight size={13} /></span>
-              <span className="case-neighbour-title">{next.title}</span>
-              <span className="case-neighbour-meta mono-label">{next.meta}</span>
-            </Link>
-          ) : <span />}
-        </div>
-      </div>
-    </nav>
   );
 }
 

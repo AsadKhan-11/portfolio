@@ -726,9 +726,15 @@ html.lenis body {
   }
 }
 
-/* Very narrow phones: the logo gives up its wordmark before it collides with the button. */
-@media (max-width: 370px) {
-  .nav-digital {
+/*
+  Very narrow phones. The logo link is white-space: nowrap, so it cannot
+  shrink inside its flex cell — at 320px it ran five pixels under the
+  button and pushed the burger past the gutter. "Digital" is already gone
+  by 560px; below 360 the wordmark goes too and the mark carries the
+  brand on its own.
+*/
+@media (max-width: 360px) {
+  .nav-word {
     display: none;
   }
 }
@@ -3168,10 +3174,20 @@ html.lenis body {
   margin-top: 1.5rem;
   font-family: var(--f-display), sans-serif;
   font-weight: 800;
-  /* Syne at 800 is very wide: "IRONSIDE" settles at about 7.8em. Content is
-     90vw wide (5vw gutters) and tops out at 1296px, so 9.6vw capped at
-     9.5rem leaves the word a safe margin inside the gutters at every width. */
-  font-size: clamp(2.3rem, 9.6vw, 9.5rem);
+  /*
+    A title wraps between words, but a single word cannot break — so the
+    size is driven by the longest word, whose length arrives as
+    --case-chars. Syne 800 at -0.05em tracking measures 0.98em per
+    uppercase character at its narrowest ("Ironside") and 1.18em at its
+    widest ("Academy"), so budgeting 1.2em each keeps every title inside
+    the column. A flat 9.6vw capped at 9.5rem used to overflow: at that
+    cap "Aesthetics" wants 1561px of a 1248px column, and "Academy" ran
+    over too.
+  */
+  --case-fit: calc(
+    (min(100vw, var(--measure)) - 2 * var(--gutter)) / (var(--case-chars, 8) * 1.2)
+  );
+  font-size: clamp(1.5rem, var(--case-fit), 9.5rem);
   line-height: 0.86;
   letter-spacing: -0.05em;
   text-transform: uppercase;
@@ -3300,6 +3316,18 @@ html.lenis body {
   .case-lead {
     grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
     gap: clamp(2rem, 5vw, 5rem);
+  }
+}
+
+/*
+  The portrait points left, at the copy beside it. Below 900px the grid
+  collapses to one column and it lands underneath, pointing at nothing
+  while the text it refers to sits above — so it only earns its place at
+  the two-column widths.
+*/
+@media (max-width: 899px) {
+  .case-lead-art {
+    display: none;
   }
 }
 
@@ -4040,6 +4068,19 @@ html.lenis body {
   color: var(--bone-45);
 }
 
+/* What each flow does. On a mobile study this reel is the only place the
+   clips are shown, so the blurbs sit here rather than nowhere. */
+.case-phonereel-blurb {
+  margin-top: 0.6rem;
+  margin-inline: auto;
+  max-width: 34ch;
+  text-align: center;
+  text-wrap: pretty;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--bone-45);
+}
+
 @media (min-width: 1000px) {
   .case-flow[data-device] {
     grid-template-columns: minmax(0, 330px) minmax(0, 1fr);
@@ -4145,6 +4186,26 @@ html.lenis body {
   scroll-margin-top: 96px;
 }
 
+/* ── What the hero reel is playing ── */
+.case-reel-fig {
+  margin: 0;
+}
+
+.case-reel-cap {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: clamp(1.1rem, 2.5vh, 1.6rem);
+  max-width: 62ch;
+  text-wrap: pretty;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--bone-45);
+}
+
+.case-reel-cap .mono-label {
+  color: var(--bone);
+}
+
 /* ── The summary, lifted out of the collapsed block ──
    It carries its own type rather than .case-summary, which is display
    weight sized for a short line and would set 450 characters of prose at
@@ -4199,79 +4260,6 @@ html.lenis body {
   white-space: nowrap;
 }
 
-/* ── Previous / next through the set ── */
-.case-neighbours {
-  position: relative;
-  padding-block: clamp(2rem, 5vh, 3rem);
-}
-
-.case-neighbours-row {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 720px) {
-  .case-neighbours-row {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.case-neighbour {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  padding: clamp(1.25rem, 3vw, 1.75rem);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  text-decoration: none;
-  background: rgba(18, 18, 23, 0.4);
-  transition: border-color 0.5s var(--ease-out-expo),
-    background 0.5s var(--ease-out-expo),
-    transform 0.5s var(--ease-out-expo);
-}
-
-.case-neighbour:hover {
-  border-color: var(--flame-line);
-  background: rgba(18, 18, 23, 0.7);
-}
-
-.case-neighbour[data-dir="prev"]:hover {
-  transform: translateX(-4px);
-}
-
-.case-neighbour[data-dir="next"]:hover {
-  transform: translateX(4px);
-}
-
-/* The direction label carries the arrow, so it needs to be a flex row. */
-.case-neighbour .mono-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--flame);
-}
-
-.case-neighbour[data-dir="next"] {
-  text-align: right;
-}
-
-.case-neighbour[data-dir="next"] .mono-label {
-  justify-content: flex-end;
-}
-
-.case-neighbour-title {
-  font-family: var(--f-display), sans-serif;
-  font-size: clamp(1.1rem, 2.4vw, 1.5rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--bone);
-}
-
-.case-neighbour-meta {
-  color: var(--bone-30);
-}
-
 /* ── Contact form: where the enquiry came from ── */
 .form-source {
   display: inline-flex;
@@ -4310,8 +4298,3 @@ html.lenis body {
   color: var(--ink);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .case-neighbour:hover {
-    transform: none;
-  }
-}

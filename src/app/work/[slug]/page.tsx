@@ -12,7 +12,6 @@ import {
   CaseJump,
   CaseMidCta,
   CaseMore,
-  CaseNeighbours,
   CaseOutro,
   CasePhones,
   CaseReel,
@@ -143,7 +142,6 @@ export default async function CaseStudyPage({
         <CaseGallery study={study} />
         <CasePhones study={study} />
         <CaseDecisions study={study} />
-        <CaseNeighbours study={study} />
         <CaseMore study={study} />
         <CaseOutro study={study} />
       </main>
