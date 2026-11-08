@@ -2,6 +2,9 @@ import type { MetadataRoute } from "next";
 import { CASE_STUDIES } from "@/lib/caseStudies";
 import { SITE_URL } from "@/lib/site";
 
+/* A static export needs metadata routes marked as built once, at build time. */
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   /* Newest study stands in for the home page, which lists them all. */
   const newest = CASE_STUDIES.reduce(

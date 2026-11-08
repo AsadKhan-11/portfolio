@@ -6,36 +6,22 @@ import { FiArrowUpRight, FiCheck, FiX } from "react-icons/fi";
 import { Magnetic } from "./animations";
 import Select from "./Select";
 import { CASE_STUDIES } from "@/lib/caseStudies";
+import { BUDGETS, EMAIL_RE, MESSAGE_MAX, MESSAGE_MIN, PROJECT_TYPES } from "@/lib/contactFields";
 
 const EMAIL = "mrasad10khan@gmail.com";
 
 /*
-  Optional form service (Web3Forms, Formspree, a Worker of your own…).
-  Set NEXT_PUBLIC_FORM_ENDPOINT, plus NEXT_PUBLIC_FORM_KEY if the service
-  wants an access key, and enquiries are delivered straight to the inbox.
-  Without it the form falls back to opening the visitor's mail client.
+  Where an enquiry is posted. A production build posts to the site's own
+  /api/contact (functions/api/contact.ts), which emails it through Resend,
+  so there is nothing to set. `next dev` has no such route, so there the
+  form falls back to opening the visitor's mail client.
+
+  NEXT_PUBLIC_FORM_ENDPOINT overrides either way: a URL to post somewhere
+  else, or an empty string to force the mail-client fallback.
 */
-const ENDPOINT = process.env.NEXT_PUBLIC_FORM_ENDPOINT;
-const FORM_KEY = process.env.NEXT_PUBLIC_FORM_KEY;
-
-const PROJECT_TYPES = [
-  "AI integration",
-  "Chatbot",
-  "CRM / automation",
-  "Web app",
-  "E-commerce",
-  "Design",
-];
-
-const BUDGETS = [
-  "Under $1,000",
-  "$1,000 – $3,000",
-  "$3,000 – $7,000",
-  "$7,000+",
-  "Not sure yet",
-];
-
-const MESSAGE_MAX = 1000;
+const ENDPOINT =
+  process.env.NEXT_PUBLIC_FORM_ENDPOINT ??
+  (process.env.NODE_ENV === "production" ? "/api/contact" : undefined);
 
 type Fields = {
   name: string;
@@ -46,9 +32,6 @@ type Fields = {
 };
 
 const EMPTY: Fields = { name: "", email: "", phone: "", budget: "", message: "" };
-
-/* Deliberately permissive — just enough to catch a genuine typo. */
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 /*
   Every CTA on a case study carries ?ref=<slug>. The query string is an
@@ -67,8 +50,8 @@ function validate(f: Fields): Partial<Record<keyof Fields, string>> {
   if (!f.email.trim()) e.email = "Please add an email so I can reply";
   else if (!EMAIL_RE.test(f.email.trim())) e.email = "Check this email, it looks incomplete";
   if (!f.message.trim()) e.message = "Tell me a little about the project";
-  else if (f.message.trim().length < 20)
-    e.message = "A bit more detail helps, 20 characters minimum";
+  else if (f.message.trim().length < MESSAGE_MIN)
+    e.message = `A bit more detail helps, ${MESSAGE_MIN} characters minimum`;
   return e;
 }
 
@@ -159,14 +142,16 @@ export default function ContactForm() {
       fetch(ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
+        /*
+          Content only. The server builds the subject, sender and
+          recipient itself, so nothing here can redirect the mail.
+        */
         body: JSON.stringify({
-          ...(FORM_KEY ? { access_key: FORM_KEY } : {}),
-          subject,
           name: f.name.trim(),
           email: f.email.trim(),
           phone: f.phone.trim(),
           budget: f.budget,
-          project_type: types.join(", "),
+          project_types: types,
           /* Which case study produced the lead, if any. */
           came_from: source ? `${source.title} (/work/${source.slug})` : "Direct",
           message: f.message.trim(),
@@ -174,7 +159,12 @@ export default function ContactForm() {
       })
         .then(async (res) => {
           const body = await res.json().catch(() => ({}));
-          setStatus(res.ok && body.success !== false ? "sent" : "error");
+          /*
+            Only an explicit success counts. A static host answers an
+            unknown path with a 200 HTML page, and "no failure reported"
+            would then show Message sent for an enquiry nobody received.
+          */
+          setStatus(res.ok && body.success === true ? "sent" : "error");
         })
         .catch(() => setStatus("error"));
       return;

@@ -33,6 +33,10 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Cloudflare Pages local secrets (wrangler pages dev). The example is committed.
+.dev.vars*
+!.dev.vars.example
+
 # vercel
 .vercel
 
@@ -42,3 +46,6 @@ next-env.d.ts
 
 # design source files — kept locally, not deployed
 assets-src/
+
+# Wrangler local state (wrangler pages dev)
+.wrangler/
