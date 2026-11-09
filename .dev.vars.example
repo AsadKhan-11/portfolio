@@ -1,18 +1,17 @@
 # Copy this file to .dev.vars (git ignores that one) to test the contact
-# form locally with `npm run dev:functions`. Real values never go in this
-# file, which is committed.
+# form locally with `npm run preview:cf`. Real values never go in this file,
+# which is committed.
 #
-# On the live site the same three names are set in the Cloudflare Pages
-# project instead: Settings, Variables and Secrets.
+# On the live site the settings are split. RESEND_API_KEY is a secret, set in
+# the Cloudflare dashboard under the Worker's Settings, Variables & Secrets.
+# CONTACT_FROM is a plain variable in wrangler.jsonc. CONTACT_TO is optional
+# and defaults to the address shown on the site (CONTACT_EMAIL).
 
 # Resend dashboard, API Keys. Starts with re_
 RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxx
 
-# Before your domain is verified, Resend only lets you send from
-# onboarding@resend.dev, and only to the email you signed up to Resend with.
-CONTACT_FROM="WebForge Digital <onboarding@resend.dev>"
-CONTACT_TO=the-email-you-signed-up-to-resend-with@example.com
-
-# Once webforgedigital.dev is verified in Resend, switch to:
-#   CONTACT_FROM="WebForge Digital <forms@webforgedigital.dev>"
-#   CONTACT_TO=asad@webforgedigital.dev
+# Optional overrides for local testing. Before your domain is verified in
+# Resend, it only lets you send from onboarding@resend.dev, and only to the
+# email you signed up to Resend with:
+# CONTACT_FROM="WebForge Digital <onboarding@resend.dev>"
+# CONTACT_TO=the-email-you-signed-up-to-resend-with@example.com

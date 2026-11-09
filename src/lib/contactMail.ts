@@ -2,9 +2,9 @@
   Turns a contact-form POST into an email, through Resend.
 
   Only web-standard Request, Response and fetch are used, so the same
-  function runs as a Cloudflare Pages Function today (functions/api/
-  contact.ts) and would sit behind a Next route handler unchanged if the
-  site ever moved to Vercel.
+  function runs in the Cloudflare Worker (worker/index.ts) today and would
+  sit behind a Next route handler unchanged if the site ever moved to
+  Vercel.
 
   The API key lives only in the server environment. Putting it in the
   browser, NEXT_PUBLIC_ or otherwise, would let anyone send mail as you.

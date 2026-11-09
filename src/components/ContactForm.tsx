@@ -11,7 +11,7 @@ import { CONTACT_EMAIL as EMAIL } from "@/lib/site";
 
 /*
   Where an enquiry is posted. A production build posts to the site's own
-  /api/contact (functions/api/contact.ts), which emails it through Resend,
+  /api/contact (worker/index.ts), which emails it through Resend,
   so there is nothing to set. `next dev` has no such route, so there the
   form falls back to opening the visitor's mail client.
 
