@@ -7,8 +7,7 @@ import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 import { Magnetic } from "./animations";
 import { useIntroDone } from "./intro";
-
-const EMAIL = "mrasad10khan@gmail.com";
+import { CONTACT_EMAIL as EMAIL } from "@/lib/site";
 
 const MENU_SOCIALS = [
   { label: "GitHub", href: "https://github.com/AsadKhan-11" },

@@ -11,8 +11,7 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 import { Magnetic, Reveal, SplitText } from "./animations";
 import ContactForm from "./ContactForm";
-
-const EMAIL = "mrasad10khan@gmail.com";
+import { CONTACT_EMAIL as EMAIL } from "@/lib/site";
 
 const DETAILS = [
   { Icon: FiMail, k: "Email", v: EMAIL, href: `mailto:${EMAIL}` },

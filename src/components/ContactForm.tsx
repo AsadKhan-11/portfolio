@@ -7,8 +7,7 @@ import { Magnetic } from "./animations";
 import Select from "./Select";
 import { CASE_STUDIES } from "@/lib/caseStudies";
 import { BUDGETS, EMAIL_RE, MESSAGE_MAX, MESSAGE_MIN, PROJECT_TYPES } from "@/lib/contactFields";
-
-const EMAIL = "mrasad10khan@gmail.com";
+import { CONTACT_EMAIL as EMAIL } from "@/lib/site";
 
 /*
   Where an enquiry is posted. A production build posts to the site's own

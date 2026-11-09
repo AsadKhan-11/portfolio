@@ -15,4 +15,4 @@ CONTACT_TO=the-email-you-signed-up-to-resend-with@example.com
 
 # Once webforgedigital.dev is verified in Resend, switch to:
 #   CONTACT_FROM="WebForge Digital <forms@webforgedigital.dev>"
-#   CONTACT_TO=hello@webforgedigital.dev
+#   CONTACT_TO=asad@webforgedigital.dev
