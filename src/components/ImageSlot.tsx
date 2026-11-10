@@ -24,6 +24,12 @@ interface ImageSlotProps {
   /** Rendered when `src` is absent. */
   fallback?: ReactNode;
   sizes?: string;
+  /**
+   * The image is on the first screen: load it eagerly and ahead of the rest of
+   * the page. Next 16 deprecates next/image's own `priority` for `preload`,
+   * which only adds a <link> to the head; an image that is already in the HTML
+   * wants the hints on the <img> itself, and that is what Lighthouse checks.
+   */
   priority?: boolean;
   className?: string;
   /** Applies the site's duotone treatment over photography. */
@@ -54,7 +60,8 @@ export default function ImageSlot({
           alt={alt}
           fill
           sizes={sizes}
-          priority={priority}
+          loading={priority ? "eager" : undefined}
+          fetchPriority={priority ? "high" : undefined}
           style={{ objectFit: "cover" }}
         />
       ) : (

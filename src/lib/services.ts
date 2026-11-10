@@ -31,6 +31,8 @@ export interface ServicePage {
   name: string;
   /** One line, for lists of services. */
   short: string;
+  /** Two lines, for the cards that introduce each service on the home and services pages. */
+  summary: string;
   /** The <title>. */
   title: string;
   /** The meta description. */
@@ -60,6 +62,8 @@ export const SERVICES: ServicePage[] = [
     n: "01",
     name: "AI Integration",
     short: "LLM features built into products that already work.",
+    summary:
+      "LLM features built into products that already work: semantic search, document Q&A, summarisation and drafting, wired to your own data with retrieval rather than guesswork.",
     title: "AI Integration Services · LLM Features for Your Product",
     description:
       "Add AI to a product that already works: search, document Q&A and drafting that answer from your own data, built by one developer for a fixed quote.",
@@ -145,6 +149,8 @@ export const SERVICES: ServicePage[] = [
     n: "02",
     name: "Chatbots & Assistants",
     short: "Support bots and lead-qualifying assistants that hand over to a human.",
+    summary:
+      "Support bots that deflect repetitive tickets and qualify leads before they reach your inbox, with escalation to a human when the bot is out of its depth.",
     title: "AI Chatbot Development for Support and Lead Capture",
     description:
       "Chatbots that answer repetitive questions and qualify leads before they reach your inbox, with a clean hand-over to a human when they are out of their depth.",
@@ -230,6 +236,8 @@ export const SERVICES: ServicePage[] = [
     n: "03",
     name: "CRM & Automation",
     short: "Two-way CRM sync and workflows that remove the copy-paste work.",
+    summary:
+      "Connect the tools you already pay for. Two-way CRM sync, webhook pipelines and workflows that remove the copy-paste work between systems.",
     title: "CRM Integration & Workflow Automation for Small Teams",
     description:
       "Connect the tools you already pay for. Two-way CRM sync, webhook pipelines and workflows that remove the copy-paste work between your systems.",
@@ -315,6 +323,8 @@ export const SERVICES: ServicePage[] = [
     n: "04",
     name: "Full-Stack Web Apps",
     short: "Client portals, dashboards and admin panels, built end to end.",
+    summary:
+      "End-to-end MERN builds: dashboards, admin panels, client portals. Secure auth, sensible data modelling, and a frontend that stays fast as the product grows.",
     title: "Full Stack Web App Development · Portals & Dashboards",
     description:
       "End-to-end MERN builds: client portals, dashboards and admin panels with secure sign-in and clean data models, designed and built by one developer.",
@@ -400,6 +410,8 @@ export const SERVICES: ServicePage[] = [
     n: "05",
     name: "E-Commerce & Payments",
     short: "Storefronts, subscriptions and checkout flows on Stripe.",
+    summary:
+      "Storefronts, subscriptions and checkout flows on Stripe. Cart, orders and fulfilment handled properly, with an admin your team can actually operate.",
     title: "E-Commerce Development & Stripe Payments Integration",
     description:
       "Storefronts, subscriptions and checkout flows on Stripe, with cart, orders and fulfilment handled properly and an admin your team can actually operate.",
@@ -485,6 +497,8 @@ export const SERVICES: ServicePage[] = [
     n: "06",
     name: "UI / UX & Design Systems",
     short: "Wireframes to design systems in Figma, built as reusable components.",
+    summary:
+      "Wireframes through to pixel-level design systems in Figma, then built as reusable components. Interfaces designed around what users are actually trying to do.",
     title: "UI/UX Design & Design Systems for Websites and Apps",
     description:
       "Wireframes through to pixel-level design systems in Figma, built as reusable components, with interfaces designed around what your users are trying to do.",

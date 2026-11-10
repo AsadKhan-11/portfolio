@@ -35,12 +35,70 @@ function breadcrumbs(url: string, trail: { name: string; item?: string }[]) {
   };
 }
 
+/*
+  A page of the site that is not a service or About: the projects, services,
+  packages, FAQs and contact pages. A breadcrumb trail, the page itself, and
+  for the two index pages the list of things it links to.
+
+  `crumbs` run from the home page down; the last has no path (it is this
+  page). `type` is the schema.org page type: CollectionPage for an index,
+  ContactPage for /contact, WebPage for the rest.
+*/
+export function pageJsonLd({
+  path,
+  type = "WebPage",
+  title,
+  description,
+  crumbs,
+  list,
+}: {
+  path: string;
+  type?: "WebPage" | "CollectionPage" | "ContactPage";
+  title: string;
+  description: string;
+  crumbs: { name: string; path?: string }[];
+  list?: { name: string; path: string }[];
+}) {
+  const url = `${SITE_URL}${path}`;
+  const abs = (p: string) => (p === "/" ? SITE_URL : `${SITE_URL}${p}`);
+
+  return toScript([
+    breadcrumbs(
+      url,
+      crumbs.map((c) => ({ name: c.name, item: c.path ? abs(c.path) : undefined })),
+    ),
+    {
+      "@type": type,
+      "@id": `${url}#webpage`,
+      url,
+      name: title,
+      description,
+      inLanguage: "en",
+      isPartOf: WEBSITE,
+      breadcrumb: { "@id": `${url}#breadcrumbs` },
+      ...(list
+        ? {
+            mainEntity: {
+              "@type": "ItemList",
+              itemListElement: list.map((l, i) => ({
+                "@type": "ListItem",
+                position: i + 1,
+                name: l.name,
+                url: abs(l.path),
+              })),
+            },
+          }
+        : {}),
+    },
+  ]);
+}
+
 export function serviceJsonLd(s: ServicePage) {
   const url = `${SITE_URL}/services/${s.slug}`;
   return toScript([
     breadcrumbs(url, [
       { name: "Home", item: SITE_URL },
-      { name: "Services", item: `${SITE_URL}/#services` },
+      { name: "Services", item: `${SITE_URL}/services` },
       { name: s.name },
     ]),
     {

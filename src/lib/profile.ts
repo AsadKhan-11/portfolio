@@ -1,10 +1,26 @@
 /*
-  Where Asad has worked, in one place: the home page's "Path" section and the
-  About page both read this, so the two can't tell different stories.
+  The profile copy: the home page's About section and the /about page both
+  read it, so the two can't introduce Asad differently.
 */
+export const PROFILE = {
+  statement:
+    "I build complete web products, from the first pixel of an interface to the last line of the API behind it.",
+  intro:
+    "I’m Asad, a full stack developer working with founders and teams worldwide from Lahore, Pakistan. People hire me when they want one person who can carry a product all the way: design that sells the idea, and engineering that doesn’t fall over once it works.",
+  workingWithMe:
+    "Working with me looks like this: a fixed quote before we start, honest timelines, a staging link you can open any day of the week, and a finished product you fully own. No hand-offs between departments, no surprises on the invoice.",
+};
+
+/** Said under the hero on the home page and on About. */
+export const AVAILABILITY = "Booking new builds · 2026";
+
 /** ISO date of the last substantive edit to /about; feeds the sitemap. */
 export const ABOUT_UPDATED = "2026-11-11";
 
+/*
+  Where Asad has worked, in one place: the home page's "Path" section and the
+  About page both read this, so the two can't tell different stories.
+*/
 export type Role = {
   year: string;
   period: string;

@@ -33,6 +33,15 @@ interface SplitTextProps {
   as?: "span" | "div";
 }
 
+/*
+  Every reveal below starts when its element is a little way inside the screen
+  from the top and the bottom. The margin is vertical only ("-12% 0px"): a
+  margin of "-12%" also shrinks the screen's left and right edges by 12% of its
+  width, and a short word that starts at the left edge of a wide screen (the
+  "time" in "Price and time", 88px wide on a 1440px screen) then sits wholly
+  outside the shrunk screen and is never counted as visible, so it never
+  appears.
+*/
 export function SplitText({
   text,
   className = "",
@@ -42,7 +51,7 @@ export function SplitText({
   as = "span",
 }: SplitTextProps) {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-12%" });
+  const inView = useInView(ref, { once: true, margin: "-12% 0px" });
   const Tag = motion[as];
 
   return (
@@ -104,7 +113,7 @@ export function Reveal({
   once = true,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once, margin: "-8%" });
+  const inView = useInView(ref, { once, margin: "-8% 0px" });
 
   return (
     <motion.div
@@ -135,7 +144,7 @@ export function Stagger({
   style?: CSSProperties;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-6%" });
+  const inView = useInView(ref, { once: true, margin: "-6% 0px" });
 
   return (
     <motion.div

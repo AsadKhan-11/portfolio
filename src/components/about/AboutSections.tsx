@@ -1,216 +1,113 @@
 import Link from "next/link";
-import { FiArrowDownRight, FiArrowRight, FiArrowUpRight } from "react-icons/fi";
+import { FiArrowDownRight, FiArrowUpRight } from "react-icons/fi";
 import { Reveal } from "../animations";
-import { MaskWords, after } from "../heroMotion";
+import { after } from "../heroMotion";
 import ImageSlot from "../ImageSlot";
-import { CaseCards, Crumbs, SectionHead } from "../service/ServiceSections";
-import { ROLES } from "@/lib/profile";
-import { SERVICES, serviceHref } from "@/lib/services";
+import { PageHero } from "../page/PageParts";
+import SectionHead from "../SectionHead";
+import { AVAILABILITY, PROFILE } from "@/lib/profile";
 import { CONTACT_EMAIL, SOCIAL_LINKS } from "@/lib/site";
 
 /*
-  The About page. Everything here restates something the home page already
-  says (the profile, the path, the FAQ on time zones, how projects run); the
-  page exists so that "who is Asad Khan" has an address of its own that
-  search engines and people can land on and link to.
+  What is particular to the About page. The profile copy is the home page's
+  (lib/profile.ts), and the rest of the page (the figures, the "why me"
+  comparison, the toolkit, the career, the projects, the services, the closing
+  call to action) is the same component the home page and the other pages use.
+
+  The first screen carries the name, the one-line statement and the portrait
+  and nothing longer: it fills the screen, and two paragraphs on top of the
+  headline made it taller than a laptop's. The fuller account of who and how
+  is the section right under it.
 */
 
-/* The three studies this page shows. Swap in newer projects as they ship. */
-const FEATURED_WORK = ["ironside-gym", "vector-academy", "veloura"];
-
-const PRINCIPLES = [
-  {
-    title: "One person, start to finish",
-    body: "You deal with the developer doing the work. Design, build and launch happen under one roof, with no hand-offs between departments.",
-  },
-  {
-    title: "A fixed quote first",
-    body: "After we've talked through what you need, I quote a fixed price, so there are no surprises halfway through or on the invoice.",
-  },
-  {
-    title: "A staging link, any day",
-    body: "You can open a working version any day of the week, so progress is something you see rather than something you're told.",
-  },
-  {
-    title: "You own what I build",
-    body: "The repository, the assets and any accounts set up for the project are yours once the final invoice is settled. No proprietary framework, and nothing that needs you to keep paying me to keep it running.",
-  },
-];
-
-const TOOLKIT = [
-  { group: "Front end", items: ["React", "Next.js", "TypeScript", "Tailwind", "HTML5 & CSS3"] },
-  { group: "Back end", items: ["Node.js", "MongoDB", "REST APIs", "Webhooks"] },
-  { group: "Mobile", items: ["React Native"] },
-  { group: "Payments & integrations", items: ["Stripe", "GoHighLevel"] },
-  { group: "AI", items: ["LLM APIs", "Retrieval over your own data"] },
-  { group: "Design", items: ["Figma", "Design systems"] },
-];
+/*
+  The portrait. It is the largest thing on About's first screen, so where it
+  sits decides how fast that screen is. Beside the words (960px and wider) it
+  is part of the first screen; on a phone it would sit under them and take up
+  most of what is left of the screen, which made it the slowest thing to
+  paint and left the hero taller than the screen. So a phone gets the same
+  figure at the top of the story that follows (AboutStory) and the hero keeps
+  to the words. Both are lazy: whichever one is hidden is never fetched.
+*/
+function Portrait() {
+  return (
+    <ImageSlot
+      src="/about/workspace.webp"
+      alt="Asad Khan working at his desk in Lahore"
+      slot="/about/workspace.webp"
+      ratio="4 / 5"
+      sizes="(max-width: 900px) 90vw, 40vw"
+    />
+  );
+}
 
 export function AboutHero() {
   return (
-    <section className="svc-hero">
-      <div className="shell">
-        <Crumbs trail={[{ label: "Home", href: "/" }, { label: "About" }]} />
-
-        <div className="svc-about-grid">
-          <div>
-            <p className="eyebrow hero-in hero-in-fade" style={after(0.05)}>
-              About
-            </p>
-
-            <h1 className="svc-title">
-              <MaskWords text="I’m Asad Khan, a full stack developer" delay={0.1} />{" "}
-              <span className="serif-em" style={{ color: "var(--flame)" }}>
-                <MaskWords text="building for clients worldwide." delay={0.5} />
-              </span>
-            </h1>
-
-            <p className="svc-lede hero-in" style={after(0.4)}>
-              I build complete web products, from the first pixel of an interface to
-              the last line of the API behind it. I&rsquo;m based in Lahore, Pakistan,
-              and I work with founders and teams worldwide.
-            </p>
-            <p className="svc-lede hero-in" style={after(0.48)}>
-              People hire me when they want one person who can carry a product all the
-              way: design that sells the idea, and engineering that doesn&rsquo;t fall
-              over once it works.
-            </p>
-
-            <div className="svc-cta-row hero-in" style={after(0.56)}>
-              <Link href="/#contact" className="btn btn-solid" data-cursor="Talk">
-                <span>Start a project</span>
-              </Link>
-              <Link href="/#work" className="link-sweep hero-quiet-link">
-                See the work <FiArrowDownRight />
-              </Link>
-            </div>
-          </div>
-
-          <figure className="svc-about-photo hero-in" style={after(0.3)}>
-            <ImageSlot
-              src="/about/workspace.jpg"
-              alt="Asad Khan working at his desk in Lahore"
-              slot="/about/workspace.jpg"
-              ratio="4 / 5"
-              sizes="(max-width: 900px) 90vw, 40vw"
-              priority
-            />
-            <figcaption className="mono-label">The desk in Lahore</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
+    <PageHero
+      trail={[{ label: "Home", href: "/" }, { label: "About" }]}
+      eyebrow="About"
+      lead="I’m Asad Khan,"
+      em="a full stack developer in Lahore."
+      lede={PROFILE.statement}
+      kicker={`${AVAILABILITY} · Lahore, Pakistan`}
+      aside={
+        <figure className="svc-about-photo svc-about-photo-hero hero-in" style={after(0.3)}>
+          <Portrait />
+          <figcaption className="mono-label">The desk in Lahore</figcaption>
+        </figure>
+      }
+    >
+      <Link href="/contact" className="btn btn-solid" data-cursor="Talk">
+        <span>Start a project</span>
+      </Link>
+      <Link href="/work" className="link-sweep hero-quiet-link">
+        See the projects <FiArrowDownRight />
+      </Link>
+    </PageHero>
   );
 }
 
-export function AboutApproach() {
-  return (
-    <section className="section bg-glow-tr">
-      <div className="rule-top" />
-      <div className="shell">
-        <SectionHead
-          eyebrow="01 · Approach"
-          title="How I"
-          em="work"
-          lede="Working with me looks like this: no hand-offs, no surprises, and a finished product you fully own."
-        />
-
-        <div className="svc-cards">
-          {PRINCIPLES.map((p, i) => (
-            <Reveal key={p.title} className="svc-cell" delay={(i % 2) * 0.06}>
-              <article className="svc-card panel tick">
-                <span className="svc-card-n">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="svc-card-title">{p.title}</h3>
-                <p className="svc-card-body">{p.body}</p>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function AboutToolkit() {
-  return (
-    <section className="section bg-grid">
-      <div className="rule-top" />
-      <div className="shell">
-        <SectionHead
-          eyebrow="02 · Toolkit"
-          title="What I build"
-          em="with"
-          lede="The MERN stack (MongoDB, Express, React and Node.js) is the backbone of most projects, plus whatever else the job needs."
-        />
-
-        <div className="svc-cards svc-cards-3">
-          {TOOLKIT.map((t, i) => (
-            <Reveal key={t.group} className="svc-cell" delay={(i % 3) * 0.06}>
-              <div className="svc-card panel">
-                <p className="mono-label">{t.group}</p>
-                <ul className="svc-tags">
-                  {t.items.map((item) => (
-                    <li key={item}>
-                      <span className="tag">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function AboutPath() {
+/* The fuller account that doesn't fit on the first screen: who, then how. */
+export function AboutStory() {
   return (
     <section className="section">
       <div className="rule-top" />
       <div className="shell">
-        <SectionHead
-          eyebrow="03 · Path"
-          title="Where"
-          em="I've worked"
-          lede="Short and honest. Client work since 2023, WebForge Digital since 2024, and now full stack work at MyntorX while the studio keeps shipping."
-        />
+        <SectionHead eyebrow="01 · Story" title="Who you’ll" em="work with" />
 
-        <ol className="svc-roles">
-          {ROLES.map((r) => (
-            <li key={r.period}>
-              <Reveal>
-                <div className="svc-role panel tick">
-                  <p className="mono-label">{r.period}</p>
-                  <h3 className="svc-card-title">
-                    {r.title} <span className="svc-role-org">· {r.org}</span>
-                  </h3>
-                  <p className="svc-card-body">{r.copy}</p>
-                  <ul className="svc-tags">
-                    {r.stack.map((t) => (
-                      <li key={t}>
-                        <span className="tag">{t}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-            </li>
-          ))}
-        </ol>
+        {/* Only below 960px: from there up the portrait is in the first screen. */}
+        <Reveal>
+          <figure className="svc-about-photo svc-about-photo-story">
+            <Portrait />
+            <figcaption className="mono-label">The desk in Lahore</figcaption>
+          </figure>
+        </Reveal>
+
+        <div className="svc-split svc-story-grid">
+          <Reveal>
+            <p className="mono-label">Who I am</p>
+            <p className="svc-story">{PROFILE.intro}</p>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <p className="mono-label">How I work</p>
+            <p className="svc-story">{PROFILE.workingWithMe}</p>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
 }
 
-export function AboutZones() {
+/* Where to be found, and when: the basics a visitor to an About page looks for. */
+export function AboutLocation() {
   return (
     <section className="section bg-raised">
       <div className="rule-top" />
       <div className="shell">
         <div className="svc-split">
           <Reveal>
-            <p className="eyebrow">04 · Location</p>
+            <p className="eyebrow">06 · Location</p>
             <h2 className="svc-h2">From Lahore, for clients worldwide</h2>
             <p className="svc-card-body" style={{ maxWidth: "52ch" }}>
               Most of my clients are outside Pakistan. I&rsquo;m in Lahore (UTC+5), which
@@ -231,7 +128,7 @@ export function AboutZones() {
                 I reply within a day. Tell me what you&rsquo;re building and I&rsquo;ll come
                 back with questions, or a fixed quote once the scope is clear.
               </p>
-              <Link href="/#contact" className="link-sweep svc-aside-link">
+              <Link href="/contact" className="link-sweep svc-aside-link">
                 Get in touch
               </Link>
             </div>
@@ -242,86 +139,33 @@ export function AboutZones() {
   );
 }
 
-export function AboutWork() {
-  return (
-    <section className="section bg-glow-bl">
-      <div className="rule-top" />
-      <div className="shell">
-        <SectionHead
-          eyebrow="05 · Work"
-          title="Selected"
-          em="work"
-          lede="A few of the platforms and sites I've built. Each has a full case study: what was built, and why."
-        />
-        <CaseCards slugs={FEATURED_WORK} />
-        <Reveal delay={0.1}>
-          <div className="case-more-cta">
-            <Link href="/#work" className="btn">
-              <span>View all work</span>
-              <FiArrowRight />
-            </Link>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-export function AboutServices() {
-  return (
-    <section className="section">
-      <div className="rule-top" />
-      <div className="shell">
-        <SectionHead
-          eyebrow="06 · Services"
-          title="What I"
-          em="do"
-          lede="Six things I get hired for, from AI features to the storefront underneath them. Most projects use several at once."
-        />
-
-        <ul className="svc-more">
-          {SERVICES.map((x) => (
-            <li key={x.slug}>
-              <Link href={serviceHref(x.slug)} className="svc-more-link panel tick" data-cursor="Read">
-                <span className="svc-card-n">{x.n}</span>
-                <span className="svc-more-name">{x.name}</span>
-                <span className="svc-card-body">{x.short}</span>
-                <FiArrowRight className="svc-more-arrow" size={18} aria-hidden="true" />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
 export function AboutElsewhere() {
   return (
     <section className="section bg-raised">
       <div className="rule-top" />
       <div className="shell">
+        <SectionHead
+          eyebrow="Elsewhere"
+          title="Find me"
+          em="online"
+          lede="The same name, the same work and the same email on every one of these, so what you read here is what you'll find there."
+        />
+
         <Reveal>
-          <div className="svc-elsewhere panel">
-            <div>
-              <p className="eyebrow">Elsewhere</p>
-              <h2 className="svc-h2">Find me online</h2>
-            </div>
-            <ul className="svc-links">
-              <li>
-                <a href={`mailto:${CONTACT_EMAIL}`} className="link-sweep">
-                  {CONTACT_EMAIL} <FiArrowUpRight size={14} aria-hidden="true" />
+          <ul className="svc-links svc-links-lg">
+            <li>
+              <a href={`mailto:${CONTACT_EMAIL}`} className="link-sweep">
+                {CONTACT_EMAIL} <FiArrowUpRight size={14} aria-hidden="true" />
+              </a>
+            </li>
+            {SOCIAL_LINKS.map((s) => (
+              <li key={s.url}>
+                <a href={s.url} target="_blank" rel="noopener noreferrer" className="link-sweep">
+                  {s.label} <FiArrowUpRight size={14} aria-hidden="true" />
                 </a>
               </li>
-              {SOCIAL_LINKS.map((s) => (
-                <li key={s.url}>
-                  <a href={s.url} target="_blank" rel="noopener noreferrer" className="link-sweep">
-                    {s.label} <FiArrowUpRight size={14} aria-hidden="true" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+            ))}
+          </ul>
         </Reveal>
       </div>
     </section>

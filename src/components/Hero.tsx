@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { FiArrowDownRight, FiCheck } from "react-icons/fi";
 import { Magnetic } from "./animations";
-import { MaskWords, after } from "./heroMotion";
+import { MaskWords, ScrollCue, after } from "./heroMotion";
 import { IdleHeroField } from "./LazyFields";
 
 /* The offer, in three short promises, so the first screen answers
@@ -106,17 +106,11 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Scroll cue — outer box carries the scroll-driven fade, inner the
-          entrance, so the two opacities multiply instead of overwriting. */}
+      {/* Scroll cue — the outer box carries the scroll-driven fade, the shared
+          cue inside it the entrance, so the two opacities multiply instead of
+          overwriting. */}
       <motion.div className="scroll-cue" style={{ opacity: fade }}>
-        <div className="scroll-cue-inner hero-in hero-in-fade" style={after(T.cue)}>
-          <span className="mono-label">Scroll</span>
-          <motion.span
-            className="scroll-cue-line"
-            animate={{ scaleY: [0, 1, 0], originY: [0, 0, 1] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </div>
+        <ScrollCue after={T.cue} />
       </motion.div>
     </section>
   );

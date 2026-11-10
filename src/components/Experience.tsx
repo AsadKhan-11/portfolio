@@ -77,7 +77,9 @@ function PathRow({ role }: { role: Role }) {
   );
 }
 
-export default function Experience() {
+/* `eyebrow` is the numbered label: "05 · Path" on the home page, where it is the
+   fifth section, and whatever fits on another page that shows it. */
+export default function Experience({ eyebrow = "05 · Path" }: { eyebrow?: string }) {
   const timelineRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: timelineRef,
@@ -95,7 +97,7 @@ export default function Experience() {
       <div className="shell">
         <div className="path-layout">
           <div className="path-sticky">
-            <p className="eyebrow">05 · Path</p>
+            <p className="eyebrow">{eyebrow}</p>
             <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
               <SplitText text="Where" />
               <br />

@@ -2,20 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { FiArrowUp, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
 import { FaXTwitter } from "react-icons/fa6";
 import { Magnetic, Marquee } from "./animations";
+import { PAGES } from "@/lib/nav";
 import { SERVICES, serviceHref } from "@/lib/services";
-
-/* `page` links go to a page of their own; the rest are sections of the home page. */
-const LINKS: { label: string; href: string; page?: boolean }[] = [
-  { label: "Work", href: "#work" },
-  { label: "Services", href: "#services" },
-  { label: "Packages", href: "#packages" },
-  { label: "About", href: "/about", page: true },
-  { label: "Contact", href: "#contact" },
-];
 
 const WORDMARK = "WebForge Digital";
 
@@ -31,8 +22,6 @@ export default function Footer() {
   const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
   const rippleId = useRef(0);
   const year = new Date().getFullYear();
-  // Section links target the home page; from another route they need the "/" prefix.
-  const onHome = usePathname() === "/";
 
   /*
     Material-style click ripple, centred on the click point. The
@@ -105,17 +94,11 @@ export default function Footer() {
       <div className="shell" style={{ paddingBlock: "clamp(3rem, 8vh, 5rem)" }}>
         <div className="footer-top">
           <nav className="footer-links">
-            {LINKS.map((l) =>
-              l.page ? (
-                <Link key={l.label} href={l.href} className="link-sweep">
-                  {l.label}
-                </Link>
-              ) : (
-                <a key={l.label} href={onHome ? l.href : `/${l.href}`} className="link-sweep">
-                  {l.label}
-                </a>
-              ),
-            )}
+            {PAGES.map((p) => (
+              <Link key={p.href} href={p.href} className="link-sweep">
+                {p.label}
+              </Link>
+            ))}
           </nav>
 
           <div className="footer-socials">

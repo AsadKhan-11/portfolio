@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { FiArrowUpRight, FiCheck } from "react-icons/fi";
-import { Magnetic, Reveal, SplitText, Stagger, StaggerItem } from "./animations";
+import { Magnetic, Reveal, Stagger, StaggerItem } from "./animations";
+import SectionHead from "./SectionHead";
 
 /*
   The moment of doubt: a visitor has just seen the prices and is
@@ -59,29 +61,20 @@ const OPTIONS: {
   },
 ];
 
-export default function Band() {
+/*
+  `ctaHref` is where the button goes: "#contact" on the home page, where the
+  form is a section further down, and "/contact" on the other pages that show this.
+*/
+export default function Band({ ctaHref = "#contact" }: { ctaHref?: string }) {
   return (
     <section className="band" aria-label="How working with me compares">
       <div className="shell">
-        <div className="section-head">
-          <div>
-            <p className="eyebrow">Why me</p>
-            <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
-              <SplitText text="Three ways" />
-              <br />
-              <span className="serif-em" style={{ color: "var(--flame)" }}>
-                <SplitText text="to get a website" delay={0.1} />
-              </span>
-            </h2>
-          </div>
-          <Reveal delay={0.15}>
-            <p className="lede">
-              The honest comparison nobody puts on their pricing page. Only
-              one of these is built around your business, and only one picks
-              up the phone afterwards.
-            </p>
-          </Reveal>
-        </div>
+        <SectionHead
+          eyebrow="Why me"
+          title="Three ways"
+          em="to get a website"
+          lede="The honest comparison nobody puts on their pricing page. Only one of these is built around your business, and only one picks up the phone afterwards."
+        />
 
         <Stagger className="vs-grid" gap={0.1}>
           {OPTIONS.map(({ name, values, featured }) => (
@@ -110,10 +103,17 @@ export default function Band() {
         <Reveal delay={0.1}>
           <div className="band-cta-row">
             <Magnetic strength={0.3}>
-              <a href="#contact" className="btn btn-solid">
-                <span>Start yours</span>
-                <FiArrowUpRight />
-              </a>
+              {ctaHref.startsWith("#") ? (
+                <a href={ctaHref} className="btn btn-solid">
+                  <span>Start yours</span>
+                  <FiArrowUpRight />
+                </a>
+              ) : (
+                <Link href={ctaHref} className="btn btn-solid">
+                  <span>Start yours</span>
+                  <FiArrowUpRight />
+                </Link>
+              )}
             </Magnetic>
             <span className="mono-label">Currently booking for 2026</span>
           </div>

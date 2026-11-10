@@ -81,7 +81,7 @@ export function caseStudyJsonLd(study: CaseStudy) {
       "@id": `${pageUrl}#breadcrumbs`,
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: "Work", item: `${SITE_URL}/#work` },
+        { "@type": "ListItem", position: 2, name: "Projects", item: `${SITE_URL}/work` },
         /* Last item omits `item`: Google falls back to this page's URL. */
         { "@type": "ListItem", position: 3, name: study.title },
       ],

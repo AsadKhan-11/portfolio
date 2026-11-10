@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import { Reveal, SplitText } from "./animations";
 import ImageSlot from "./ImageSlot";
+import { PROFILE } from "@/lib/profile";
 
 export default function About() {
   return (
@@ -15,9 +16,9 @@ export default function About() {
           <Reveal className="profile-media">
             <figure>
               <ImageSlot
-                src="/about/workspace.jpg"
+                src="/about/workspace.webp"
                 alt="Asad Khan working at his desk in Lahore"
-                slot="/about/workspace.jpg"
+                slot="/about/workspace.webp"
                 ratio="4 / 5"
                 sizes="(max-width: 900px) 90vw, 40vw"
                 fallback={
@@ -63,8 +64,7 @@ export default function About() {
                   color: "var(--bone)",
                 }}
               >
-                I build complete web products, from the first pixel of an
-                interface to the last line of the API behind it.
+                {PROFILE.statement}
               </p>
             </Reveal>
 
@@ -77,11 +77,7 @@ export default function About() {
                   color: "var(--bone-45)",
                 }}
               >
-                I&rsquo;m Asad, a full stack developer working with founders
-                and teams worldwide from Lahore, Pakistan. People hire me when
-                they want one person who can carry a product all the way:
-                design that sells the idea, and engineering that doesn&rsquo;t
-                fall over once it works.
+                {PROFILE.intro}
               </p>
             </Reveal>
 
@@ -94,10 +90,7 @@ export default function About() {
                   color: "var(--bone-45)",
                 }}
               >
-                Working with me looks like this: a fixed quote before we start,
-                honest timelines, a staging link you can open any day of the
-                week, and a finished product you fully own. No hand-offs
-                between departments, no surprises on the invoice.
+                {PROFILE.workingWithMe}
               </p>
             </Reveal>
 

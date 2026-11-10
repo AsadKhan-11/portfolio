@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { FiArrowRight, FiArrowUpRight, FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 import type { Clip, Shot } from "@/lib/caseStudies";
+import type { Project } from "@/lib/projects";
 import { Stagger, StaggerItem } from "../animations";
+import { ProjectCard } from "../Work";
 import { useMediaQuery } from "../useClient";
 
 /* A browser-style frame around anything captured from the product. */
@@ -320,20 +321,11 @@ export function Gallery({ shots, device }: { shots: Shot[]; device?: boolean }) 
    matches; the shuffle runs once after mount, before the section scrolls
    into view, so each visit sees a different set.
    ───────────────────────────────────────────── */
-export interface MoreCard {
-  key: string;
-  shot: string;
-  title: string;
-  meta: string;
-  href: string;
-  label: string;
-}
-
-export function MoreGrid({ cards, pick = 3 }: { cards: MoreCard[]; pick?: number }) {
-  const [shown, setShown] = useState(() => cards.slice(0, pick));
+export function MoreGrid({ projects, pick = 3 }: { projects: Project[]; pick?: number }) {
+  const [shown, setShown] = useState(() => projects.slice(0, pick));
 
   useEffect(() => {
-    const pool = [...cards];
+    const pool = [...projects];
     for (let i = pool.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [pool[i], pool[j]] = [pool[j], pool[i]];
@@ -341,36 +333,15 @@ export function MoreGrid({ cards, pick = 3 }: { cards: MoreCard[]; pick?: number
     // Deliberate one-time post-mount shuffle; see the note above.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShown(pool.slice(0, pick));
-  }, [cards, pick]);
+  }, [projects, pick]);
 
   return (
     <Stagger className="case-more">
-      {shown.map((c) => {
-        const internal = c.href.startsWith("/");
-        const body = (
-          <>
-            <span className="work-shot">
-              <Image src={c.shot} alt={`${c.title} ${internal ? "case study" : "website"}`} fill sizes="(max-width: 760px) 92vw, 30vw" style={{ objectFit: "cover", objectPosition: "top" }} />
-            </span>
-            <span className="work-card-foot">
-              <span className="work-card-title">{c.title}</span>
-              <span className="mono-label work-card-domain">
-                {c.label} {internal ? <FiArrowRight size={13} /> : <FiArrowUpRight size={13} />}
-              </span>
-              <span className="mono-label work-card-meta">{c.meta}</span>
-            </span>
-          </>
-        );
-        return (
-          <StaggerItem key={c.key}>
-            {internal ? (
-              <Link href={c.href} className="work-card" data-cursor="Read">{body}</Link>
-            ) : (
-              <a href={c.href} target="_blank" rel="noopener noreferrer" className="work-card" data-cursor="Visit">{body}</a>
-            )}
-          </StaggerItem>
-        );
-      })}
+      {shown.map((p) => (
+        <StaggerItem key={p.key}>
+          <ProjectCard p={p} />
+        </StaggerItem>
+      ))}
     </Stagger>
   );
 }

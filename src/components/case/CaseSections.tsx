@@ -2,8 +2,11 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FiArrowRight, FiArrowUpRight, FiInfo, FiPlus } from "react-icons/fi";
-import { Counter, Reveal, SplitText, Stagger, StaggerItem } from "../animations";
+import { Counter, Reveal, Stagger, StaggerItem } from "../animations";
+import { MaskWords, ScrollCue, after } from "../heroMotion";
 import { CASE_STUDIES, LIVE_BUILDS, roleInSentence, type CaseStudy } from "@/lib/caseStudies";
+import { toProject } from "@/lib/projects";
+import SectionHead from "../SectionHead";
 import { Device, FlowPlayer, Frame, Gallery, MoreGrid, PhoneReel, Reel } from "./CaseMedia";
 
 const isMobile = (s: CaseStudy) => s.platform === "mobile";
@@ -15,7 +18,7 @@ const nounFor = (s: CaseStudy) => s.noun ?? (isMobile(s) ? "app" : "platform");
   arrives attributed. Without it a lead from this page is indistinguishable
   from one off the home page.
 */
-export const enquiryHref = (s: CaseStudy) => `/?ref=${s.slug}#contact`;
+export const enquiryHref = (s: CaseStudy) => `/contact?ref=${s.slug}`;
 
 /* Characters in the longest word — what the hero title has to fit. */
 const longestWord = (title: string) =>
@@ -42,28 +45,15 @@ const SECTION_IDS = {
   decisions: "decisions",
 } as const;
 
-function Head({ eyebrow, title, em, lede }: { eyebrow: string; title: string; em: string; lede?: string }) {
-  return (
-    <div className="section-head">
-      <div>
-        <p className="eyebrow">{eyebrow}</p>
-        <h2 className="section-title" style={{ marginTop: "1.75rem" }}>
-          <SplitText text={title} />
-          <br />
-          <span className="serif-em" style={{ color: "var(--flame)" }}>
-            <SplitText text={em} delay={0.1} />
-          </span>
-        </h2>
-      </div>
-      {lede && (
-        <Reveal delay={0.15}>
-          <p className="lede">{lede}</p>
-        </Reveal>
-      )}
-    </div>
-  );
-}
 
+/*
+  The first screen uses the same CSS entrance as every other page's (.hero-in,
+  MaskWords), not Framer Motion's Reveal and SplitText. Those render hidden on
+  the server and are revealed only after the page hydrates, so on a slow phone
+  the tagline, the biggest thing in view, was the last to appear: Lighthouse
+  measured the largest paint at 6.4s here against 0.9s on the pages already on
+  the CSS entrance.
+*/
 export function CaseHero({ study }: { study: CaseStudy }) {
   return (
     <section id="home" className="case-hero bg-glow-tr">
@@ -72,21 +62,24 @@ export function CaseHero({ study }: { study: CaseStudy }) {
           Visible trail, not just JSON-LD: Google's structured data policy
           says markup must not describe information the visitor cannot see.
         */}
-        <Reveal>
+        <div className="hero-in hero-in-fade" style={after(0.05)}>
           <nav className="case-crumbs mono-label" aria-label="Breadcrumb">
             <ol>
               <li>
                 <Link href="/" data-cursor="Home">Home</Link>
               </li>
               <li>
-                <Link href="/#work" data-cursor="Back">Work</Link>
+                <Link href="/work" data-cursor="Back">Projects</Link>
               </li>
               <li aria-current="page">{study.title}</li>
             </ol>
           </nav>
-        </Reveal>
+        </div>
 
-        <p className="eyebrow" style={{ marginTop: "clamp(2rem, 5vh, 3.5rem)" }}>
+        <p
+          className="eyebrow hero-in hero-in-fade"
+          style={{ marginTop: "clamp(2rem, 5vh, 3.5rem)", ...after(0.1) }}
+        >
           Case study · {study.n} · {study.type}
         </p>
         {/*
@@ -98,7 +91,7 @@ export function CaseHero({ study }: { study: CaseStudy }) {
           className="case-title"
           style={{ "--case-chars": longestWord(study.title) } as CSSProperties}
         >
-          <SplitText text={study.title} delay={0.1} />
+          <MaskWords text={study.title} delay={0.1} />
         </h1>
 
         {/*
@@ -108,21 +101,25 @@ export function CaseHero({ study }: { study: CaseStudy }) {
           — the facts are gone and the note now sits with the overview.
         */}
         <div className="case-hero-row">
-          <Reveal delay={0.25}>
+          <div className="hero-in" style={after(0.25)}>
             <p className="case-tagline">{study.tagline}</p>
             <Link href={enquiryHref(study)} className="btn btn-solid case-hero-cta" data-cursor="Talk">
               <span>Start something like this</span>
               <FiArrowRight />
             </Link>
-          </Reveal>
-          <Reveal delay={0.35}>
+          </div>
+          <div className="hero-in" style={after(0.35)}>
             <div className="case-tags">
               {study.tags.map((t) => (
                 <span key={t} className="tag">{t}</span>
               ))}
             </div>
-          </Reveal>
+          </div>
         </div>
+      </div>
+
+      <div className="scroll-cue">
+        <ScrollCue after={0.9} />
       </div>
     </section>
   );
@@ -307,7 +304,7 @@ export function CaseHighlights({ study }: { study: CaseStudy }) {
     <section id={SECTION_IDS.features} className="section bg-glow-bl">
       <div className="rule-top" />
       <div className="shell">
-        <Head
+        <SectionHead
           eyebrow="What's inside"
           title="What it"
           em="does"
@@ -366,7 +363,7 @@ export function CaseFlows({ study }: { study: CaseStudy }) {
     <section id={SECTION_IDS.walkthroughs} className="section">
       <div className="rule-top" />
       <div className="shell">
-        <Head
+        <SectionHead
           eyebrow="In motion"
           title="See it"
           em="working"
@@ -389,7 +386,7 @@ export function CaseGallery({ study }: { study: CaseStudy }) {
     <section id={SECTION_IDS.gallery} className="section bg-glow-tr">
       <div className="rule-top" />
       <div className="shell">
-        <Head eyebrow="Gallery" title={isMobile(study) ? "Screen by" : "More"} em={isMobile(study) ? "screen" : "screens"} lede="Click any screen to see it full size, then use the arrow keys to move through the set." />
+        <SectionHead eyebrow="Gallery" title={isMobile(study) ? "Screen by" : "More"} em={isMobile(study) ? "screen" : "screens"} lede="Click any screen to see it full size, then use the arrow keys to move through the set." />
         <Reveal delay={0.1} style={{ marginTop: "clamp(2.5rem, 6vh, 4rem)" }}>
           <Gallery shots={study.gallery} device={isMobile(study)} />
         </Reveal>
@@ -404,7 +401,7 @@ export function CasePhones({ study }: { study: CaseStudy }) {
     <section id={SECTION_IDS.mobile} className="section">
       <div className="rule-top" />
       <div className="shell">
-        <Head
+        <SectionHead
           eyebrow="Mobile"
           title="Made for the"
           em="phone"
@@ -432,7 +429,7 @@ export function CaseDecisions({ study }: { study: CaseStudy }) {
     <section id={SECTION_IDS.decisions} className="section bg-glow-bl">
       <div className="rule-top" />
       <div className="shell">
-        <Head eyebrow="How it fits together" title="Thinking" em="behind it" lede={study.decisionsLede ?? "AI that does the heavy lifting, and people who stay in control of the relationship."} />
+        <SectionHead eyebrow="How it fits together" title="Thinking" em="behind it" lede={study.decisionsLede ?? "AI that does the heavy lifting, and people who stay in control of the relationship."} />
         <Stagger className="case-decisions">
           {study.decisions.map((d, i) => (
             <StaggerItem key={d.title} className="panel case-decision">
@@ -485,28 +482,25 @@ export function CaseMidCta({ study }: { study: CaseStudy }) {
 */
 export function CaseMore({ study }: { study: CaseStudy }) {
   const others = CASE_STUDIES.filter((c) => c.slug !== study.slug);
-  const cards = [
-    ...others.map((c) => ({ key: c.slug, shot: c.card, title: c.title, meta: c.meta, href: `/work/${c.slug}`, label: "Case study" })),
-    ...LIVE_BUILDS.map((b) => ({ key: b.key, shot: b.shot, title: b.title, meta: b.meta, href: b.url, label: b.domain })),
-  ];
+  const projects = [...others.map(toProject), ...LIVE_BUILDS];
 
   return (
     <section className="section bg-glow-tr">
       <div className="rule-top" />
       <div className="shell">
-        <Head
+        <SectionHead
           eyebrow="Keep exploring"
           title="More"
           em="selected work"
           lede="A few more things I've built and shipped, picked at random each visit."
         />
 
-        <MoreGrid cards={cards} />
+        <MoreGrid projects={projects} />
 
         <Reveal delay={0.1}>
           <div className="case-more-cta">
-            <Link href="/#work" className="btn">
-              <span>View all work</span>
+            <Link href="/work" className="btn">
+              <span>View all projects</span>
               <FiArrowRight />
             </Link>
           </div>
@@ -533,8 +527,8 @@ export function CaseOutro({ study }: { study: CaseStudy }) {
               <span>Start a project</span>
               <FiArrowUpRight />
             </Link>
-            <Link href="/#work" className="btn">
-              <span>Back to all work</span>
+            <Link href="/work" className="btn">
+              <span>Back to all projects</span>
             </Link>
           </div>
         </Reveal>

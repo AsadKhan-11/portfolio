@@ -1,60 +1,80 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import type { IconType } from "react-icons";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
-import { FiArrowUpRight } from "react-icons/fi";
+import { FiArrowUpRight, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
+import { FaXTwitter } from "react-icons/fa6";
 import { Magnetic } from "./animations";
-import { CONTACT_EMAIL as EMAIL } from "@/lib/site";
-
-const MENU_SOCIALS = [
-  { label: "GitHub", href: "https://github.com/AsadKhan-11" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/asad-khan-011h/" },
-  { label: "X", href: "https://x.com/webforge_dev" },
-  { label: "Instagram", href: "https://www.instagram.com/webforge.dev/" },
-];
-
-const NAV_ITEMS = [
-  { label: "Index", href: "#home" },
-  { label: "Work", href: "#work" },
-  { label: "Services", href: "#services" },
-  { label: "Packages", href: "#packages" },
-  { label: "Profile", href: "#about" },
-  { label: "Path", href: "#experience" },
-  { label: "Contact", href: "#contact" },
-];
+import { isCurrent, NAV_BREAKPOINT, PAGES } from "@/lib/nav";
+import { CONTACT_EMAIL as EMAIL, SOCIAL_LINKS } from "@/lib/site";
 
 const EASE = [0.76, 0, 0.24, 1] as const;
 
+const SOCIAL_ICONS: Record<string, IconType> = {
+  GitHub: FiGithub,
+  LinkedIn: FiLinkedin,
+  X: FaXTwitter,
+  Instagram: FiInstagram,
+};
+
 /*
-  The desktop nav. From 960px up this is the only navigation — the burger
-  is hidden there — so it has to cover everywhere the overlay goes. The
-  logo handles #home and the button handles #contact; "Path" is here
-  because #experience appears in no other link on the page, footer
-  included, and would otherwise be reachable only by scrolling to it.
+  The row of links in the bar, from the nav breakpoint up. Contact is not in
+  it: the "Start a project" button beside the row is the Contact page, and a
+  second link to the same place would only crowd the bar.
 */
-const PRIMARY = [
-  { label: "Work", href: "#work" },
-  { label: "Services", href: "#services" },
-  { label: "Pricing", href: "#packages" },
-  { label: "About", href: "#about" },
-  { label: "Path", href: "#experience" },
-];
+const PRIMARY = PAGES.filter((p) => p.href !== "/contact");
+
+/* The menu lists every page, and the home page first. */
+const MENU = [{ label: "Home", href: "/" }, ...PAGES];
+
+/* "#home" is an anchor on the home page itself; everything else is a page. */
+function NavLink({
+  href,
+  children,
+  ...rest
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+  onClick?: () => void;
+  "aria-current"?: "page";
+  "aria-label"?: string;
+  "data-cursor"?: string;
+  style?: CSSProperties;
+}) {
+  return href.startsWith("#") ? (
+    <a href={href} {...rest}>
+      {children}
+    </a>
+  ) : (
+    <Link href={href} {...rest}>
+      {children}
+    </Link>
+  );
+}
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  /*
+    The menu is open for one page. Remembering which means a change of page
+    closes it by itself (the remembered page no longer matches), without an
+    effect having to notice and reset it.
+  */
+  const [openAt, setOpenAt] = useState<string | null>(null);
+  const open = openAt === pathname;
   const [clock, setClock] = useState("");
+  const burgerRef = useRef<HTMLButtonElement>(null);
   const { scrollYProgress } = useScroll();
 
-  /*
-    The menu points at sections of the home page. From any other route
-    (a case study, say) those hashes would go nowhere, so they're routed
-    through "/" — and "Index" / the logo simply mean "home".
-  */
-  const onHome = usePathname() === "/";
-  const to = (hash: string) => (onHome ? hash : hash === "#home" ? "/" : `/${hash}`);
+  const close = useCallback(() => setOpenAt(null), []);
+
+  /* On the home page the logo scrolls to the top; from anywhere else it goes there. */
+  const homeHref = pathname === "/" ? "#home" : "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -82,27 +102,59 @@ export default function Navbar() {
   }, []);
 
   /*
-    Lock scroll behind the overlay, and let Escape close it. Only runs
-    while the menu is actually open — otherwise mounting the navbar would
-    clear a scroll lock owned by someone else (the intro panel).
+    While the menu is open:
+    - the page behind it can't scroll, and can't be reached with the keyboard
+      or a screen reader (`inert`);
+    - focus moves into the menu, and Tab cycles through the bar's own
+      controls and the menu rather than escaping to the page;
+    - Escape closes it and hands focus back to the menu button;
+    - widening the window past the nav breakpoint closes it, because the
+      button that closes it is gone from there up.
+    Only runs while the menu is actually open, so mounting the navbar never
+    clears a scroll lock owned by someone else (the intro panel).
   */
   useEffect(() => {
     if (!open) return;
+
     document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const behind = document.querySelectorAll<HTMLElement>("main, footer");
+    behind.forEach((el) => el.setAttribute("inert", ""));
+    document.querySelector<HTMLElement>("#site-menu a")?.focus({ preventScroll: true });
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpenAt(null);
+        burgerRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const items = [
+        ...document.querySelectorAll<HTMLElement>(
+          ".nav-bar a[href], .nav-bar button, #site-menu a[href], #site-menu button"
+        ),
+      ].filter((el) => el.getClientRects().length > 0);
+      if (!items.length) return;
+
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
     window.addEventListener("keydown", onKey);
 
-    /*
-      The burger is gone from 960px up, so a window widening past it
-      while the overlay is open would strip the only control that closes
-      it — and leave body scroll locked behind it.
-    */
-    const desktop = window.matchMedia("(min-width: 960px)");
-    const onWiden = (e: MediaQueryListEvent) => e.matches && setOpen(false);
+    const desktop = window.matchMedia(`(min-width: ${NAV_BREAKPOINT}px)`);
+    const onWiden = (e: MediaQueryListEvent) => e.matches && setOpenAt(null);
     desktop.addEventListener("change", onWiden);
 
     return () => {
       document.body.style.overflow = "";
+      behind.forEach((el) => el.removeAttribute("inert"));
       window.removeEventListener("keydown", onKey);
       desktop.removeEventListener("change", onWiden);
     };
@@ -115,7 +167,11 @@ export default function Navbar() {
           globals.css) — the anvil lands exactly on `.nav-mark`, so the bar
           must wait in its final position, not slide into it. Everyone else
           sees it in the first paint. */}
-      <header className="nav-bar" data-scrolled={scrolled}>
+      <header
+        className="nav-bar"
+        data-scrolled={scrolled}
+        data-menu={open ? "open" : undefined}
+      >
         <div className="nav-inner">
           <Magnetic strength={0.25}>
             {/*
@@ -126,9 +182,9 @@ export default function Navbar() {
               link should always carry the full name. The alt is for image
               search and audits, which count an empty one as missing.
             */}
-            <a
-              href={to("#home")}
-              onClick={() => setOpen(false)}
+            <NavLink
+              href={homeHref}
+              onClick={close}
               aria-label="WebForge Digital, home"
               style={{
                 fontFamily: "var(--f-display)",
@@ -160,23 +216,35 @@ export default function Navbar() {
               >
                 Digital
               </span>
-            </a>
+            </NavLink>
           </Magnetic>
 
           <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
             <nav className="nav-links" aria-label="Primary">
               {PRIMARY.map((l) => (
-                <a key={l.label} href={to(l.href)} className="nav-link">
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className="nav-link"
+                  aria-current={isCurrent(pathname, l.href) ? "page" : undefined}
+                >
                   {l.label}
-                </a>
+                </Link>
               ))}
             </nav>
-            {/* Hidden on phones (see .nav-cta). There the hero carries the
-                same call to action and the menu lists Contact, so the bar
-                stays as logo and menu button instead of crowding the logo. */}
-            <a href={to("#contact")} className="nav-cta" data-cursor="Talk">
+
+            {/* Shown only where the row of links is (see .nav-cta). Below that
+                width the menu button is all the bar has, and the menu carries
+                this same button, so the bar never shows both. */}
+            <Link
+              href="/contact"
+              className="nav-cta"
+              data-cursor="Talk"
+              aria-current={isCurrent(pathname, "/contact") ? "page" : undefined}
+            >
               Start a project
-            </a>
+            </Link>
+
             <span
               className="mono-label nav-clock"
               style={{ letterSpacing: "0.18em" }}
@@ -199,11 +267,13 @@ export default function Navbar() {
                     own positioning — the two have to agree on the exact
                     gap to converge into a clean X. */}
                 <button
+                  ref={burgerRef}
                   className="burger"
                   data-open={open}
-                  onClick={() => setOpen((v) => !v)}
+                  onClick={() => setOpenAt(open ? null : pathname)}
                   aria-label={open ? "Close menu" : "Open menu"}
                   aria-expanded={open}
+                  aria-controls="site-menu"
                 >
                   <span />
                   <span />
@@ -221,83 +291,92 @@ export default function Navbar() {
 
       <AnimatePresence>
         {open && (
-          <motion.nav
+          <motion.div
+            id="site-menu"
             className="menu-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
+            /* Lenis would otherwise take the wheel and scroll the page behind
+               a menu that is taller than the screen. */
+            data-lenis-prevent
             initial={{ clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={{ clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.85, ease: EASE }}
+            transition={{ duration: 0.55, ease: EASE }}
           >
             <div className="menu-shell">
-              <div>
-                <p className="mono-label menu-eyebrow">Navigation</p>
+              <nav className="menu-main" aria-label="Menu">
+                <p className="mono-label menu-eyebrow">Menu</p>
                 <ul className="menu-list">
-                  {NAV_ITEMS.map((item, i) => (
-                    <li key={item.label} className="menu-row-wrap">
-                      <motion.a
-                        href={to(item.href)}
-                        className="menu-row"
-                        onClick={() => setOpen(false)}
-                        initial={{ y: "110%" }}
-                        animate={{ y: 0 }}
-                        exit={{ y: "110%" }}
-                        transition={{
-                          duration: 0.8,
-                          delay: 0.15 + i * 0.045,
-                          ease: [0.16, 1, 0.3, 1],
-                        }}
+                  {MENU.map((item, i) => {
+                    const current =
+                      item.href === "/" ? pathname === "/" : isCurrent(pathname, item.href);
+                    return (
+                      <li
+                        key={item.href}
+                        className="menu-row-wrap"
+                        style={{ "--i": i } as CSSProperties}
                       >
-                        <span className="menu-index">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <span className="menu-label">{item.label}</span>
-                        <FiArrowUpRight className="menu-arrow" size={18} />
-                      </motion.a>
-                    </li>
-                  ))}
+                        <NavLink
+                          href={item.href === "/" ? homeHref : item.href}
+                          className="menu-row"
+                          aria-current={current ? "page" : undefined}
+                          onClick={close}
+                        >
+                          <span className="menu-index" aria-hidden="true">
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <span className="menu-label">{item.label}</span>
+                          <FiArrowUpRight className="menu-arrow" size={20} aria-hidden="true" />
+                        </NavLink>
+                      </li>
+                    );
+                  })}
                 </ul>
-              </div>
+              </nav>
 
-              <motion.aside
-                className="menu-aside"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-              >
-                <div className="menu-aside-block">
-                  <p className="mono-label">Get in touch</p>
-                  <a href={`mailto:${EMAIL}`} className="menu-aside-value link-sweep">
+              <div className="menu-aside" style={{ "--i": MENU.length } as CSSProperties}>
+                <Link
+                  href="/contact"
+                  className="btn btn-solid menu-cta"
+                  onClick={close}
+                  data-cursor="Talk"
+                >
+                  <span>Start a project</span>
+                  <FiArrowUpRight aria-hidden="true" />
+                </Link>
+
+                <div className="menu-contact">
+                  <a href={`mailto:${EMAIL}`} className="menu-email link-sweep">
                     {EMAIL}
                   </a>
-                </div>
-
-                <div className="menu-aside-block">
-                  <p className="mono-label">Based in</p>
-                  <span className="menu-aside-value" suppressHydrationWarning>
+                  <p className="menu-where" suppressHydrationWarning>
                     Lahore, Pakistan · {clock}
-                  </span>
+                  </p>
                 </div>
 
-                <div className="menu-aside-block">
-                  <p className="mono-label">Elsewhere</p>
-                  <div className="menu-socials">
-                    {MENU_SOCIALS.map((s) => (
-                      <a
-                        key={s.label}
-                        href={s.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="menu-social link-sweep"
-                      >
-                        {s.label}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </motion.aside>
+                <ul className="menu-socials">
+                  {SOCIAL_LINKS.map(({ url, label }) => {
+                    const Icon = SOCIAL_ICONS[label];
+                    return (
+                      <li key={url}>
+                        <a
+                          href={url}
+                          className="social"
+                          aria-label={label}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {Icon ? <Icon size={16} aria-hidden="true" /> : label}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             </div>
-          </motion.nav>
+          </motion.div>
         )}
       </AnimatePresence>
     </>

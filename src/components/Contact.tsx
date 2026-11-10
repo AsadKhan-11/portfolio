@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  FiClock,
   FiGithub,
   FiInstagram,
   FiLinkedin,
@@ -17,6 +18,8 @@ const DETAILS = [
   { Icon: FiMail, k: "Email", v: EMAIL, href: `mailto:${EMAIL}` },
   { Icon: FiPhone, k: "Phone", v: "+92 310 4388534", href: "tel:+923104388534" },
   { Icon: FiMapPin, k: "Location", v: "Lahore, Pakistan" },
+  /* Hours and a time zone, and how long to wait: what a visitor looks for beside the phone number. */
+  { Icon: FiClock, k: "Availability", v: "Replies within a day · UTC+5" },
 ];
 
 const SOCIALS = [
@@ -26,7 +29,76 @@ const SOCIALS = [
   { I: FiInstagram, href: "https://www.instagram.com/webforge.dev/", l: "Instagram" },
 ];
 
-export default function Contact() {
+/*
+  The home page's contact section and the /contact page are the same thing
+  in two places: the same details beside the same form. The two halves are
+  exported so the page can put its own heading above them.
+*/
+export function ContactDetails() {
+  return (
+    <>
+      <Reveal delay={0.16}>
+        <div className="contact-details">
+          {DETAILS.map(({ Icon, k, v, href }) => (
+            <div key={k} className="contact-meta-item">
+              <span className="contact-meta-icon" aria-hidden="true">
+                <Icon size={16} />
+              </span>
+              <span>
+                <span className="mono-label">{k}</span>
+                {href ? (
+                  <a href={href} className="contact-meta-value link-sweep">
+                    {v}
+                  </a>
+                ) : (
+                  <span className="contact-meta-value">{v}</span>
+                )}
+              </span>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal delay={0.22}>
+        <div className="contact-socials">
+          <span className="mono-label">Elsewhere</span>
+          <div style={{ display: "flex", gap: "0.7rem" }}>
+            {SOCIALS.map(({ I, href, l }) => (
+              <Magnetic key={l} strength={0.4}>
+                <a
+                  href={href}
+                  className="social"
+                  aria-label={l}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <I size={16} />
+                </a>
+              </Magnetic>
+            ))}
+          </div>
+        </div>
+      </Reveal>
+    </>
+  );
+}
+
+/* The form, carried by its own panel. */
+export function ContactPanel() {
+  return (
+    <Reveal delay={0.15} className="contact-form-panel">
+      <p className="mono-label contact-form-label">Start a project</p>
+      <ContactForm />
+    </Reveal>
+  );
+}
+
+/*
+  The section. With no props it is the home page's, under its own heading.
+  `head={false}` is the /contact page's: its first screen has already said
+  what the page is, so the section is just the details beside the form.
+*/
+export default function Contact({ head = true }: { head?: boolean }) {
   return (
     <section id="contact" className="section bg-glow-br">
       <div className="rule-top" />
@@ -34,74 +106,33 @@ export default function Contact() {
         <div className="contact-layout">
           {/* ── Intro + ways to reach me ── */}
           <div className="contact-intro">
-            <Reveal>
-              <p className="eyebrow">08 · Contact</p>
-            </Reveal>
+            {head && (
+              <>
+                <Reveal>
+                  <p className="eyebrow">08 · Contact</p>
+                </Reveal>
 
-            <h2 className="section-title" style={{ marginTop: "1.5rem" }}>
-              <SplitText text="Let's build" />
-              <br />
-              <span className="serif-em" style={{ color: "var(--flame)" }}>
-                <SplitText text="something" delay={0.1} />
-              </span>
-            </h2>
+                <h2 className="section-title" style={{ marginTop: "1.5rem" }}>
+                  <SplitText text="Let's build" />
+                  <br />
+                  <span className="serif-em" style={{ color: "var(--flame)" }}>
+                    <SplitText text="something" delay={0.1} />
+                  </span>
+                </h2>
 
-            <Reveal delay={0.1}>
-              <p className="lede" style={{ marginTop: "1.5rem" }}>
-                Whether you have a spec ready or just the beginning of an
-                idea, tell me about it. I reply within a day.
-              </p>
-            </Reveal>
+                <Reveal delay={0.1}>
+                  <p className="lede" style={{ marginTop: "1.5rem" }}>
+                    Whether you have a spec ready or just the beginning of an
+                    idea, tell me about it. I reply within a day.
+                  </p>
+                </Reveal>
+              </>
+            )}
 
-            <Reveal delay={0.16}>
-              <div className="contact-details">
-                {DETAILS.map(({ Icon, k, v, href }) => (
-                  <div key={k} className="contact-meta-item">
-                    <span className="contact-meta-icon" aria-hidden="true">
-                      <Icon size={16} />
-                    </span>
-                    <span>
-                      <span className="mono-label">{k}</span>
-                      {href ? (
-                        <a href={href} className="contact-meta-value link-sweep">
-                          {v}
-                        </a>
-                      ) : (
-                        <span className="contact-meta-value">{v}</span>
-                      )}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.22}>
-              <div className="contact-socials">
-                <span className="mono-label">Elsewhere</span>
-                <div style={{ display: "flex", gap: "0.7rem" }}>
-                  {SOCIALS.map(({ I, href, l }) => (
-                    <Magnetic key={l} strength={0.4}>
-                      <a
-                        href={href}
-                        className="social"
-                        aria-label={l}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <I size={16} />
-                      </a>
-                    </Magnetic>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
+            <ContactDetails />
           </div>
 
-          {/* ── The form, carried by its own panel ── */}
-          <Reveal delay={0.15} className="contact-form-panel">
-            <p className="mono-label contact-form-label">Start a project</p>
-            <ContactForm />
-          </Reveal>
+          <ContactPanel />
         </div>
       </div>
     </section>

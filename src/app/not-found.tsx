@@ -3,8 +3,10 @@ import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { MaskWords, after } from "@/components/heroMotion";
+import { after } from "@/components/heroMotion";
+import { PageHero } from "@/components/page/PageParts";
 import { CASE_STUDIES } from "@/lib/caseStudies";
+import { PAGES } from "@/lib/nav";
 import { SERVICES, serviceHref } from "@/lib/services";
 
 /*
@@ -15,8 +17,8 @@ import { SERVICES, serviceHref } from "@/lib/services";
   copy of the page that somebody links to.
 
   Every link is absolute: this one file answers for /anything/at/any/depth.
-  The links are the site's own lists (services, case studies), so a page
-  that is added later turns up here without anyone remembering to.
+  The links are the site's own lists (pages, services, case studies), so a
+  page that is added later turns up here without anyone remembering to.
 */
 export const metadata: Metadata = {
   title: "Page not found · WebForge Digital",
@@ -32,43 +34,41 @@ export default function NotFound() {
     <>
       <Navbar />
       <main className="flex-1 relative" style={{ zIndex: 2 }}>
-        <section className="svc-hero nf-hero">
-          <p className="nf-code hero-in" style={after(0.05)} aria-hidden="true">
-            404
-          </p>
-
-          <div className="shell">
-            <p className="eyebrow hero-in hero-in-fade" style={after(0.05)}>
-              Error 404
+        <PageHero
+          trail={[{ label: "Home", href: "/" }, { label: "Page not found" }]}
+          eyebrow="Error 404"
+          lead="That page"
+          em="isn’t here."
+          lede="The link may be old, or the address mistyped. Nothing is broken on your side. Here is where most people are headed."
+          aside={
+            <p className="nf-code hero-in" style={after(0.2)} aria-hidden="true">
+              404
             </p>
-
-            <h1 className="svc-title">
-              <MaskWords text="That page" delay={0.1} />{" "}
-              <span className="serif-em" style={{ color: "var(--flame)" }}>
-                <MaskWords text="isn’t here." delay={0.28} />
-              </span>
-            </h1>
-
-            <p className="svc-lede hero-in" style={after(0.4)}>
-              The link may be old, or the address mistyped. Nothing is broken on your
-              side. Here is where most people are headed.
-            </p>
-
-            <div className="svc-cta-row hero-in" style={after(0.5)}>
-              <Link href="/" className="btn btn-solid" data-cursor="Home">
-                <span>Back to the home page</span>
-              </Link>
-              <Link href="/#work" className="link-sweep hero-quiet-link">
-                See the work <FiArrowRight />
-              </Link>
-            </div>
-          </div>
-        </section>
+          }
+        >
+          <Link href="/" className="btn btn-solid" data-cursor="Home">
+            <span>Back to the home page</span>
+          </Link>
+          <Link href="/work" className="link-sweep hero-quiet-link">
+            See the projects <FiArrowRight />
+          </Link>
+        </PageHero>
 
         <section className="section">
           <div className="rule-top" />
           <div className="shell">
             <div className="nf-columns">
+              <nav aria-label="Pages">
+                <p className="eyebrow">Pages</p>
+                <ul className="nf-list">
+                  {PAGES.map((p) => (
+                    <li key={p.href}>
+                      <Link href={p.href}>{p.label}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
               <nav aria-label="Services">
                 <p className="eyebrow">Services</p>
                 <ul className="nf-list">
@@ -80,8 +80,8 @@ export default function NotFound() {
                 </ul>
               </nav>
 
-              <nav aria-label="Work">
-                <p className="eyebrow">Work</p>
+              <nav aria-label="Projects">
+                <p className="eyebrow">Projects</p>
                 <ul className="nf-list">
                   {CASE_STUDIES.map((c) => (
                     <li key={c.slug}>
@@ -90,21 +90,6 @@ export default function NotFound() {
                       </Link>
                     </li>
                   ))}
-                </ul>
-              </nav>
-
-              <nav aria-label="More">
-                <p className="eyebrow">More</p>
-                <ul className="nf-list">
-                  <li>
-                    <Link href="/about">About</Link>
-                  </li>
-                  <li>
-                    <Link href="/#packages">Packages</Link>
-                  </li>
-                  <li>
-                    <Link href="/#contact">Contact</Link>
-                  </li>
                 </ul>
               </nav>
             </div>

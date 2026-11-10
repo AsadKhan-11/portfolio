@@ -662,7 +662,9 @@ html.lenis body {
   display: none;
 }
 
-@media (min-width: 960px) {
+/* nav breakpoint: 1040px. The row of links, the "Start a project" button and
+   the menu button all switch here (see NAV_BREAKPOINT in lib/nav.ts). */
+@media (min-width: 1040px) {
   .nav-links {
     display: flex;
     align-items: center;
@@ -671,6 +673,7 @@ html.lenis body {
 }
 
 .nav-link {
+  position: relative;
   font-family: var(--f-mono), monospace;
   font-size: 0.7rem;
   letter-spacing: 0.16em;
@@ -680,13 +683,34 @@ html.lenis body {
   transition: color 0.3s;
 }
 
-.nav-link:hover {
+.nav-link:hover,
+.nav-link[aria-current="page"] {
   color: var(--bone);
 }
 
-/* Hidden on phones (560px and under). The hero carries the same call to
-   action and the menu lists Contact, and a button here as well sat on top
-   of the logo's wordmark. From 561px there is room for it. */
+/* A hairline under the link you are on, and under the one you point at */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -7px;
+  height: 1px;
+  background: var(--flame);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.nav-link:hover::after,
+.nav-link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* The button is the Contact page. It is shown exactly where the row of links
+   is (nav breakpoint, 1040px) and nowhere else: below that the bar is the
+   logo and the menu button, and the menu carries its own copy of this
+   button, so the bar never shows the two side by side. */
 .nav-cta {
   display: none;
   align-items: center;
@@ -712,7 +736,7 @@ html.lenis body {
   flex-shrink: 0;
 }
 
-@media (min-width: 561px) {
+@media (min-width: 1040px) {
   .nav-cta {
     display: inline-flex;
   }
@@ -737,47 +761,52 @@ html.lenis body {
   transform-origin: left;
 }
 
-/* Fullscreen overlay menu. Centers vertically when the 8 nav items
-   fit the viewport, but with `safe center` falls back to top-aligned
-   the moment they don't — plain `center` let the list overflow
-   upward past its own top padding and collide with the fixed header
-   (the "Index" row rendering behind the logo bar). */
+/*
+  The menu, below the nav breakpoint: a full-height sheet under the bar. The
+  pages come first as a numbered list with the current one marked, then the
+  one button, the address and the social links. On a phone it is a single
+  column and the button and details sit at the foot of the sheet whenever
+  there is room; from 760px the list and the details sit side by side.
+*/
 .menu-overlay {
   position: fixed;
   inset: 0;
   z-index: 95;
-  background: var(--ink-raised);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  justify-content: safe center;
-  padding: calc(84px + 2rem) var(--gutter) var(--gutter);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--ink);
+  padding-top: calc(84px + env(safe-area-inset-top, 0px));
 }
 
-/* Nav list left, contact details right. Type is deliberately sized as
-   navigation rather than display — at the old poster scale the eight
-   items overflowed the viewport and the last one was cut off. */
+/* A warm glow in the top corner and a cool one at the foot, so the sheet is
+   not a flat slab. Fixed, so it stays put if the list scrolls. */
+.menu-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(70% 45% at 100% 0%, rgba(255, 92, 53, 0.16), transparent 70%),
+    radial-gradient(60% 40% at 0% 100%, rgba(79, 240, 255, 0.07), transparent 70%);
+}
+
 .menu-shell {
+  position: relative;
+  flex: 1 0 auto;
   width: 100%;
   max-width: var(--measure);
   margin-inline: auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(2rem, 5vh, 3.25rem);
-}
-
-@media (min-width: 900px) {
-  .menu-shell {
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.7fr);
-    gap: clamp(3rem, 6vw, 6rem);
-    align-items: start;
-  }
+  padding: clamp(0.5rem, 2.5vh, 1.25rem) var(--gutter)
+    max(1.5rem, env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 4vh, 2.25rem);
 }
 
 .menu-eyebrow {
   display: block;
-  margin-bottom: 1.1rem;
+  margin-bottom: 0.9rem;
 }
 
 .menu-list {
@@ -787,100 +816,185 @@ html.lenis body {
   border-top: 1px solid var(--rule);
 }
 
-/* The mask the row animates up out of */
+/* Each row rises into place a beat after the one above it */
 .menu-row-wrap {
-  overflow: hidden;
+  animation: menu-rise 0.6s var(--ease-out-expo) both;
+  animation-delay: calc(0.12s + var(--i, 0) * 0.04s);
+}
+
+@keyframes menu-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-row-wrap,
+  .menu-aside {
+    animation: none;
+  }
 }
 
 .menu-row {
   display: flex;
   align-items: center;
-  gap: clamp(0.85rem, 2vw, 1.5rem);
-  padding-block: clamp(0.65rem, 1.5vh, 1rem);
+  gap: clamp(0.85rem, 3vw, 1.25rem);
+  min-height: 60px;
+  padding-block: 0.5rem;
   border-bottom: 1px solid var(--rule);
   color: var(--bone);
   text-decoration: none;
-  transition: color 0.4s var(--ease-out-expo),
-    padding-left 0.45s var(--ease-out-expo);
-}
-
-.menu-row:hover {
-  color: var(--flame);
-  padding-left: 0.7rem;
+  transition: color 0.35s var(--ease-out-expo), padding-left 0.4s var(--ease-out-expo);
 }
 
 .menu-index {
   flex-shrink: 0;
-  width: 2rem;
+  width: 1.6rem;
   font-family: var(--f-mono), monospace;
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   letter-spacing: 0.2em;
   color: var(--bone-30);
-  transition: color 0.4s var(--ease-out-expo);
-}
-
-.menu-row:hover .menu-index {
-  color: var(--flame);
+  transition: color 0.35s var(--ease-out-expo);
 }
 
 .menu-label {
   flex: 1;
+  min-width: 0;
   font-family: var(--f-display), sans-serif;
-  font-weight: 800;
-  font-size: clamp(1.3rem, 2.6vw, 2rem);
-  line-height: 1.12;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 8.4vw, 2.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
 }
 
 .menu-arrow {
   flex-shrink: 0;
-  opacity: 0;
-  transform: translate(-6px, 6px);
-  transition: opacity 0.4s var(--ease-out-expo),
-    transform 0.4s var(--ease-out-expo);
+  color: var(--bone-30);
+  transition: transform 0.4s var(--ease-out-expo), color 0.35s var(--ease-out-expo);
+}
+
+.menu-row:focus-visible {
+  outline: 2px solid var(--flame);
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+
+.menu-row:hover,
+.menu-row:focus-visible,
+.menu-row[aria-current="page"] {
+  color: var(--flame);
+}
+
+.menu-row:hover .menu-index,
+.menu-row:focus-visible .menu-index,
+.menu-row[aria-current="page"] .menu-index,
+.menu-row:hover .menu-arrow,
+.menu-row:focus-visible .menu-arrow,
+.menu-row[aria-current="page"] .menu-arrow {
+  color: var(--flame);
 }
 
 .menu-row:hover .menu-arrow {
-  opacity: 1;
-  transform: translate(0, 0);
+  transform: translate(3px, -3px);
 }
 
-.menu-aside {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.25rem, 3vh, 1.85rem);
-}
-
-@media (min-width: 900px) {
-  .menu-aside {
-    padding-top: 2.4rem;
+@media (hover: hover) {
+  .menu-row:hover {
+    padding-left: 0.6rem;
   }
 }
 
-.menu-aside-block {
+/* The button, the address and the social links */
+.menu-aside {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1.25rem;
+  margin-top: auto;
+  animation: menu-rise 0.6s var(--ease-out-expo) both;
+  animation-delay: calc(0.12s + var(--i, 0) * 0.04s);
 }
 
-.menu-aside-value {
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--bone-70);
-  text-decoration: none;
+.menu-cta {
+  width: 100%;
+  justify-content: center;
+  padding-block: 1.15rem;
+}
+
+.menu-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.menu-email {
+  align-self: flex-start;
+  font-size: 1rem;
+  color: var(--bone);
+}
+
+.menu-where {
+  margin: 0;
+  font-family: var(--f-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bone-45);
 }
 
 .menu-socials {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.4rem;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.menu-social {
-  font-size: 0.92rem;
-  color: var(--bone-70);
-  text-decoration: none;
+@media (min-width: 760px) {
+  .menu-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    align-content: center;
+    align-items: center;
+    gap: clamp(3rem, 7vw, 6rem);
+  }
+
+  .menu-aside {
+    margin-top: 0;
+    gap: 1.75rem;
+  }
+
+  .menu-row {
+    min-height: 72px;
+  }
+
+  .menu-label {
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+  }
+}
+
+/* A phone on its side has little height: tighten the rows so the list fits */
+@media (max-height: 560px) {
+  .menu-row {
+    min-height: 48px;
+  }
+
+  .menu-label {
+    font-size: 1.5rem;
+  }
+}
+
+/* While it is open the bar sits on the menu, not on a frosted panel of its
+   own, and the scroll hairline has nothing to measure. */
+.nav-bar[data-menu="open"] {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+
+.nav-bar[data-menu="open"] .nav-progress {
+  opacity: 0;
 }
 
 /* Hamburger */
@@ -897,9 +1011,10 @@ html.lenis body {
 }
 
 /*
-  Hidden from 960px — the same breakpoint where .nav-links appears, so
-  there is exactly one way to navigate at every width and never two. The
-  overlay it opens only duplicated the links already on screen.
+  Hidden from 1040px (the nav breakpoint) — the same width where .nav-links
+  and .nav-cta appear, so there is exactly one way to navigate at every
+  width and never two. The menu it opens only duplicated the links already
+  on screen.
 
   The hide sits on a plain wrapper around the Magnetic div, not on the
   button: hiding the button alone left the Magnetic div in the flex row
@@ -912,7 +1027,7 @@ html.lenis body {
   align-items: center;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1040px) {
   .burger-wrap {
     display: none;
   }
@@ -1206,6 +1321,36 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
   width: 1px;
   height: 48px;
   background: var(--flame);
+  transform-origin: top;
+  animation: scroll-cue-draw 2.2s ease-in-out infinite;
+}
+
+/* Grows down from the top, then shrinks away toward the bottom */
+@keyframes scroll-cue-draw {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+
+  50.01% {
+    transform-origin: bottom;
+  }
+
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue-line {
+    animation: none;
+  }
 }
 
 @media (max-width: 1279px) {
@@ -3283,10 +3428,20 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
 /* ═══════════ Case study page ═══════════
    Everything here reuses the site's tokens. Media sits in a browser-style
    frame so screenshots read as software rather than loose images. */
+/* Fills the screen like every other page's first screen (see .svc-hero). */
 .case-hero {
   position: relative;
-  padding-top: calc(84px + clamp(3rem, 9vh, 6.5rem));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-top: calc(84px + clamp(1.5rem, 4vh, 3rem));
   padding-bottom: clamp(3rem, 7vh, 5rem);
+}
+
+.case-hero > .shell {
+  width: 100%;
 }
 
 /*
@@ -4468,10 +4623,26 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
    tag, faq-*, work-card, case-outro). Only what those can't express lives
    here. */
 
+/*
+  The first screen of every page but the home page fills the screen. 100svh is
+  the height with a phone's address bar showing, so the bottom is never cut
+  off by it; the 100vh line is for browsers too old to know svh. min-height,
+  not height: on a short window the words are never clipped, the screen just
+  grows. The content sits in the middle of what is left under the fixed bar.
+*/
 .svc-hero {
   position: relative;
-  padding-top: calc(84px + clamp(2rem, 6vh, 4.5rem));
-  padding-bottom: clamp(3.5rem, 9vh, 6.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding-top: calc(84px + clamp(1rem, 3vh, 2.5rem));
+  padding-bottom: clamp(3.5rem, 9vh, 6rem);
+}
+
+.svc-hero > .shell {
+  width: 100%;
 }
 
 /* Breadcrumb trail */
@@ -4514,31 +4685,35 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
 }
 
 /* First screen: words left, a panel (or the portrait) right */
-.svc-hero-grid,
-.svc-about-grid {
+.svc-hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: clamp(2.5rem, 6vw, 4rem);
-  align-items: start;
+  align-items: center;
 }
 
 @media (min-width: 960px) {
   .svc-hero-grid {
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.9fr);
-    gap: clamp(3rem, 6vw, 6rem);
-  }
-
-  .svc-about-grid {
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.8fr);
     gap: clamp(3rem, 6vw, 6rem);
   }
 }
 
+/* The status line under a first screen's paragraph ("Booking new builds") */
+.svc-kicker {
+  margin-top: 1.5rem;
+}
+
+/*
+  The headline's size follows the screen's height as well as its width: on a
+  short laptop screen a four-line headline at the width-only size is taller
+  than the screen it is meant to fit inside.
+*/
 .svc-title {
   margin-top: clamp(1.25rem, 3vh, 1.75rem);
   font-family: var(--f-display), sans-serif;
   font-weight: 800;
-  font-size: clamp(2rem, 4.6vw, 3.9rem);
+  font-size: clamp(2rem, min(4.6vw, 7.2vh), 3.9rem);
   line-height: 1.06;
   letter-spacing: -0.03em;
   color: var(--bone);
@@ -4569,8 +4744,42 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
   margin-top: clamp(1.75rem, 4vh, 2.5rem);
 }
 
+/*
+  The portrait is sized by the screen's height, not just its column's width:
+  a 4:5 photo in a wide column is taller than a laptop screen, and the first
+  screen is meant to fit one. Its height comes to the screen's less the bar,
+  the trail and the padding; on a phone, where it sits under the words, it
+  simply takes the column.
+*/
 .svc-about-photo {
+  width: min(100%, 22rem);
   margin: 0;
+}
+
+/* On a phone the portrait lives in the story under the first screen (see
+   AboutHero and Portrait); from 960px up it sits beside the words and the
+   story's copy of it is hidden. */
+.svc-about-photo-hero {
+  display: none;
+}
+
+.svc-about-photo-story {
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+@media (min-width: 960px) {
+  .svc-about-photo {
+    width: min(100%, calc((100svh - 17rem) * 0.8));
+    margin-inline-start: auto;
+  }
+
+  .svc-about-photo-hero {
+    display: block;
+  }
+
+  .svc-about-photo-story {
+    display: none;
+  }
 }
 
 .svc-about-photo figcaption {
@@ -4618,6 +4827,40 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
 .svc-aside-link {
   font-size: 0.9rem;
   color: var(--flame);
+}
+
+/*
+  On a short laptop screen (two columns wide, under about 780px tall) the
+  first screen is tightened rather than left to run past the bottom: less air
+  under the trail and above the scroll cue, a closer panel, a snugger
+  paragraph. Taller screens are untouched.
+*/
+@media (min-width: 960px) and (max-height: 780px) {
+  .svc-hero {
+    padding-bottom: 3rem;
+  }
+
+  .svc-crumbs {
+    margin-bottom: 1.25rem;
+  }
+
+  .svc-lede {
+    line-height: 1.65;
+  }
+
+  .svc-aside {
+    padding: 1.5rem;
+  }
+
+  .svc-fit {
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .svc-aside-foot {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
 }
 
 .svc-price {
@@ -4787,6 +5030,19 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
   margin-top: 1rem;
 }
 
+/* The About story: two paragraphs set larger than card copy, each under a label */
+.svc-story-grid {
+  margin-top: clamp(2.5rem, 6vh, 4rem);
+}
+
+.svc-story {
+  max-width: 54ch;
+  margin: 1rem 0 0;
+  font-size: clamp(1.02rem, 1.5vw, 1.15rem);
+  line-height: 1.8;
+  color: var(--bone-70);
+}
+
 .svc-tags {
   display: flex;
   flex-wrap: wrap;
@@ -4808,123 +5064,6 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
   margin-top: 0.25rem;
 }
 
-/* Related work reuses the case pages' card grid; with two or three cards
-   it should share the row rather than leave an empty column. */
-.svc-related.case-more {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-}
-
-/* FAQ: native <details>, styled with the home page's accordion classes */
-.svc-faq {
-  margin-top: clamp(2.5rem, 6vh, 4rem);
-}
-
-.svc-faq-item summary {
-  list-style: none;
-}
-
-.svc-faq-item summary::-webkit-details-marker {
-  display: none;
-}
-
-.svc-faq-item summary:focus-visible {
-  outline: 2px solid var(--flame);
-  outline-offset: 4px;
-  border-radius: 4px;
-}
-
-.svc-faq-item .faq-text,
-.svc-faq-item .faq-answer {
-  margin: 0;
-}
-
-/* The home page's numerals are a deliberately faint 15%; these sit in the
-   open on the page, and an audit counts them as text. */
-.svc-faq-item .faq-num {
-  color: var(--bone-45);
-}
-
-.svc-faq-item[open] .faq-num,
-.svc-faq-item summary:hover .faq-num {
-  color: var(--flame);
-}
-
-.svc-faq-item[open] .faq-text,
-.svc-faq-item summary:hover .faq-text {
-  color: var(--bone);
-}
-
-.svc-faq-item[open] .faq-toggle {
-  transform: rotate(135deg);
-  background: var(--flame);
-  border-color: var(--flame);
-  color: var(--ink);
-}
-
-/* Other services */
-.svc-more {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(1rem, 2vw, 1.5rem);
-  margin: clamp(2.5rem, 6vh, 4rem) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-@media (min-width: 700px) {
-  .svc-more {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1100px) {
-  .svc-more {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.svc-more li {
-  display: flex;
-}
-
-.svc-more-link {
-  position: relative;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 0.6rem;
-  padding: clamp(1.4rem, 2.4vw, 2rem);
-  padding-right: clamp(3rem, 5vw, 3.75rem);
-  text-decoration: none;
-  color: inherit;
-}
-
-.svc-more-name {
-  font-family: var(--f-display), sans-serif;
-  font-weight: 700;
-  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: var(--bone);
-}
-
-.svc-more-link .svc-card-body {
-  margin-top: 0;
-}
-
-.svc-more-arrow {
-  position: absolute;
-  top: clamp(1.4rem, 2.4vw, 2rem);
-  right: clamp(1.4rem, 2.4vw, 2rem);
-  color: var(--bone-45);
-  transition: transform 0.4s var(--ease-out-expo), color 0.4s var(--ease-out-expo);
-}
-
-.svc-more-link:hover .svc-more-arrow {
-  transform: translate(3px, -3px);
-  color: var(--flame);
-}
-
 /* Closing call to action */
 .svc-cta-copy {
   max-width: 52ch;
@@ -4932,49 +5071,7 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
   text-align: center;
 }
 
-/* About: where I've worked, and where to find me */
-.svc-roles {
-  display: grid;
-  gap: clamp(1rem, 2vw, 1.5rem);
-  margin: clamp(2.5rem, 6vh, 4rem) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.svc-role {
-  padding: clamp(1.5rem, 2.8vw, 2.25rem);
-}
-
-.svc-role .mono-label {
-  display: block;
-}
-
-.svc-role .svc-card-title {
-  margin-top: 0.75rem;
-}
-
-.svc-role-org {
-  font-weight: 600;
-  color: var(--bone-45);
-}
-
-.svc-role .svc-tags {
-  margin-top: 1.25rem;
-}
-
-.svc-elsewhere {
-  display: grid;
-  gap: 1.5rem;
-  align-items: center;
-  padding: clamp(1.75rem, 3.5vw, 2.75rem);
-}
-
-@media (min-width: 900px) {
-  .svc-elsewhere {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
-  }
-}
-
+/* About: where to find me */
 .svc-links {
   display: flex;
   flex-wrap: wrap;
@@ -4991,6 +5088,19 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
   min-height: 44px;
   font-size: 0.95rem;
   color: var(--bone-70);
+}
+
+.svc-links-lg {
+  gap: 0.25rem 2.5rem;
+  margin-top: clamp(2rem, 5vh, 3rem);
+}
+
+.svc-links-lg a {
+  font-family: var(--f-display), sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.05rem, 2vw, 1.4rem);
+  letter-spacing: -0.01em;
+  color: var(--bone);
 }
 
 /* Footer: a link to every service page from every page */
@@ -5032,24 +5142,24 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
 }
 
 /* 404 page: outlined numerals behind the headline, then the site's own lists */
-.nf-hero {
-  overflow: hidden;
-}
-
 .nf-code {
-  position: absolute;
-  top: calc(84px + 0.5rem);
-  right: var(--gutter);
   margin: 0;
   font-family: var(--f-display), sans-serif;
   font-weight: 800;
-  font-size: clamp(7rem, 26vw, 19rem);
+  font-size: clamp(7rem, 22vw, 17rem);
   line-height: 0.8;
   letter-spacing: -0.06em;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(244, 241, 234, 0.14);
+  -webkit-text-stroke: 1px rgba(244, 241, 234, 0.2);
   pointer-events: none;
   user-select: none;
+}
+
+@media (max-width: 959px) {
+  /* Under the words on a phone it is texture, not a second column */
+  .nf-code {
+    font-size: clamp(5.5rem, 28vw, 9rem);
+  }
 }
 
 .nf-columns {
@@ -5096,6 +5206,288 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--bone-45);
+}
+
+/* Index pages: projects, services, packages, FAQs, contact */
+.page-title {
+  max-width: 24ch;
+}
+
+/* A project's pitch line, under its name and kind */
+.work-card-pitch {
+  grid-column: 1 / -1;
+  margin-top: 0.15rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--bone-45);
+}
+
+/* "See all" under a section, on the home page and on the index pages */
+.sect-more {
+  margin: clamp(2rem, 4vw, 2.75rem) 0 0;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.sect-more a {
+  color: var(--flame);
+}
+
+/* The FAQ page's topic chips */
+.faq-topics ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.faq-topics .tag {
+  min-height: 44px;
+  text-decoration: none;
+}
+
+.faq-group {
+  scroll-margin-top: 84px;
+}
+
+/* A project's role, under its pitch (the detailed card) */
+.work-card-role {
+  grid-column: 1 / -1;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--bone-45);
+}
+
+.work-card-role b {
+  margin-right: 0.35rem;
+  font-family: var(--f-mono), monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--flame);
+}
+
+/*
+  Services in an even grid: the cards in a list with any left out (the other
+  five on a service page) can't fill the bento, so they flow into as many even
+  columns as fit. These come after the bento's own rules, at the same
+  specificity as its tablet overrides, so they win.
+*/
+.service-grid.is-even {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  grid-auto-rows: auto;
+}
+
+.service-grid.is-even > .service-cell {
+  grid-column: auto;
+  grid-row: auto;
+}
+
+/* No heading above the cards (a page whose first screen already says what it is) */
+.service-grid.is-flush {
+  margin-top: 0;
+}
+
+/* "Which one do I need?": a situation on the left, the service for it on the right */
+.fit-list {
+  margin: clamp(2.5rem, 6vh, 4rem) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+.fit-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.5rem clamp(1rem, 3vw, 2rem);
+  align-items: baseline;
+  padding-block: clamp(1.1rem, 2.4vw, 1.6rem);
+  border-bottom: 1px solid var(--rule);
+  color: inherit;
+  text-decoration: none;
+}
+
+.fit-text {
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
+  line-height: 1.5;
+  color: var(--bone-70);
+  transition: color 0.4s var(--ease-out-expo);
+}
+
+.fit-go {
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--f-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--flame);
+}
+
+.fit-go svg {
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.fit-row:hover .fit-text {
+  color: var(--bone);
+}
+
+.fit-row:hover .fit-go svg {
+  transform: translateX(4px);
+}
+
+@media (min-width: 760px) {
+  .fit-row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .fit-go {
+    grid-column: auto;
+  }
+}
+
+/* Where an FAQ answer points on to */
+.faq-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.5rem;
+  margin: 0;
+  /* Indented to the question text, like the answer above it */
+  padding-left: calc(2ch + clamp(0.9rem, 2.5vw, 2rem));
+  padding-bottom: clamp(1.5rem, 3vw, 2rem);
+  font-size: 0.85rem;
+  color: var(--flame);
+}
+
+.faq-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+}
+
+/* The FAQs page's one button that opens or closes every answer */
+.faq-tools {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.faq-expand {
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 99px;
+  background: none;
+  font-family: var(--f-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bone-70);
+  cursor: pointer;
+  transition: color 0.3s var(--ease-out-expo), border-color 0.3s var(--ease-out-expo);
+}
+
+.faq-expand:hover,
+.faq-expand:focus-visible {
+  color: var(--flame);
+  border-color: var(--flame-line);
+}
+
+/* The package comparison table: scrolls sideways in its own frame on a narrow screen */
+.pkg-compare-wrap {
+  margin-top: clamp(2.5rem, 6vh, 4rem);
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: rgba(18, 18, 23, 0.55);
+}
+
+.pkg-compare-wrap:focus-visible {
+  outline: 2px solid var(--flame);
+  outline-offset: 2px;
+}
+
+.pkg-compare {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.pkg-compare th,
+.pkg-compare td {
+  padding: 1rem clamp(0.75rem, 2vw, 1.5rem);
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--bone-70);
+}
+
+.pkg-compare tbody tr:last-child th,
+.pkg-compare tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.pkg-compare thead th {
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+/* The feature names stay put while the packages scroll beside them */
+.pkg-compare tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: 38%;
+  min-width: 200px;
+  background: var(--ink-raised);
+  font-weight: 500;
+  text-align: left;
+  color: var(--bone);
+}
+
+.pkg-compare thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--ink-raised);
+}
+
+.pkg-compare-name {
+  display: block;
+  font-family: var(--f-display), sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: var(--bone);
+}
+
+.pkg-compare-price {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--f-mono), monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--flame);
+}
+
+.pkg-compare .is-featured {
+  background: var(--flame-soft);
+}
+
+.pkg-yes {
+  color: var(--flame);
+}
+
+.pkg-no {
+  color: var(--bone-30);
 }
 
 /* Home: each service card links to its own page. The link's ::after covers
