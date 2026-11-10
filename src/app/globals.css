@@ -616,9 +616,10 @@ html.lenis body {
 }
 
 /* ═══════════ Nav ═══════════ */
-/* The clock needs the room on a phone — the mark plus "WebForge"
-   still carries the brand on its own. */
-@media (max-width: 560px) {
+/* On a phone the bar is only the logo and the menu button, so the full
+   "WebForge Digital" fits down to about 350px. Narrower than that
+   "Digital" goes, and the mark plus "WebForge" still carry the brand. */
+@media (max-width: 349px) {
   .nav-digital {
     display: none;
   }
@@ -682,8 +683,11 @@ html.lenis body {
   color: var(--bone);
 }
 
+/* Hidden on phones (560px and under). The hero carries the same call to
+   action and the menu lists Contact, and a button here as well sat on top
+   of the logo's wordmark. From 561px there is room for it. */
 .nav-cta {
-  display: inline-flex;
+  display: none;
   align-items: center;
   padding: 0.7rem 1.25rem;
   border-radius: 99px;
@@ -707,35 +711,9 @@ html.lenis body {
   flex-shrink: 0;
 }
 
-.nav-cta-short {
-  display: none;
-}
-
-@media (max-width: 560px) {
+@media (min-width: 561px) {
   .nav-cta {
-    padding: 0.6rem 0.95rem;
-    font-size: 0.62rem;
-  }
-
-  .nav-cta-long {
-    display: none;
-  }
-
-  .nav-cta-short {
-    display: inline;
-  }
-}
-
-/*
-  Very narrow phones. The logo link is white-space: nowrap, so it cannot
-  shrink inside its flex cell — at 320px it ran five pixels under the
-  button and pushed the burger past the gutter. "Digital" is already gone
-  by 560px; below 360 the wordmark goes too and the mark carries the
-  brand on its own.
-*/
-@media (max-width: 360px) {
-  .nav-word {
-    display: none;
+    display: inline-flex;
   }
 }
 
@@ -1016,11 +994,17 @@ html.lenis body {
   }
 }
 
+/*
+  Sized by whichever of the window's width and height is the tighter limit.
+  A width-only size left the headline too big for a short laptop window (the
+  old fix was a max-height media query, which still let the break land
+  differently from one window to the next).
+*/
 .hero-headline {
-  margin-top: clamp(1.5rem, 3.5vh, 2.25rem);
+  margin-top: clamp(1.25rem, 3.2svh, 2rem);
   font-family: var(--f-display), sans-serif;
   font-weight: 800;
-  font-size: clamp(2.3rem, 5.4vw, 5rem);
+  font-size: clamp(2.1rem, min(5vw, 9svh), 5rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
   color: var(--bone);
@@ -1030,13 +1014,21 @@ html.lenis body {
   font-size: 1.04em;
 }
 
+/* Each phrase is its own line, so a phrase can only wrap inside itself.
+   `balance` makes that wrap even ("Websites, / portals," rather than a
+   long line and a stub) on screens too narrow for the phrase. */
+.hero-line {
+  display: block;
+  text-wrap: balance;
+}
+
 .hero-cta-row {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 1.5rem;
-  margin-top: clamp(1.5rem, 3.5vh, 2.25rem);
+  margin-top: clamp(1.5rem, 3.6svh, 2.25rem);
 }
 
 .hero-proofline {
@@ -1045,15 +1037,20 @@ html.lenis body {
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.6rem 1.75rem;
-  margin-top: clamp(2rem, 6vh, 3.25rem);
+  margin-top: clamp(1.75rem, 5svh, 3rem);
 }
 
+/* Two even lines on a wide screen rather than three. The mesh behind the
+   text is brightest at the crests; the dark halo keeps the words clear of
+   it without drawing a visible box. */
 .hero-lede {
-  max-width: 44ch;
-  margin-top: clamp(1.25rem, 3vh, 1.75rem);
+  max-width: 66ch;
+  margin-top: clamp(1.1rem, 2.6svh, 1.6rem);
   font-size: clamp(0.95rem, 1.2vw, 1.1rem);
-  line-height: 1.75;
-  color: var(--bone-45);
+  line-height: 1.7;
+  color: var(--bone-70);
+  text-wrap: balance;
+  text-shadow: 0 0 22px rgba(8, 8, 10, 0.95), 0 0 6px rgba(8, 8, 10, 0.7);
 }
 
 .hero-quiet-link {
@@ -1082,10 +1079,42 @@ html.lenis body {
   color: var(--flame);
 }
 
-/* Short viewports: rein the type in so nothing crowds the fold */
-@media (max-height: 780px) and (min-width: 900px) {
+/*
+  Phones. Too narrow for "Websites, portals," on one line, so the first two
+  phrases stop being separate lines and flow as one balanced block
+  ("Websites, / portals, and / web apps"); the serif line stays on its own.
+  Balanced, no word can be left alone on a line at any width. The two
+  actions stack instead of squeezing side by side, and the three promises
+  become a short checklist rather than a ragged wrapped row.
+*/
+@media (max-width: 639px) {
   .hero-headline {
-    font-size: clamp(2.2rem, 4.2vw, 4rem);
+    /* "portals, and" is about 9.2em wide; 9.2vw keeps it inside the
+       column with a few percent to spare from 320px up. */
+    font-size: clamp(1.7rem, 9.2vw, 2.9rem);
+    text-wrap: balance;
+  }
+
+  .hero-line:not(.serif-em) {
+    display: inline;
+  }
+
+  .hero-lede {
+    max-width: 34ch;
+  }
+
+  .hero-cta-row {
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+
+  .hero-proofline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+    width: fit-content;
+    margin-inline: auto;
+    margin-top: 2rem;
   }
 }
 
@@ -1150,6 +1179,50 @@ html.lenis body {
 @media (max-width: 639px) {
   .service-cell {
     grid-column: 1 / -1;
+  }
+}
+
+/*
+  Tablets. The 12-column bento puts the last three cells four columns wide,
+  which is only about 130px of text at 640px: "E-Commerce" alone needs 200,
+  so titles broke mid-word ("E-COMMERC / E") on an iPad held upright, and
+  "Automation" did too in the cell above. Two even columns instead: the hero
+  beside the two stacked cells, then two cells across, then one full-width.
+  From 900px the original bento has room again. These override the
+  coordinates the markup sets, so they have to be more specific than
+  .service-cell.
+*/
+@media (min-width: 640px) and (max-width: 899px) {
+  .service-grid > .service-cell:nth-child(1) {
+    grid-column: 1 / span 6;
+  }
+
+  .service-grid > .service-cell:nth-child(2),
+  .service-grid > .service-cell:nth-child(3) {
+    grid-column: 7 / span 6;
+  }
+
+  .service-grid > .service-cell:nth-child(4) {
+    grid-column: 1 / span 6;
+    grid-row: 3;
+  }
+
+  .service-grid > .service-cell:nth-child(5) {
+    grid-column: 7 / span 6;
+    grid-row: 3;
+  }
+
+  .service-grid > .service-cell:nth-child(6) {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+
+  /* The hero card is half the width here, and "Integration" at its usual
+     22px needs more than the card has below about 730px. Reaches the usual
+     size at 770px and holds it to 900, so nothing jumps at the breakpoint.
+     The extra class makes this win over the base rule further down. */
+  .service-grid .service-card.is-hero .service-title {
+    font-size: clamp(1.1rem, 2.9vw, 1.4rem);
   }
 }
 
@@ -1305,6 +1378,29 @@ html.lenis body {
 
   50% {
     transform: translateY(-16px);
+  }
+}
+
+/*
+  The copy's width above is "card width minus the art's width". Below
+  1280px that leaves the text 300px or less (about 20px on a phone, so the
+  words ran one to a line down a 900px-tall card). There the art leaves the
+  corner and sits under the copy instead, and the copy keeps the whole card
+  width. `order` moves it past the copy, which comes later in the markup.
+*/
+@media (max-width: 1279px) {
+  .service-card.is-hero .service-copy {
+    max-width: none;
+  }
+
+  .service-hero-art {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    order: 1;
+    align-self: flex-end;
+    width: clamp(150px, 48%, 220px);
+    margin-top: 1.25rem;
   }
 }
 
@@ -3082,6 +3178,72 @@ html.lenis body {
   gap: 1.5rem;
   padding-top: 1.75rem;
   border-top: 1px solid var(--rule);
+}
+
+.footer-socials {
+  display: flex;
+  gap: 0.7rem;
+}
+
+/*
+  Phones. Five links in a wrapping row left "Contact" alone on a second
+  line, at a size too small to hit with a thumb, and the small print ran as
+  four stacked rows with the back-to-top button stranded at the bottom. The
+  links become two even columns of 44px rows (the column order keeps the
+  reading order), and the small print tucks into a grid with the button
+  beside the first two lines.
+*/
+@media (max-width: 639px) {
+  .footer-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+  }
+
+  .footer-links {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(3, auto);
+    column-gap: 1.5rem;
+    row-gap: 0;
+    font-size: 0.75rem;
+  }
+
+  .footer-links a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .footer-bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "copy up"
+      "loc  up"
+      "tech tech";
+    align-items: center;
+    gap: 0.6rem 1rem;
+    padding-top: 1.5rem;
+  }
+
+  .footer-copy {
+    grid-area: copy;
+  }
+
+  .footer-loc {
+    grid-area: loc;
+  }
+
+  .footer-tech {
+    grid-area: tech;
+    margin-top: 0.5rem;
+  }
+
+  .footer-up {
+    grid-area: up;
+  }
 }
 
 /* ═══════════ Accessibility ═══════════ */

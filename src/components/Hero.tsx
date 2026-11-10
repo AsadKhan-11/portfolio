@@ -9,9 +9,11 @@ import { useIntroDone } from "./intro";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/* The offer, in four short promises, so the first screen answers
-   "what do I get and how risky is it?" without any scrolling. */
-const TRUST = ["Fixed quote up front", "Live in 2–6 weeks", "You own the code", "Reply within a day"];
+/* The offer, in three short promises, so the first screen answers
+   "what do I get and how risky is it?" without any scrolling. A fourth,
+   "reply within a day", is the reply-time figure in the stats strip right
+   under the hero, so it only crowded the first screen by repeating it. */
+const TRUST = ["Fixed quote up front", "Live in 2–6 weeks", "You own the code"];
 
 /* Entrance beats, counted from the moment the intro curtain clears */
 const T = {
@@ -95,10 +97,23 @@ export default function Hero() {
             Booking new builds · 2026
           </motion.p>
 
+          {/*
+            Three fixed lines instead of one sentence left to wrap. Left to
+            wrap, the break depended on the window: on a short laptop screen
+            the first line took "Websites, portals, and web" and stranded
+            "apps" alone beneath it. Each phrase is its own block now, so it
+            can only ever break inside itself (see .hero-line). The literal
+            spaces keep the heading's text a single sentence for anything
+            that reads it without the layout.
+          */}
           <h1 className="hero-headline">
-            <MaskWords text="Websites, portals, and web apps" delay={T.head} play={ready} />
-            <br />
-            <span className="serif-em" style={{ color: "var(--flame)" }}>
+            <span className="hero-line">
+              <MaskWords text="Websites, portals," delay={T.head} play={ready} />
+            </span>{" "}
+            <span className="hero-line">
+              <MaskWords text="and web apps" delay={T.head + 0.12} play={ready} />
+            </span>{" "}
+            <span className="hero-line serif-em" style={{ color: "var(--flame)" }}>
               <MaskWords text="that win you clients." delay={T.head + 0.35} play={ready} />
             </span>
           </h1>

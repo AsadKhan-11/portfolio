@@ -109,7 +109,7 @@ export default function Footer() {
             ))}
           </nav>
 
-          <div style={{ display: "flex", gap: "0.7rem" }}>
+          <div className="footer-socials">
             {SOCIALS.map(({ I, href, l }) => (
               <Magnetic key={l} strength={0.4}>
                 <a
@@ -157,16 +157,21 @@ export default function Footer() {
         </a>
 
         <div className="footer-bottom">
-          <span className="mono-label">© {year} WebForge Digital</span>
-          <span className="mono-label" suppressHydrationWarning>
+          <span className="footer-copy mono-label">© {year} WebForge Digital</span>
+          <span className="footer-loc mono-label" suppressHydrationWarning>
             Lahore, PK · {clock}
           </span>
-          <span className="mono-label">Next.js · Three.js · Framer Motion</span>
-          <Magnetic strength={0.3}>
-            <a href="#home" className="social" aria-label="Back to top">
-              <FiArrowUp size={16} />
-            </a>
-          </Magnetic>
+          <span className="footer-tech mono-label">Next.js · Three.js · Framer Motion</span>
+          {/* A plain wrapper to place on the phone grid: Magnetic moves its
+              own div around under the cursor, which is no place for a
+              grid-area. */}
+          <div className="footer-up">
+            <Magnetic strength={0.3}>
+              <a href="#home" className="social" aria-label="Back to top">
+                <FiArrowUp size={16} />
+              </a>
+            </Magnetic>
+          </div>
         </div>
       </div>
     </footer>

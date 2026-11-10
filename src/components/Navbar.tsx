@@ -124,9 +124,18 @@ export default function Navbar() {
       >
         <div className="nav-inner">
           <Magnetic strength={0.25}>
+            {/*
+              The link is named by aria-label rather than by its contents:
+              "Digital" drops out of the visible text below 350px, and the
+              mark's alt would otherwise be read out as well as the words
+              next to it ("WebForge Digital logo WebForge Digital"). The
+              link should always carry the full name. The alt is for image
+              search and audits, which count an empty one as missing.
+            */}
             <a
               href={to("#home")}
               onClick={() => setOpen(false)}
+              aria-label="WebForge Digital, home"
               style={{
                 fontFamily: "var(--f-display)",
                 fontWeight: 800,
@@ -143,14 +152,14 @@ export default function Navbar() {
             >
               <Image
                 src="/brand/mark-light.png"
-                alt=""
+                alt="WebForge Digital logo"
                 className="nav-mark"
                 width={32}
                 height={19}
                 priority
                 style={{ display: "block" }}
               />
-              <span className="nav-word">WebForge</span>
+              <span>WebForge</span>
               <span
                 className="nav-digital"
                 style={{ color: "var(--bone-45)", fontWeight: 600 }}
@@ -168,9 +177,11 @@ export default function Navbar() {
                 </a>
               ))}
             </nav>
+            {/* Hidden on phones (see .nav-cta). There the hero carries the
+                same call to action and the menu lists Contact, so the bar
+                stays as logo and menu button instead of crowding the logo. */}
             <a href={to("#contact")} className="nav-cta" data-cursor="Talk">
-              <span className="nav-cta-long">Start a project</span>
-              <span className="nav-cta-short">Get a quote</span>
+              Start a project
             </a>
             <span
               className="mono-label nav-clock"
