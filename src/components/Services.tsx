@@ -26,6 +26,12 @@ type Service = {
   hero?: boolean;
   /** Decorative art filling the hero cell's spare space. */
   art?: string;
+  /**
+   * What the art shows. The art itself is hidden from screen readers (it is
+   * decoration), but an empty alt reads as a missing one to image search and
+   * SEO audits, so it says what is in the picture.
+   */
+  artAlt?: string;
 };
 
 const SERVICES: Service[] = [
@@ -40,6 +46,8 @@ const SERVICES: Service[] = [
     rowSpan: 2,
     hero: true,
     art: "/ai-integration-bot.png",
+    artAlt:
+      "Friendly AI robot holding a holographic panel that links an AI chip to search and database icons",
   },
   {
     n: "02",
@@ -119,7 +127,7 @@ export default function Services() {
         </div>
 
         <Stagger className="service-grid" gap={0.08}>
-          {SERVICES.map(({ n, title, copy, Icon, colStart, colSpan, rowStart, rowSpan, hero, art }) => (
+          {SERVICES.map(({ n, title, copy, Icon, colStart, colSpan, rowStart, rowSpan, hero, art, artAlt }) => (
             <StaggerItem
               key={n}
               className="service-cell"
@@ -140,7 +148,7 @@ export default function Services() {
                   <span className="service-hero-art" aria-hidden="true">
                     <Image
                       src={art}
-                      alt=""
+                      alt={artAlt ?? ""}
                       fill
                       sizes="(max-width: 640px) 55vw, 280px"
                       style={{ objectFit: "contain" }}

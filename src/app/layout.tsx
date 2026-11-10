@@ -37,12 +37,22 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
+/*
+  Search shows about 60 characters of a title and about 160 of a description,
+  and SEO audits flag anything outside 50–60 and 120–160. The old title was 40
+  characters (room left unused) and the old description 173 (cut mid-sentence).
+  The title also leads with the terms people search for, "web development" and
+  "design", rather than the studio's own label for itself.
+*/
+const TITLE = "WebForge Digital · Full Stack Web Development & Design";
+const DESCRIPTION =
+  "WebForge Digital is the full stack web studio of Asad Khan. Websites, portals and web apps, designed and built under one roof with React, Next.js and Node.js.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
-  title: "WebForge Digital · Full Stack Web Studio",
-  description:
-    "WebForge Digital is the full stack studio of Asad Khan. Design and engineering under one roof: fast, considered web products built with React, Next.js, Node.js, and MongoDB.",
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: [
     "WebForge Digital",
     "Web Studio",
@@ -72,7 +82,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "WebForge Digital · Full Stack Web Studio",
+    title: TITLE,
     description:
       "Design and engineering under one roof. Fixed quotes, honest timelines, and web products you fully own.",
     type: "website",
@@ -88,7 +98,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "WebForge Digital · Full Stack Web Studio",
+    title: TITLE,
     description:
       "Design and engineering under one roof. Fixed quotes, honest timelines, and web products you fully own.",
     images: ["/brand/og.jpg"],

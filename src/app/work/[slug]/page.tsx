@@ -26,6 +26,8 @@ export function generateStaticParams() {
 }
 
 const DESC_MAX = 155;
+const TITLE_MIN = 50;
+const TITLE_MAX = 60;
 
 /** Cut at a word boundary — a description ending "behind t…" reads broken. */
 function clamp(text: string, max = DESC_MAX) {
@@ -35,19 +37,41 @@ function clamp(text: string, max = DESC_MAX) {
 }
 
 /*
-  Google renders roughly 155 characters. `summary` is a full paragraph, so
-  it was being cut mid-sentence. The pitch is already written as one line
-  and says the most per character, so it leads and never gets trimmed;
-  everything after it is dropped a clause at a time to fit.
+  Google renders roughly 155 characters, and SEO audits want 120 to 160.
+  `summary` is a full paragraph, so it was being cut mid-sentence. The pitch
+  is already written as one line and says the most per character, so it leads
+  and never gets trimmed. After it comes the fullest ending that still fits:
+  a short pitch gets the long one, and a long pitch gets a shorter one rather
+  than none, which used to leave three pages under 120 characters.
 */
 function metaDescription(study: CaseStudy) {
-  const long = `${study.pitch} ${study.type}, ${study.year} — walkthroughs, screens and the thinking behind the build.`;
-  if (long.length <= DESC_MAX) return long;
-
-  const short = `${study.pitch} ${study.type}, ${study.year}.`;
-  if (short.length <= DESC_MAX) return short;
-
+  const lead = `${study.pitch} ${study.type}, ${study.year}`;
+  for (const tail of [
+    " — walkthroughs, screens and the thinking behind the build.",
+    " — screens and the thinking behind the build.",
+    " — walkthrough and screens.",
+    ".",
+  ]) {
+    if (lead.length + tail.length <= DESC_MAX) return lead + tail;
+  }
   return clamp(study.pitch);
+}
+
+/*
+  The name and what the thing is come first and are never cut. Search shows
+  about 60 characters and audits want 50 to 60, so when the title is short
+  the brand goes on the end to use the room, and only then. That keeps the
+  earlier rule intact: the brand can never push the words people search for
+  off the end of a long title.
+*/
+function caseTitle(study: CaseStudy) {
+  const base = `${study.title} — ${typeInSentence(study)} case study`;
+  if (base.length >= TITLE_MIN) return base;
+  for (const brand of [" · WebForge Digital", " · WebForge"]) {
+    const withBrand = base + brand;
+    if (withBrand.length >= TITLE_MIN && withBrand.length <= TITLE_MAX) return withBrand;
+  }
+  return base;
 }
 
 export async function generateMetadata({
@@ -61,14 +85,12 @@ export async function generateMetadata({
 
   /*
     "Aurelle" is a name nobody searches. Saying what it is earns the click
-    and gives the title a term with demand behind it.
-
-    No "· WebForge Digital" suffix: Google renders about 60 characters, and
-    eighteen of them spent on a brand nobody is searching either would push
-    the words that matter off the end. The site name is declared on the home
-    page instead, as WebSite schema, which is where Search reads it from.
+    and gives the title a term with demand behind it. The brand is not part
+    of the formula (see caseTitle): the site name is declared on the home
+    page as WebSite schema, which is where Search reads it from, and it is
+    only added here to fill a title that would otherwise run short.
   */
-  const title = `${study.title} — ${typeInSentence(study)} case study`;
+  const title = caseTitle(study);
   const cover = study.highlights[0].shot;
   const description = metaDescription(study);
 
