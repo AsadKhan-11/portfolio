@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 import { Magnetic } from "./animations";
-import { useIntroDone } from "./intro";
 import { CONTACT_EMAIL as EMAIL } from "@/lib/site";
 
 const MENU_SOCIALS = [
@@ -48,7 +47,6 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [clock, setClock] = useState("");
   const { scrollYProgress } = useScroll();
-  const ready = useIntroDone();
 
   /*
     The menu points at sections of the home page. From any other route
@@ -112,16 +110,12 @@ export default function Navbar() {
 
   return (
     <>
-      <motion.header
-        className="nav-bar"
-        data-scrolled={scrolled}
-        /* Fades in place once the intro curtain is clear — the intro's
-           anvil lands exactly on `.nav-mark`, so the bar must wait in
-           its final position, not slide into it. */
-        initial={{ opacity: 0 }}
-        animate={ready ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
-      >
+      {/* On a visit that gets the intro curtain, the bar waits at opacity 0
+          and fades in once the curtain is clear (html[data-intro] in
+          globals.css) — the anvil lands exactly on `.nav-mark`, so the bar
+          must wait in its final position, not slide into it. Everyone else
+          sees it in the first paint. */}
+      <header className="nav-bar" data-scrolled={scrolled}>
         <div className="nav-inner">
           <Magnetic strength={0.25}>
             {/*
@@ -223,7 +217,7 @@ export default function Navbar() {
           className="nav-progress"
           style={{ scaleX: scrollYProgress, width: "100%" }}
         />
-      </motion.header>
+      </header>
 
       <AnimatePresence>
         {open && (

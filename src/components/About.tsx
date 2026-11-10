@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { FiArrowRight } from "react-icons/fi";
 import { Reveal, SplitText } from "./animations";
 import ImageSlot from "./ImageSlot";
 
@@ -97,6 +99,16 @@ export default function About() {
                 week, and a finished product you fully own. No hand-offs
                 between departments, no surprises on the invoice.
               </p>
+            </Reveal>
+
+            <Reveal delay={0.28}>
+              <Link
+                href="/about"
+                className="link-sweep hero-quiet-link"
+                style={{ marginTop: "2rem" }}
+              >
+                Read the full story <FiArrowRight />
+              </Link>
             </Reveal>
           </div>
         </div>

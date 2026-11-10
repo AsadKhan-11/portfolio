@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FiArrowUp, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
 import { FaXTwitter } from "react-icons/fa6";
 import { Magnetic, Marquee } from "./animations";
+import { SERVICES, serviceHref } from "@/lib/services";
 
-const LINKS = [
+/* `page` links go to a page of their own; the rest are sections of the home page. */
+const LINKS: { label: string; href: string; page?: boolean }[] = [
   { label: "Work", href: "#work" },
   { label: "Services", href: "#services" },
   { label: "Packages", href: "#packages" },
-  { label: "Profile", href: "#about" },
+  { label: "About", href: "/about", page: true },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -102,11 +105,17 @@ export default function Footer() {
       <div className="shell" style={{ paddingBlock: "clamp(3rem, 8vh, 5rem)" }}>
         <div className="footer-top">
           <nav className="footer-links">
-            {LINKS.map((l) => (
-              <a key={l.label} href={onHome ? l.href : `/${l.href}`} className="link-sweep">
-                {l.label}
-              </a>
-            ))}
+            {LINKS.map((l) =>
+              l.page ? (
+                <Link key={l.label} href={l.href} className="link-sweep">
+                  {l.label}
+                </Link>
+              ) : (
+                <a key={l.label} href={onHome ? l.href : `/${l.href}`} className="link-sweep">
+                  {l.label}
+                </a>
+              ),
+            )}
           </nav>
 
           <div className="footer-socials">
@@ -125,6 +134,16 @@ export default function Footer() {
             ))}
           </div>
         </div>
+
+        {/* One link to every service page from every page of the site. */}
+        <nav className="footer-services" aria-label="Services">
+          <span className="mono-label">Services</span>
+          {SERVICES.map((s) => (
+            <Link key={s.slug} href={serviceHref(s.slug)} className="link-sweep">
+              {s.name}
+            </Link>
+          ))}
+        </nav>
 
         {/* Oversized outlined wordmark, centred, single line. Sits
             still for 2s, then idles into a per-letter wave — a click

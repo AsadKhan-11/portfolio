@@ -6,6 +6,7 @@ import { FiArrowUpRight, FiCheck, FiX } from "react-icons/fi";
 import { Magnetic } from "./animations";
 import Select from "./Select";
 import { CASE_STUDIES } from "@/lib/caseStudies";
+import { getService } from "@/lib/services";
 import { BUDGETS, EMAIL_RE, MESSAGE_MAX, MESSAGE_MIN, PROJECT_TYPES } from "@/lib/contactFields";
 import { CONTACT_EMAIL as EMAIL } from "@/lib/site";
 
@@ -33,7 +34,7 @@ type Fields = {
 const EMPTY: Fields = { name: "", email: "", phone: "", budget: "", message: "" };
 
 /*
-  Every CTA on a case study carries ?ref=<slug>. The query string is an
+  Every CTA on a case study or a service page carries ?ref=<slug>. The query string is an
   external source, so it is read through useSyncExternalStore rather than
   an effect: the server snapshot is null, hydration matches, and there is
   no cascading render. Nothing can change the query without a navigation
@@ -77,7 +78,15 @@ export default function ContactForm() {
   const source = useMemo(() => {
     if (refDropped || !refSlug) return null;
     const study = CASE_STUDIES.find((c) => c.slug === refSlug);
-    return study ? { slug: study.slug, title: study.title } : null;
+    if (study) {
+      return { title: study.title, path: `/work/${study.slug}`, kind: "case study" as const };
+    }
+    /* A service page carries its slug the same way, so a lead from
+       /services/web-apps is as attributable as one off a case study. */
+    const service = getService(refSlug);
+    return service
+      ? { title: service.name, path: `/services/${service.slug}`, kind: "service page" as const }
+      : null;
   }, [refSlug, refDropped]);
 
   const set = (k: keyof Fields) => (v: string) => {
@@ -111,7 +120,7 @@ export default function ContactForm() {
       f.phone ? `Phone: ${f.phone.trim()}` : null,
       types.length ? `Project type: ${types.join(", ")}` : null,
       f.budget ? `Budget: ${f.budget}` : null,
-      source ? `Came from: ${source.title} case study (/work/${source.slug})` : null,
+      source ? `Came from: ${source.title} ${source.kind} (${source.path})` : null,
       "",
       f.message.trim(),
     ]
@@ -151,8 +160,8 @@ export default function ContactForm() {
           phone: f.phone.trim(),
           budget: f.budget,
           project_types: types,
-          /* Which case study produced the lead, if any. */
-          came_from: source ? `${source.title} (/work/${source.slug})` : "Direct",
+          /* Which case study or service page produced the lead, if any. */
+          came_from: source ? `${source.title} (${source.path})` : "Direct",
           message: f.message.trim(),
         }),
       })
@@ -228,7 +237,8 @@ export default function ContactForm() {
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         >
           <span>
-            About something like <strong>{source.title}</strong>
+            {source.kind === "case study" ? "About something like " : "About "}
+            <strong>{source.title}</strong>
           </span>
           <button
             type="button"

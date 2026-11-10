@@ -35,7 +35,7 @@ export default function Contact() {
           {/* ── Intro + ways to reach me ── */}
           <div className="contact-intro">
             <Reveal>
-              <p className="eyebrow">09 · Contact</p>
+              <p className="eyebrow">08 · Contact</p>
             </Reveal>
 
             <h2 className="section-title" style={{ marginTop: "1.5rem" }}>

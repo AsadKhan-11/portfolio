@@ -2,61 +2,7 @@
 
 import { FiCheck, FiSliders } from "react-icons/fi";
 import { Reveal, SplitText, Stagger, StaggerItem } from "./animations";
-
-type Pkg = {
-  n: string;
-  name: string;
-  audience: string;
-  price: number;
-  features: string[];
-  featured?: boolean;
-};
-
-const PACKAGES: Pkg[] = [
-  {
-    n: "01",
-    name: "Launch",
-    audience: "A fast, professional site for a small business getting online.",
-    price: 1500,
-    features: [
-      "Custom-designed site, up to 5 pages",
-      "Mobile-first, fully responsive",
-      "Basic on-page SEO",
-      "Contact form wired to your inbox",
-      "Two rounds of revisions",
-      "Live in 2 weeks",
-    ],
-  },
-  {
-    n: "02",
-    name: "Build",
-    audience: "A real product for a startup or team, not just a brochure site.",
-    price: 4500,
-    features: [
-      "Everything in Launch",
-      "Custom full-stack application",
-      "User accounts & admin dashboard",
-      "Integrations with the tools you use",
-      "Four rounds of revisions",
-      "Live in 4–6 weeks",
-    ],
-    featured: true,
-  },
-  {
-    n: "03",
-    name: "Scale",
-    audience: "A full hand-off build, with AI features baked in from day one.",
-    price: 9000,
-    features: [
-      "Everything in Build",
-      "AI features: chat, search, automation",
-      "Payments & subscriptions",
-      "Performance & accessibility audit",
-      "30 days of post-launch support",
-      "Priority turnaround",
-    ],
-  },
-];
+import { PACKAGES } from "@/lib/packages";
 
 export default function Packages() {
   return (

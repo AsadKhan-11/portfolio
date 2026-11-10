@@ -2,7 +2,9 @@
 
 import type { IconType } from "react-icons";
 import Image from "next/image";
+import Link from "next/link";
 import {
+  FiArrowRight,
   FiCpu,
   FiLayers,
   FiLayout,
@@ -11,9 +13,12 @@ import {
   FiShoppingBag,
 } from "react-icons/fi";
 import { Reveal, SplitText, Stagger, StaggerItem } from "./animations";
+import { serviceHref } from "@/lib/services";
 
 type Service = {
   n: string;
+  /** The service's own page, at /services/<slug> (see lib/services.ts). */
+  slug: string;
   title: string;
   copy: string;
   Icon: IconType;
@@ -37,6 +42,7 @@ type Service = {
 const SERVICES: Service[] = [
   {
     n: "01",
+    slug: "ai-integration",
     title: "AI Integration",
     copy: "LLM features built into products that already work: semantic search, document Q&A, summarisation and drafting, wired to your own data with retrieval rather than guesswork.",
     Icon: FiCpu,
@@ -45,12 +51,13 @@ const SERVICES: Service[] = [
     rowStart: 1,
     rowSpan: 2,
     hero: true,
-    art: "/ai-integration-bot.png",
+    art: "/ai-integration-bot.webp",
     artAlt:
       "Friendly AI robot holding a holographic panel that links an AI chip to search and database icons",
   },
   {
     n: "02",
+    slug: "chatbots-assistants",
     title: "Chatbots & Assistants",
     copy: "Support bots that deflect repetitive tickets and qualify leads before they reach your inbox, with escalation to a human when the bot is out of its depth.",
     Icon: FiMessageSquare,
@@ -61,6 +68,7 @@ const SERVICES: Service[] = [
   },
   {
     n: "03",
+    slug: "crm-automation",
     title: "CRM & Automation",
     copy: "Connect the tools you already pay for. Two-way CRM sync, webhook pipelines and workflows that remove the copy-paste work between systems.",
     Icon: FiRefreshCw,
@@ -71,6 +79,7 @@ const SERVICES: Service[] = [
   },
   {
     n: "04",
+    slug: "web-apps",
     title: "Full-Stack Web Apps",
     copy: "End-to-end MERN builds: dashboards, admin panels, client portals. Secure auth, sensible data modelling, and a frontend that stays fast as the product grows.",
     Icon: FiLayers,
@@ -81,6 +90,7 @@ const SERVICES: Service[] = [
   },
   {
     n: "05",
+    slug: "ecommerce-payments",
     title: "E-Commerce & Payments",
     copy: "Storefronts, subscriptions and checkout flows on Stripe. Cart, orders and fulfilment handled properly, with an admin your team can actually operate.",
     Icon: FiShoppingBag,
@@ -91,6 +101,7 @@ const SERVICES: Service[] = [
   },
   {
     n: "06",
+    slug: "ui-ux-design",
     title: "UI / UX & Design Systems",
     copy: "Wireframes through to pixel-level design systems in Figma, then built as reusable components. Interfaces designed around what users are actually trying to do.",
     Icon: FiLayout,
@@ -127,7 +138,7 @@ export default function Services() {
         </div>
 
         <Stagger className="service-grid" gap={0.08}>
-          {SERVICES.map(({ n, title, copy, Icon, colStart, colSpan, rowStart, rowSpan, hero, art, artAlt }) => (
+          {SERVICES.map(({ n, slug, title, copy, Icon, colStart, colSpan, rowStart, rowSpan, hero, art, artAlt }) => (
             <StaggerItem
               key={n}
               className="service-cell"
@@ -162,6 +173,14 @@ export default function Services() {
 
                 <h3 className="service-title">{title}</h3>
                 <p className="service-copy">{copy}</p>
+
+                {/* Stretched over the whole card (see .service-link), so the
+                    card is one big target without nesting links in a link. */}
+                <Link href={serviceHref(slug)} className="service-link" data-cursor="Read">
+                  <span>Learn more</span>
+                  <span className="sr-only"> about {title}</span>
+                  <FiArrowRight size={14} aria-hidden="true" />
+                </Link>
               </article>
             </StaggerItem>
           ))}

@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { INTRO_EVENT, INTRO_KEY as SESSION_KEY, skipIntro } from "./intro";
+import { INTRO_KEY as SESSION_KEY } from "@/lib/introBoot";
+import { markIntroDone, skipIntro } from "./intro";
 
 /*
   Intro sequence, in three beats:
@@ -13,19 +14,22 @@ import { INTRO_EVENT, INTRO_KEY as SESSION_KEY, skipIntro } from "./intro";
   2. It flies to the exact spot the navbar keeps its own mark
      (measured live from `.nav-mark`), shrinking into place like a
      stamp coming down.
-  3. The ink panel dissolves. The intro event fires at landing, so the
+  3. The ink panel dissolves. The stage is marked clear at landing, so the
      navbar fades in underneath the flown copy while we fade out — one
      continuous settle instead of a swap.
 
   Runs once per browser session so repeat navigation isn't punished.
 */
 
-const COUNT_MS = 650;
+/* Each beat is a fifth shorter than it was (650 / 800 / 550): the curtain
+   used to hold the hero back for about 1.3s, and everything on the page
+   waits behind it. */
+const COUNT_MS = 520;
 /* Spin tail overlaps the flight's start — the portrait is still
    finishing its last degrees of rotation as it leaves for the hero,
    so there's no static beat between spin-up and departure. */
-const SPIN_MS = 800;
-const FLY_MS = 550;
+const SPIN_MS = 650;
+const FLY_MS = 450;
 
 const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
 const EASE_QUART = [0.76, 0, 0.24, 1] as const;
@@ -45,7 +49,7 @@ export default function Preloader() {
     if (finalized.current) return;
     finalized.current = true;
     document.body.style.overflow = "";
-    window.dispatchEvent(new Event(INTRO_EVENT));
+    markIntroDone();
     setVisible(false);
   }, []);
 
@@ -140,11 +144,9 @@ export default function Preloader() {
   }, [finalize]);
 
   return (
-    /* The exit-complete dispatch stays as an idempotent backstop — the
+    /* The exit-complete call stays as an idempotent backstop — the
        real signal fires at landing so the two portraits can crossfade. */
-    <AnimatePresence
-      onExitComplete={() => window.dispatchEvent(new Event(INTRO_EVENT))}
-    >
+    <AnimatePresence onExitComplete={markIntroDone}>
       {visible && (
         <motion.div
           className="preloader"

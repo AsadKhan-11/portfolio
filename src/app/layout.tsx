@@ -6,6 +6,7 @@ import MotionProvider from "@/components/MotionProvider";
 import Preloader from "@/components/Preloader";
 import { IdleShaderField } from "@/components/LazyFields";
 import SmoothScroll from "@/components/SmoothScroll";
+import { INTRO_BOOT_SCRIPT } from "@/lib/introBoot";
 import { SITE_URL, SOCIALS } from "@/lib/site";
 
 /* Display — geometric, characterful. Carries every headline. */
@@ -148,8 +149,13 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${syne.variable} ${instrument.variable} ${inter.variable} ${jetbrains.variable} h-full antialiased`}
+      /* The script below adds data-intro to this element before React sees it. */
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
+        {/* Says, before first paint, whether the intro curtain will play, so
+            the hero is only hidden for visits that actually get a curtain. */}
+        <script dangerouslySetInnerHTML={{ __html: INTRO_BOOT_SCRIPT }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON_LD }}

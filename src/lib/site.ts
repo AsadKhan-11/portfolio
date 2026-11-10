@@ -13,3 +13,16 @@ export const SOCIALS = [
   "https://x.com/webforge_dev",
   "https://www.instagram.com/webforge.dev/",
 ];
+
+const NETWORK_NAMES: Record<string, string> = {
+  "github.com": "GitHub",
+  "www.linkedin.com": "LinkedIn",
+  "x.com": "X",
+  "www.instagram.com": "Instagram",
+};
+
+/** SOCIALS with a name for each, for pages and files that list them as links. */
+export const SOCIAL_LINKS = SOCIALS.map((url) => {
+  const host = new URL(url).hostname;
+  return { url, label: NETWORK_NAMES[host] ?? host };
+});

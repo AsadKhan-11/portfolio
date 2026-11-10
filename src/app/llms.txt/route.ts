@@ -1,5 +1,6 @@
 import { CASE_STUDIES } from "@/lib/caseStudies";
-import { CONTACT_EMAIL, SITE_URL, SOCIALS } from "@/lib/site";
+import { SERVICES, serviceHref } from "@/lib/services";
+import { CONTACT_EMAIL, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
 
 /*
   /llms.txt: a plain-text summary of the site for AI assistants and
@@ -21,19 +22,10 @@ export const dynamic = "force-static";
 /* "Live · self-initiated" reads better as plain text with a comma. */
 const plain = (s: string) => s.replace(/\s·\s/g, ", ");
 
-/* SOCIALS is a bare list of URLs; name each by its host. */
-const NETWORKS: Record<string, string> = {
-  "github.com": "GitHub",
-  "www.linkedin.com": "LinkedIn",
-  "x.com": "X",
-  "www.instagram.com": "Instagram",
-};
-const network = (url: string) => {
-  const host = new URL(url).hostname;
-  return NETWORKS[host] ?? host;
-};
-
 export function GET() {
+  const services = SERVICES.map(
+    (s) => `- [${s.name}](${SITE_URL}${serviceHref(s.slug)}): ${s.short}`,
+  );
   const caseStudies = CASE_STUDIES.map(
     (s) =>
       `- [${s.title}](${SITE_URL}/work/${s.slug}): ${s.type}, ${s.year} (${plain(s.status)}). ${s.pitch}`,
@@ -49,10 +41,13 @@ export function GET() {
     "## Key pages",
     "",
     `- [Home](${SITE_URL}/): What the studio does and how to start a project.`,
-    `- [Services](${SITE_URL}/#services): AI integration, chatbots and assistants, CRM and automation, full-stack web apps, e-commerce and payments, UI/UX and design systems.`,
+    `- [About](${SITE_URL}/about): Who is behind the studio: how Asad Khan works, what he builds with and where he has worked.`,
     `- [Packages](${SITE_URL}/#packages): Project packages and what each one includes.`,
-    `- [About](${SITE_URL}/#about): Who is behind the studio.`,
     `- [Contact](${SITE_URL}/#contact): Send a project enquiry.`,
+    "",
+    "## Services",
+    "",
+    ...services,
     "",
     "## Case studies",
     "",
@@ -61,7 +56,7 @@ export function GET() {
     "## Contact",
     "",
     `- Email: ${CONTACT_EMAIL}`,
-    ...SOCIALS.map((url) => `- [${network(url)}](${url})`),
+    ...SOCIAL_LINKS.map(({ label, url }) => `- [${label}](${url})`),
     "",
   ].join("\n");
 

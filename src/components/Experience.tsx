@@ -1,53 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import type { IconType } from "react-icons";
 import { FiBriefcase, FiCode, FiMonitor } from "react-icons/fi";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Reveal, SplitText } from "./animations";
+import { ROLES, type Role } from "@/lib/profile";
 
-type Role = {
-  year: string;
-  period: string;
-  title: string;
-  org: string;
-  copy: string;
-  stack: string[];
-  Icon: IconType;
-  current?: boolean;
-};
-
-const ROLES: Role[] = [
-  {
-    year: "26",
-    period: "2026 – Present",
-    title: "Full Stack Developer",
-    org: "MyntorX",
-    copy: "Shipping production features on a team: React interfaces, Node services, and data models that real users lean on every day. The studio discipline, applied at company scale.",
-    stack: ["React", "Next.js", "Node.js", "MongoDB", "TypeScript"],
-    Icon: FiBriefcase,
-    current: true,
-  },
-  {
-    year: "24",
-    period: "2024 – Present",
-    title: "Founder & Developer",
-    org: "WebForge Digital",
-    copy: "My own studio, running alongside everything else. Custom web products for clients worldwide: full stack MERN applications, AI-assisted features, and 10+ delivered projects across e-commerce, SaaS and business sites.",
-    stack: ["React", "Next.js", "Node.js", "MongoDB", "Tailwind"],
-    Icon: FiCode,
-    current: true,
-  },
-  {
-    year: "23",
-    period: "2023 – 2024",
-    title: "Front-End Developer",
-    org: "Project-based",
-    copy: "Interactive, responsive interfaces in React and modern CSS. Focused on performance budgets, accessibility, and a component architecture that survived handover.",
-    stack: ["HTML5", "CSS3", "JavaScript", "React", "Bootstrap"],
-    Icon: FiMonitor,
-  },
-];
+/* The roles themselves live in lib/profile.ts, shared with the About page. */
+const ICONS = { briefcase: FiBriefcase, code: FiCode, monitor: FiMonitor } as const;
 
 /*
   Each row tracks its own scroll progress rather than a one-shot
@@ -56,7 +16,8 @@ const ROLES: Role[] = [
   than just fading in.
 */
 function PathRow({ role }: { role: Role }) {
-  const { year, period, title, org, copy, stack, Icon, current } = role;
+  const { year, period, title, org, copy, stack, icon, current } = role;
+  const Icon = ICONS[icon];
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
