@@ -45,3 +45,12 @@ export const MESSAGE_MAX = 1000;
   characters that would let one field name several recipients.
 */
 export const EMAIL_RE = /^[^\s@,;<>()"]+@[^\s@,;<>()"]+\.[^\s@,;<>()"]{2,}$/;
+
+/*
+  Cloudflare Turnstile, the bot check on the form. The site key is public
+  by design (it ships in the page), so it lives here; the secret key is a
+  Worker secret. Leave this empty and the form shows no check; the Worker
+  asks for one only once TURNSTILE_SECRET is set, so set the secret after
+  this key has been deployed.
+*/
+export const TURNSTILE_SITE_KEY = "";

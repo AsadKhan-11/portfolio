@@ -493,13 +493,20 @@ body {
   transition: transform 0.55s var(--ease-out-expo);
 }
 
-.btn:hover {
-  color: var(--ink);
-  border-color: var(--flame);
-}
+/*
+  Hover effects only where a real pointer hovers. On a phone a tap leaves the
+  button "hovered" until the next tap, which held the Send button in its
+  white hover colour after it was pressed.
+*/
+@media (hover: hover) {
+  .btn:hover {
+    color: var(--ink);
+    border-color: var(--flame);
+  }
 
-.btn:hover::after {
-  transform: translateY(0);
+  .btn:hover::after {
+    transform: translateY(0);
+  }
 }
 
 .btn-solid {
@@ -512,9 +519,11 @@ body {
   background: var(--bone);
 }
 
-.btn-solid:hover {
-  color: var(--ink);
-  border-color: var(--bone);
+@media (hover: hover) {
+  .btn-solid:hover {
+    color: var(--ink);
+    border-color: var(--bone);
+  }
 }
 
 /* ═══════════ Link with sweep underline ═══════════ */
@@ -2529,6 +2538,21 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
 .field select {
   appearance: none;
   cursor: pointer;
+}
+
+/*
+  Browser autofill paints a pale box behind the text. Hold the background to
+  the form's own dark colour (the inset shadow covers it; the long transition
+  stops Chrome swapping it back) and keep the text light.
+*/
+.field input:-webkit-autofill,
+.field input:-webkit-autofill:hover,
+.field input:-webkit-autofill:focus,
+.field textarea:-webkit-autofill {
+  -webkit-text-fill-color: var(--bone);
+  caret-color: var(--bone);
+  box-shadow: 0 0 0 1000px var(--ink-raised) inset;
+  transition: background-color 9999s ease-out 0s;
 }
 
 .field select option {

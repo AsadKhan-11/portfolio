@@ -12,6 +12,9 @@
     CONTACT_FROM     a plain variable in wrangler.jsonc, so it is versioned. A
                      deploy deletes plain variables that exist only in the
                      dashboard, so they cannot live there.
+    TURNSTILE_SECRET a secret, like RESEND_API_KEY. Optional: once set, the form
+                     must carry a passing Cloudflare Turnstile token. The matching
+                     site key is TURNSTILE_SITE_KEY in src/lib/contactFields.ts.
     CONTACT_TO       optional. Defaults to the address shown on the site, so a
                      notification cannot go to a different inbox than the one
                      visitors are told to write to. Set it only to override,

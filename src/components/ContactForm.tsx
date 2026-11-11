@@ -5,9 +5,17 @@ import { motion } from "framer-motion";
 import { FiArrowUpRight, FiCheck, FiX } from "react-icons/fi";
 import { Magnetic } from "./animations";
 import Select from "./Select";
+import Turnstile from "./Turnstile";
 import { CASE_STUDIES } from "@/lib/caseStudies";
 import { getService } from "@/lib/services";
-import { BUDGETS, EMAIL_RE, MESSAGE_MAX, MESSAGE_MIN, PROJECT_TYPES } from "@/lib/contactFields";
+import {
+  BUDGETS,
+  EMAIL_RE,
+  MESSAGE_MAX,
+  MESSAGE_MIN,
+  PROJECT_TYPES,
+  TURNSTILE_SITE_KEY,
+} from "@/lib/contactFields";
 import { CONTACT_EMAIL as EMAIL } from "@/lib/site";
 
 /*
@@ -30,6 +38,9 @@ type Fields = {
   budget: string;
   message: string;
 };
+
+/* The bot check is on whenever a site key is set and the form posts to the server. */
+const CHECK = Boolean(ENDPOINT && TURNSTILE_SITE_KEY);
 
 const EMPTY: Fields = { name: "", email: "", phone: "", budget: "", message: "" };
 
@@ -62,6 +73,10 @@ export default function ContactForm() {
   const [touched, setTouched] = useState<Partial<Record<keyof Fields, boolean>>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [honey, setHoney] = useState("");
+  const [token, setToken] = useState("");
+  /* Bumped after every send so the bot check hands out a fresh one-use token. */
+  const [attempt, setAttempt] = useState(0);
+  const [waiting, setWaiting] = useState(false);
   const [refDropped, setRefDropped] = useState(false);
 
   /*
@@ -144,6 +159,12 @@ export default function ContactForm() {
       return;
     }
 
+    if (CHECK && !token) {
+      /* The check runs by itself in the background; this only catches a very fast click. */
+      setWaiting(true);
+      return;
+    }
+    setWaiting(false);
     setStatus("sending");
 
     if (ENDPOINT) {
@@ -163,6 +184,7 @@ export default function ContactForm() {
           /* Which case study or service page produced the lead, if any. */
           came_from: source ? `${source.title} (${source.path})` : "Direct",
           message: f.message.trim(),
+          turnstile_token: CHECK ? token : undefined,
         }),
       })
         .then(async (res) => {
@@ -174,7 +196,11 @@ export default function ContactForm() {
           */
           setStatus(res.ok && body.success === true ? "sent" : "error");
         })
-        .catch(() => setStatus("error"));
+        .catch(() => setStatus("error"))
+        .finally(() => {
+          setToken("");
+          setAttempt((n) => n + 1);
+        });
       return;
     }
 
@@ -381,6 +407,8 @@ export default function ContactForm() {
         )}
       </div>
 
+      {CHECK && <Turnstile key={attempt} onToken={setToken} />}
+
       <div className="form-footer">
         <Magnetic strength={0.25}>
           <button type="submit" className="btn btn-solid" disabled={status === "sending"}>
@@ -397,6 +425,8 @@ export default function ContactForm() {
               </a>
               .
             </>
+          ) : waiting && !token ? (
+            "One moment, checking you are not a bot. Press send again."
           ) : (
             "Your details go straight to my inbox. Never shared, never added to a mailing list."
           )}

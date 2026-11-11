@@ -30,6 +30,8 @@ export interface ContactEnv {
   CONTACT_TO?: string;
   /** A sender on a domain verified in Resend, e.g. "WebForge Digital <forms@webforgedigital.dev>". */
   CONTACT_FROM?: string;
+  /** Secret. Cloudflare Turnstile. When set, every enquiry must carry a passing token. */
+  TURNSTILE_SECRET?: string;
 }
 
 const RESEND_URL = "https://api.resend.com/emails";
@@ -38,6 +40,26 @@ const RESEND_URL = "https://api.resend.com/emails";
 const MAX_BODY_CHARS = 8 * 1024;
 
 const SEND_TIMEOUT_MS = 8_000;
+
+const SITEVERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
+/* Asks Cloudflare whether a Turnstile token is genuine. Fails closed. */
+async function passesTurnstile(secret: string, token: unknown, ip: string | null): Promise<boolean> {
+  if (typeof token !== "string" || !token || token.length > 2048) return false;
+  const form = new URLSearchParams({ secret, response: token });
+  if (ip) form.set("remoteip", ip);
+  try {
+    const res = await fetch(SITEVERIFY_URL, {
+      method: "POST",
+      body: form,
+      signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
+    });
+    const out = (await res.json()) as { success?: boolean };
+    return out.success === true;
+  } catch {
+    return false;
+  }
+}
 
 type FieldName = "name" | "email" | "phone" | "budget" | "project_types" | "message";
 
@@ -194,6 +216,17 @@ export async function handleContact(request: Request, env: ContactEnv): Promise<
 
   const parsed = parse(data);
   if (!parsed.ok) return json({ success: false, error: "invalid", fields: parsed.fields }, 400);
+
+  /*
+    The bot check comes after validation (so a malformed request costs no
+    lookup) and before anything is sent. Without a secret the check is off.
+  */
+  if (env.TURNSTILE_SECRET) {
+    const token = (data as Record<string, unknown>).turnstile_token;
+    if (!(await passesTurnstile(env.TURNSTILE_SECRET, token, request.headers.get("CF-Connecting-IP")))) {
+      return json({ success: false, error: "verification_failed" }, 400);
+    }
+  }
 
   const to = (env.CONTACT_TO ?? "")
     .split(",")
