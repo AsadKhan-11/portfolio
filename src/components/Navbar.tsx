@@ -67,7 +67,6 @@ export default function Navbar() {
   */
   const [openAt, setOpenAt] = useState<string | null>(null);
   const open = openAt === pathname;
-  const [clock, setClock] = useState("");
   const burgerRef = useRef<HTMLButtonElement>(null);
   const { scrollYProgress } = useScroll();
 
@@ -81,24 +80,6 @@ export default function Navbar() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Live Lahore time — a small signal that the site is actually alive.
-  useEffect(() => {
-    const tick = () => {
-      setClock(
-        new Intl.DateTimeFormat("en-GB", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          timeZone: "Asia/Karachi",
-          hour12: false,
-        }).format(new Date())
-      );
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
   }, []);
 
   /*
@@ -245,15 +226,6 @@ export default function Navbar() {
               Start a project
             </Link>
 
-            <span
-              className="mono-label nav-clock"
-              style={{ letterSpacing: "0.18em" }}
-              suppressHydrationWarning
-            >
-              <span className="hidden sm:inline">LHR </span>
-              {clock}
-            </span>
-
             {/*
               A plain wrapper carries the hide, for two reasons: hiding
               only the button would leave its Magnetic div in the flex
@@ -351,9 +323,7 @@ export default function Navbar() {
                   <a href={`mailto:${EMAIL}`} className="menu-email link-sweep">
                     {EMAIL}
                   </a>
-                  <p className="menu-where" suppressHydrationWarning>
-                    Lahore, Pakistan · {clock}
-                  </p>
+                  <p className="menu-where">Lahore, Pakistan</p>
                 </div>
 
                 <ul className="menu-socials">

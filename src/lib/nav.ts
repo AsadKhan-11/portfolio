@@ -17,6 +17,7 @@ export const PAGES: NavPage[] = [
   { label: "Services", href: "/services" },
   { label: "Packages", href: "/packages" },
   { label: "FAQs", href: "/faqs" },
+  { label: "Book a call", href: "/book" },
   { label: "Contact", href: "/contact" },
 ];
 

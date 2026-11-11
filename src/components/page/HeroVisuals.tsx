@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FiArrowUpRight, FiClock, FiMail, FiMapPin } from "react-icons/fi";
+import { FiArrowUpRight, FiClock, FiMail, FiMapPin, FiVideo } from "react-icons/fi";
 import { PACKAGES } from "@/lib/packages";
 import { SERVICES, serviceHref } from "@/lib/services";
 import { SERVICE_ICONS } from "@/lib/serviceIcons";
@@ -160,6 +160,48 @@ export function ContactVisual() {
           </span>
           <span className="hv-mini-note">Open for projects in 2026</span>
         </span>
+      </div>
+
+      <Link href="/book" className="btn hv-book" data-cursor="Book">
+        <span>Prefer to talk? Book a call</span>
+        <FiArrowUpRight />
+      </Link>
+    </div>
+  );
+}
+
+/* A small calendar: a few days lit, one picked. No times, only the idea of choosing one. */
+const LIT = new Set([3, 5, 8, 10, 12, 15, 17, 19, 22, 24, 26]);
+
+export function BookVisual() {
+  const days = Array.from({ length: 30 }, (_, i) => i + 1);
+  return (
+    <div className="hv hv-cal" aria-hidden="true">
+      <div className="hv-cal-head">
+        <span className="hv-cal-month">A good day for a call</span>
+        <span className="hv-cal-meet">
+          <FiVideo size={14} /> Google Meet
+        </span>
+      </div>
+      <div className="hv-cal-week mono-label">
+        {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
+          <span key={i}>{d}</span>
+        ))}
+      </div>
+      <div className="hv-cal-grid">
+        {days.map((d) => (
+          <span
+            key={d}
+            className={`hv-cal-day${LIT.has(d) ? " is-free" : ""}${d === 17 ? " is-picked" : ""}`}
+          >
+            {d}
+          </span>
+        ))}
+      </div>
+      <div className="hv-cal-foot">
+        <span className="hv-cal-chip">15 min</span>
+        <span className="hv-cal-chip">30 min</span>
+        <span className="hv-cal-chip">60 min</span>
       </div>
     </div>
   );

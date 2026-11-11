@@ -680,15 +680,16 @@ body {
   .nav-links {
     display: flex;
     align-items: center;
-    gap: clamp(1.25rem, 2.2vw, 2.25rem);
+    gap: clamp(0.9rem, 1.9vw, 2.25rem);
   }
 }
 
 .nav-link {
   position: relative;
+  white-space: nowrap;
   font-family: var(--f-mono), monospace;
   font-size: 0.7rem;
-  letter-spacing: 0.16em;
+  letter-spacing: clamp(0.08em, 0.9vw - 0.1rem, 0.16em);
   text-transform: uppercase;
   text-decoration: none;
   color: var(--bone-70);
@@ -751,16 +752,6 @@ body {
 @media (min-width: 1040px) {
   .nav-cta {
     display: inline-flex;
-  }
-}
-
-.nav-clock {
-  display: none;
-}
-
-@media (min-width: 1200px) {
-  .nav-clock {
-    display: inline;
   }
 }
 
@@ -7375,6 +7366,301 @@ a.hv-mini-value {
   .hv-tile,
   .hv-exchange,
   .hv-price-fill {
+    animation: none;
+  }
+}
+
+.hv-book {
+  justify-content: center;
+  width: 100%;
+}
+
+/* ═══════════ Book a call ═══════════ */
+.hv-cal {
+  padding: clamp(1.2rem, 2.4vw, 1.7rem);
+  border: 1px solid var(--rule);
+  border-radius: 20px;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(255, 92, 53, 0.1), transparent 60%),
+    rgba(18, 18, 23, 0.75);
+}
+
+.hv-cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.hv-cal-month {
+  font-family: var(--f-display), sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.hv-cal-meet {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: var(--flame-soft);
+  border: 1px solid rgba(255, 92, 53, 0.3);
+  font-family: var(--f-mono), monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--flame);
+}
+
+.hv-cal-week,
+.hv-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.35rem;
+  text-align: center;
+}
+
+.hv-cal-week {
+  margin-bottom: 0.4rem;
+}
+
+.hv-cal-day {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  color: var(--bone-45);
+}
+
+.hv-cal-day.is-free {
+  color: var(--bone);
+  background: rgba(255, 92, 53, 0.1);
+  border: 1px solid rgba(255, 92, 53, 0.28);
+}
+
+.hv-cal-day.is-picked {
+  color: #fff;
+  background: var(--flame);
+  border-color: var(--flame);
+  font-weight: 700;
+  box-shadow: 0 0 0 4px rgba(255, 92, 53, 0.18), 0 10px 24px -8px rgba(255, 92, 53, 0.7);
+  animation: hv-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes hv-pulse {
+  50% {
+    box-shadow: 0 0 0 8px rgba(255, 92, 53, 0.08), 0 10px 24px -8px rgba(255, 92, 53, 0.7);
+  }
+}
+
+.hv-cal-foot {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.hv-cal-chip {
+  flex: 1;
+  padding: 0.55rem 0;
+  text-align: center;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+  font-family: var(--f-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bone-70);
+}
+
+.book {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: clamp(2.5rem, 6vh, 4rem);
+}
+
+.book-calls {
+  display: grid;
+  gap: 0.8rem;
+  align-content: start;
+}
+
+.book-call {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.1rem;
+  align-items: center;
+  width: 100%;
+  padding: 1.1rem 1.2rem;
+  text-align: left;
+  color: var(--bone);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: rgba(18, 18, 23, 0.6);
+  cursor: pointer;
+  transition: border-color 0.6s var(--ease-out-expo), background 0.6s var(--ease-out-expo),
+    transform 0.8s var(--ease-out-expo);
+}
+
+@media (hover: hover) {
+  .book-call:hover {
+    transform: translateX(3px);
+    border-color: rgba(255, 140, 100, 0.3);
+  }
+}
+
+.book-call.is-on {
+  border-color: rgba(255, 140, 100, 0.5);
+  background: linear-gradient(160deg, rgba(255, 92, 53, 0.18), rgba(18, 18, 23, 0.7));
+}
+
+.book-call-min {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 14px;
+  background: var(--flame-soft);
+  border: 1px solid rgba(255, 92, 53, 0.28);
+  font-family: var(--f-display), sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--flame);
+}
+
+.book-call-min small {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--f-mono), monospace;
+  font-weight: 500;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.book-call.is-on .book-call-min {
+  background: var(--flame);
+  color: #fff;
+  border-color: var(--flame);
+}
+
+.book-call-text {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.book-call-name {
+  font-family: var(--f-display), sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.book-note {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  margin: 0.4rem 0 0;
+  padding: 0 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--bone-70);
+}
+
+.book-note svg {
+  flex: none;
+  margin-top: 0.2rem;
+  color: var(--flame);
+}
+
+.book-panel {
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 20px;
+  background: rgba(14, 14, 18, 0.85);
+}
+
+.book-panel-head {
+  padding: clamp(1.3rem, 2.6vw, 1.9rem);
+  border-bottom: 1px solid var(--rule);
+  background: radial-gradient(100% 140% at 0% 0%, rgba(255, 92, 53, 0.1), transparent 60%);
+}
+
+.book-panel-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--flame);
+}
+
+.book-panel-title {
+  margin-top: 0.7rem;
+  font-family: var(--f-display), sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.book-panel-blurb {
+  margin-top: 0.8rem;
+  max-width: 52ch;
+  line-height: 1.65;
+  color: var(--bone-70);
+}
+
+.book-embed {
+  min-height: 34rem;
+  padding: 0.5rem;
+}
+
+.book-fallback {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+  padding: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.65;
+  color: var(--bone-70);
+}
+
+.book-fallback-title {
+  font-family: var(--f-display), sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--bone);
+}
+
+.book-fallback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+@media (min-width: 960px) {
+  .book {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: start;
+  }
+
+  .book-calls {
+    position: sticky;
+    top: 7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hv-cal-day.is-picked {
     animation: none;
   }
 }

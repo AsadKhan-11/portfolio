@@ -30,8 +30,8 @@ export interface LegalDoc {
   sections: LegalSection[];
 }
 
-const UPDATED = "2026-11-11";
-const UPDATED_LABEL = "11 November 2026";
+const UPDATED = "2026-11-12";
+const UPDATED_LABEL = "12 November 2026";
 
 export const PRIVACY: LegalDoc = {
   slug: "privacy",
@@ -63,6 +63,7 @@ export const PRIVACY: LegalDoc = {
           "your message",
           "the page you came from, such as a case study or service page, so I know what prompted the enquiry",
         ],
+        "If you book a call, I receive your name, email address, the time you chose and anything you add in the notes. Bookings are handled by Cal.com and Google Calendar (see “Who it is shared with”).",
         "If you email me directly instead, I receive your email address and whatever you write.",
         "The site has no accounts, no sign-in and no advertising or analytics cookies. It keeps one small flag in your browser’s session storage so the opening animation does not replay on every page; it holds no personal information and disappears when you close the tab.",
       ],
@@ -92,6 +93,7 @@ export const PRIVACY: LegalDoc = {
           "Cloudflare, which hosts the site, serves its pages and runs the bot check on the form",
           "Resend, which delivers the enquiry from the site to my inbox",
           "Hostinger, which provides the mailbox where I read and answer enquiries",
+          "Cal.com, which runs the call-booking page, and Google, whose Calendar and Meet hold the booking and host the call",
         ],
         "Each of these processes data under its own privacy terms. I may also disclose information if the law requires it.",
       ],
