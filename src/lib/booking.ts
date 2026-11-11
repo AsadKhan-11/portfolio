@@ -37,8 +37,7 @@ export const CALLS: CallType[] = [
   },
   {
     id: "project",
-    /* This is the slug the event type has in Cal.com. Rename it there to "project-call" and change it here too. */
-    slug: "publish-call",
+    slug: "project-call",
     minutes: 30,
     name: "Project call",
     blurb:
