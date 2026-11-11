@@ -183,6 +183,166 @@ export function ProjectsSection({
 }
 
 /*
+  One interactive shelf for every project: a row of panels, one open at a time.
+  Hovering (mouse), focusing or tapping a collapsed panel opens it and closes
+  the one before; the open panel is the link to the case study. Nothing moves
+  on its own. The chips filter between client platforms and concepts. On a
+  phone the panels stack and open downward; the first tap opens, the second
+  follows the link.
+*/
+type Kind = "all" | "platform" | "concept";
+
+/* Panels that fit before the collapsed ones get too thin. */
+const SHOWCASE_PAGE = 6;
+
+export function ProjectShowcase({
+  platforms,
+  concepts,
+}: {
+  platforms: Project[];
+  concepts: Project[];
+}) {
+  const [kind, setKind] = useState<Kind>("all");
+  const [active, setActive] = useState(0);
+  const [page, setPage] = useState(0);
+
+  const all: Array<{ p: Project; label: string }> = [
+    ...(kind !== "concept" ? platforms.map((p) => ({ p, label: "Client platform" })) : []),
+    ...(kind !== "platform" ? concepts.map((p) => ({ p, label: "Concept build" })) : []),
+  ];
+  /*
+    Only a handful of panels fit before the collapsed ones turn to slivers, so
+    a longer list is paged. Pages are sized evenly (7 is 4 + 3, never 6 + 1),
+    so adding projects never leaves a lonely last page.
+  */
+  const pages = Math.max(1, Math.ceil(all.length / SHOWCASE_PAGE));
+  const size = Math.ceil(all.length / pages);
+  const at = Math.min(page, pages - 1);
+  const list = all.slice(at * size, at * size + size);
+  const go = (n: number) => {
+    setPage(n);
+    setActive(0);
+  };
+  const chips: Array<[Kind, string, number]> = [
+    ["all", "All", platforms.length + concepts.length],
+    ["platform", "Client platforms", platforms.length],
+    ["concept", "Concept builds", concepts.length],
+  ];
+
+  return (
+    <div className="showcase">
+      <div className="showcase-bar">
+        <div className="showcase-chips" role="group" aria-label="Filter projects">
+          {chips.map(([k, label, n]) => (
+            <button
+              key={k}
+              type="button"
+              className={`showcase-chip mono-label${kind === k ? " is-on" : ""}`}
+              aria-pressed={kind === k}
+              onClick={() => {
+                setKind(k);
+                setActive(0);
+                setPage(0);
+              }}
+            >
+              {label} <span>{String(n).padStart(2, "0")}</span>
+            </button>
+          ))}
+        </div>
+        <p className="showcase-hint mono-label">Hover or tap a panel to open it</p>
+      </div>
+
+      <div className="showcase-row" key={kind}>
+        {list.map(({ p, label }, i) => {
+          const open = i === active;
+          return (
+            <Link
+              key={p.key}
+              href={p.href ?? "/work"}
+              className={`showcase-panel${open ? " is-open" : ""}`}
+              data-cursor={open ? "Read" : undefined}
+              aria-label={`${p.title}, ${label}. Read the case study`}
+              onPointerEnter={(e) => {
+                if (e.pointerType === "mouse") setActive(i);
+              }}
+              onFocus={() => setActive(i)}
+              onClick={(e) => {
+                if (!open) {
+                  e.preventDefault();
+                  setActive(i);
+                }
+              }}
+            >
+              <Image
+                src={p.shot}
+                alt=""
+                fill
+                sizes="(max-width: 899px) 92vw, 60vw"
+                className="showcase-img"
+                style={{ objectFit: "cover", objectPosition: "left top" }}
+              />
+              <span className="showcase-shade" aria-hidden />
+              <span className="showcase-n mono-label">{String(at * size + i + 1).padStart(2, "0")}</span>
+              <span className="showcase-rail" aria-hidden>
+                {p.title}
+              </span>
+              <span className="showcase-copy">
+                <span className="showcase-kind mono-label">
+                  {label} · {p.meta.split("·").pop()?.trim()}
+                </span>
+                <span className="showcase-title">{p.title}</span>
+                {p.pitch && <span className="showcase-pitch">{p.pitch}</span>}
+                <span className="showcase-foot">
+                  {p.tags && (
+                    <span className="proj-feature-tags">
+                      {p.tags.slice(0, 3).map((t) => (
+                        <span key={t} className="tag">
+                          {t}
+                        </span>
+                      ))}
+                    </span>
+                  )}
+                  <span className="showcase-cta mono-label">
+                    Read the case study <FiArrowRight size={14} />
+                  </span>
+                </span>
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {pages > 1 && (
+        <div className="showcase-pager">
+          <button
+            type="button"
+            className="showcase-arrow"
+            aria-label="Previous projects"
+            disabled={at === 0}
+            onClick={() => go(at - 1)}
+          >
+            <FiArrowRight size={18} style={{ transform: "scaleX(-1)" }} />
+          </button>
+          <span className="mono-label" aria-live="polite">
+            {String(at * size + 1).padStart(2, "0")}–{String(at * size + list.length).padStart(2, "0")} of{" "}
+            {String(all.length).padStart(2, "0")}
+          </span>
+          <button
+            type="button"
+            className="showcase-arrow"
+            aria-label="Next projects"
+            disabled={at === pages - 1}
+            onClick={() => go(at + 1)}
+          >
+            <FiArrowRight size={18} />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/*
   The deck: each card sticks as it reaches the top, so the next one rises over
   it. Every card reports how far it has risen (0 as it enters at the foot of
   the screen, 1 as it settles in place); the cards beneath add those numbers up

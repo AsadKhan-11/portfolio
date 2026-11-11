@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { InfoCards, PageCta, PageHero } from "@/components/page/PageParts";
 import SectionHead from "@/components/SectionHead";
-import { ProjectsSection } from "@/components/Work";
+import { ProjectShowcase } from "@/components/Work";
 import { CASE_STUDIES, type CaseStudy } from "@/lib/caseStudies";
 import { pageJsonLd } from "@/lib/pageJsonLd";
 import { toProject } from "@/lib/projects";
@@ -94,27 +94,18 @@ export default function ProjectsPage() {
           </div>
         </section>
 
-        <ProjectsSection
-          projects={platforms}
-          more={false}
-          head={{
-            eyebrow: "01 · Platforms",
-            title: "Client",
-            em: "platforms",
-            lede: "Built for real clients. Where a client is confidential, the case study is rebuilt here with new names and data.",
-          }}
-        />
-
-        <ProjectsSection
-          projects={concepts}
-          more={false}
-          head={{
-            eyebrow: "02 · Concepts",
-            title: "Concept",
-            em: "builds",
-            lede: "Self-initiated projects, built to explore an idea and labelled as concepts. Their businesses, people and data are fictional or sample.",
-          }}
-        />
+        <section className="section bg-glow-bl">
+          <div className="rule-top" />
+          <div className="shell">
+            <SectionHead
+              eyebrow="All projects"
+              title="Everything"
+              em="I have built"
+              lede="Client platforms, rebuilt here with new names and data where a client is confidential, and self-initiated concept builds, each labelled. Open one to read its story."
+            />
+            <ProjectShowcase platforms={platforms} concepts={concepts} />
+          </div>
+        </section>
 
         <PageCta copy="Want something like one of these? Tell me what you're building. I reply within a day, with questions or with a fixed quote once the scope is clear." />
       </main>
