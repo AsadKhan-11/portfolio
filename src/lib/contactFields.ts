@@ -53,4 +53,4 @@ export const EMAIL_RE = /^[^\s@,;<>()"]+@[^\s@,;<>()"]+\.[^\s@,;<>()"]{2,}$/;
   asks for one only once TURNSTILE_SECRET is set, so set the secret after
   this key has been deployed.
 */
-export const TURNSTILE_SITE_KEY = "";
+export const TURNSTILE_SITE_KEY = "0x4AAAAAAF87NQuwftkO2VeM";
