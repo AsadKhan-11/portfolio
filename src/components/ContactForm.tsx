@@ -401,6 +401,12 @@ export default function ContactForm() {
             "Your details go straight to my inbox. Never shared, never added to a mailing list."
           )}
         </p>
+        {/* Only ever present under `next dev`, where there is no server to send through. */}
+        {!ENDPOINT && (
+          <p className="form-note" style={{ color: "var(--flame)" }}>
+            Local preview: this opens your mail app instead of sending. The live site sends through the server.
+          </p>
+        )}
       </div>
     </form>
   );

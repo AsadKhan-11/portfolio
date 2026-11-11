@@ -23,6 +23,8 @@ export interface Project {
   /** The line the project is pitched with, shown in the detailed card. */
   pitch?: string;
   role?: string;
+  /** What it covers, as short tags. */
+  tags?: string[];
 }
 
 export const toProject = (c: CaseStudy): Project => ({
@@ -33,10 +35,18 @@ export const toProject = (c: CaseStudy): Project => ({
   href: `/work/${c.slug}`,
   pitch: c.pitch,
   role: c.role,
+  tags: c.tags,
 });
 
 /** Every project, newest listing first as the data lists them: case studies, then live builds. */
 export const PROJECTS: Project[] = [...CASE_STUDIES.map(toProject), ...LIVE_BUILDS];
+
+/*
+  The four projects the home page leads with, in this order: the platforms, with
+  one website between them. Change the list to change what the home page shows;
+  /work always lists everything.
+*/
+export const HOME_PROJECT_SLUGS = ["ironside-gym", "vector-academy", "vanta-aesthetics", "veloura"];
 
 /** The case studies with these slugs, in that order; a slug that no longer exists is skipped. */
 export const projectsFor = (slugs: string[]): Project[] =>

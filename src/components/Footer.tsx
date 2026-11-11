@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { FiArrowUp, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
 import { FaXTwitter } from "react-icons/fa6";
 import { Magnetic, Marquee } from "./animations";
 import { PAGES } from "@/lib/nav";
 import { SERVICES, serviceHref } from "@/lib/services";
+import { CASE_STUDIES } from "@/lib/caseStudies";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 const WORDMARK = "WebForge Digital";
 
@@ -92,41 +95,80 @@ export default function Footer() {
       </div>
 
       <div className="shell" style={{ paddingBlock: "clamp(3rem, 8vh, 5rem)" }}>
-        <div className="footer-top">
-          <nav className="footer-links">
+        <div className="footer-grid">
+          {/* Who this is, how to reach them, and the one action worth taking. */}
+          <div className="footer-brand">
+            <Link href="/" className="footer-logo" aria-label="WebForge Digital, home">
+              <Image src="/brand/mark-light.png" alt="" width={32} height={19} />
+              <span>
+                WebForge <span className="footer-logo-dim">Digital</span>
+              </span>
+            </Link>
+            <p className="footer-pitch">
+              Websites, portals and web apps, designed, built and launched by one developer.
+            </p>
+            <p className="footer-status mono-label">
+              <span className="footer-status-dot" aria-hidden="true" />
+              Booking new builds · 2026
+            </p>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="footer-email link-sweep">
+              {CONTACT_EMAIL}
+            </a>
+            <div className="footer-brand-actions">
+              <Magnetic strength={0.25}>
+                <Link href="/contact" className="btn btn-solid">
+                  <span>Start a project</span>
+                </Link>
+              </Magnetic>
+              <div className="footer-socials">
+                {SOCIALS.map(({ I, href, l }) => (
+                  <Magnetic key={l} strength={0.4}>
+                    <a
+                      href={href}
+                      className="social"
+                      aria-label={l}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <I size={16} />
+                    </a>
+                  </Magnetic>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <nav className="footer-col" aria-label="Explore">
+            <p className="footer-head mono-label">Explore</p>
             {PAGES.map((p) => (
-              <Link key={p.href} href={p.href} className="link-sweep">
+              <Link key={p.href} href={p.href}>
                 {p.label}
               </Link>
             ))}
           </nav>
 
-          <div className="footer-socials">
-            {SOCIALS.map(({ I, href, l }) => (
-              <Magnetic key={l} strength={0.4}>
-                <a
-                  href={href}
-                  className="social"
-                  aria-label={l}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <I size={16} />
-                </a>
-              </Magnetic>
+          {/* One link to every service page from every page of the site. */}
+          <nav className="footer-col" aria-label="Services">
+            <p className="footer-head mono-label">Services</p>
+            {SERVICES.map((s) => (
+              <Link key={s.slug} href={serviceHref(s.slug)}>
+                {s.name}
+              </Link>
             ))}
-          </div>
-        </div>
+          </nav>
 
-        {/* One link to every service page from every page of the site. */}
-        <nav className="footer-services" aria-label="Services">
-          <span className="mono-label">Services</span>
-          {SERVICES.map((s) => (
-            <Link key={s.slug} href={serviceHref(s.slug)} className="link-sweep">
-              {s.name}
+          <nav className="footer-col footer-col-wide" aria-label="Projects">
+            <p className="footer-head mono-label">Projects</p>
+            {CASE_STUDIES.slice(0, 6).map((c) => (
+              <Link key={c.slug} href={`/work/${c.slug}`}>
+                {c.title}
+              </Link>
+            ))}
+            <Link href="/work" className="footer-more">
+              All projects →
             </Link>
-          ))}
-        </nav>
+          </nav>
+        </div>
 
         {/* Oversized outlined wordmark, centred, single line. Sits
             still for 2s, then idles into a per-letter wave — a click
