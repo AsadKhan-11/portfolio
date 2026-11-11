@@ -84,11 +84,11 @@ export function ContactDetails() {
 }
 
 /* The form, carried by its own panel. */
-export function ContactPanel() {
+export function ContactPanel({ from }: { from?: string }) {
   return (
     <Reveal delay={0.15} className="contact-form-panel">
       <p className="mono-label contact-form-label">Start a project</p>
-      <ContactForm />
+      <ContactForm from={from} />
     </Reveal>
   );
 }
@@ -98,7 +98,20 @@ export function ContactPanel() {
   `head={false}` is the /contact page's: its first screen has already said
   what the page is, so the section is just the details beside the form.
 */
-export default function Contact({ head = true }: { head?: boolean }) {
+export default function Contact({
+  head = true,
+  eyebrow = "08 · Contact",
+  lede,
+  from,
+}: {
+  head?: boolean;
+  /** The case study or service slug this page is about, recorded with the enquiry. */
+  from?: string;
+  /** The label over the heading: numbered on the home page, plain on the others. */
+  eyebrow?: string;
+  /** Replaces the paragraph under the heading. */
+  lede?: string;
+}) {
   return (
     <section id="contact" className="section bg-glow-br">
       <div className="rule-top" />
@@ -109,7 +122,7 @@ export default function Contact({ head = true }: { head?: boolean }) {
             {head && (
               <>
                 <Reveal>
-                  <p className="eyebrow">08 · Contact</p>
+                  <p className="eyebrow">{eyebrow}</p>
                 </Reveal>
 
                 <h2 className="section-title" style={{ marginTop: "1.5rem" }}>
@@ -122,8 +135,8 @@ export default function Contact({ head = true }: { head?: boolean }) {
 
                 <Reveal delay={0.1}>
                   <p className="lede" style={{ marginTop: "1.5rem" }}>
-                    Whether you have a spec ready or just the beginning of an
-                    idea, tell me about it. I reply within a day.
+                    {lede ??
+                      "Whether you have a spec ready or just the beginning of an idea, tell me about it. I reply within a day."}
                   </p>
                 </Reveal>
               </>
@@ -132,7 +145,7 @@ export default function Contact({ head = true }: { head?: boolean }) {
             <ContactDetails />
           </div>
 
-          <ContactPanel />
+          <ContactPanel from={from} />
         </div>
       </div>
     </section>

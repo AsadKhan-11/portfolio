@@ -70,6 +70,9 @@ export function SplitText({
             overflow: "hidden",
             verticalAlign: "bottom",
             paddingBottom: "0.08em",
+            /* Italic letters (the "g" of "get") overhang their box; the mask would shave them. */
+            paddingInline: "0.12em",
+            marginInline: "-0.12em",
           }}
           aria-hidden="true"
         >

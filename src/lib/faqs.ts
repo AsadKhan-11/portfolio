@@ -11,6 +11,10 @@
   a dead stop sends people away; one that hands them to the page with the
   detail keeps them reading.
 */
+import { getPackage } from "./packages";
+
+const money = (n: number) => `$${n.toLocaleString("en-US")}`;
+
 export interface FaqLink {
   label: string;
   href: string;
@@ -45,7 +49,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       {
         id: "cost",
         q: "What does a project typically cost?",
-        a: "It depends on scope, but most builds land between $1,000 and $7,000. A landing page sits at the lower end; a full application with auth, payments and an admin panel sits at the upper end. I quote a fixed price after we've talked through what you need, so there are no surprises halfway through.",
+        a: `It depends on scope. The three packages start from ${money(getPackage("Launch").price)} for a custom site, ${money(getPackage("Build").price)} for a full-stack application with accounts and an admin dashboard, and ${money(getPackage("Scale").price)} when AI features and payments are part of it. I quote a fixed price after we've talked through what you need, so there are no surprises halfway through.`,
         links: [PACKAGES, CONTACT],
       },
       {
@@ -56,8 +60,8 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         id: "revisions",
-        q: "How many rounds of changes are included?",
-        a: "Two rounds of revisions on the Launch package and four on Build. Bigger or custom projects are scoped with their own number of rounds before work starts.",
+        q: "How many revisions are included?",
+        a: "Unlimited revisions on every package. We keep refining until you are happy with what was scoped. A change to the scope itself, such as a new feature, is quoted separately before any work starts.",
         links: [PACKAGES],
       },
       {

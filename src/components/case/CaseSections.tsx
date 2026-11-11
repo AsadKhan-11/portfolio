@@ -10,7 +10,6 @@ import SectionHead from "../SectionHead";
 import { Device, FlowPlayer, Frame, Gallery, MoreGrid, PhoneReel, Reel } from "./CaseMedia";
 
 const isMobile = (s: CaseStudy) => s.platform === "mobile";
-const nounFor = (s: CaseStudy) => s.noun ?? (isMobile(s) ? "app" : "platform");
 
 /*
   Every "start a project" link out of a case study carries the slug, so the
@@ -502,33 +501,6 @@ export function CaseMore({ study }: { study: CaseStudy }) {
             <Link href="/work" className="btn">
               <span>View all projects</span>
               <FiArrowRight />
-            </Link>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-export function CaseOutro({ study }: { study: CaseStudy }) {
-  return (
-    <section className="section">
-      <div className="rule-top" />
-      <div className="shell case-outro">
-        <Reveal>
-          <p className="eyebrow" style={{ justifyContent: "center" }}>Next step</p>
-          <h2 className="case-outro-title">
-            {`Need a${"aeiou".includes(nounFor(study)[0]) ? "n" : ""} ${nounFor(study)}`}
-            <br />
-            <span className="serif-em" style={{ color: "var(--flame)" }}>like {study.title}?</span>
-          </h2>
-          <div className="case-outro-actions">
-            <Link href={enquiryHref(study)} className="btn btn-solid" data-cursor="Talk">
-              <span>Start a project</span>
-              <FiArrowUpRight />
-            </Link>
-            <Link href="/work" className="btn">
-              <span>Back to all projects</span>
             </Link>
           </div>
         </Reveal>

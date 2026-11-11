@@ -6,6 +6,7 @@ import Faq from "@/components/Faq";
 import Packages from "@/components/Packages";
 import Process from "@/components/Process";
 import Services, { ServiceFit } from "@/components/Services";
+import { ServicesVisual } from "@/components/page/HeroVisuals";
 import { PageCta, PageHero } from "@/components/page/PageParts";
 import { ProjectsSection } from "@/components/Work";
 import { getFaqs } from "@/lib/faqs";
@@ -16,7 +17,7 @@ import { SERVICES, serviceHref } from "@/lib/services";
 
 const TITLE = "Web Development Services · AI, Apps, E-Commerce & Design";
 const DESCRIPTION =
-  "Six services from one developer: AI integration, chatbots, CRM automation, full-stack web apps, e-commerce and UI/UX design, all quoted at a fixed price.";
+  "Six services from one developer: AI integration, chatbots, CRM automation, full-stack web apps, e-commerce and mobile apps, all quoted at a fixed price.";
 
 export const metadata = pageMetadata({ title: TITLE, description: DESCRIPTION, path: "/services" });
 
@@ -51,11 +52,12 @@ export default function ServicesPage() {
           lead="Six services,"
           em="one developer for the whole job."
           lede="From AI features to the storefront underneath them. Most projects use several at once, which is rather the point of hiring one person for the whole stack."
+          aside={<ServicesVisual />}
         >
           <Link href="/contact" className="btn btn-solid" data-cursor="Talk">
             <span>Get a fixed quote</span>
           </Link>
-          <Link href="/work" className="link-sweep hero-quiet-link">
+          <Link href="/work" className="btn">
             See the projects <FiArrowRight />
           </Link>
         </PageHero>

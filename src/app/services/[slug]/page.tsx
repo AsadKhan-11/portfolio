@@ -69,9 +69,18 @@ export default async function ServicePageRoute({
             lede: "Projects where I've done this kind of work. Each one has a full case study: what was built, and why.",
           }}
         />
+        <Services
+          head={{
+            eyebrow: "05 · More services",
+            title: "Often paired",
+            em: "with",
+            lede: "Most projects use several of these at once, which is the point of hiring one person for the whole stack.",
+          }}
+          exclude={[service.slug]}
+        />
         <Faq
           head={{
-            eyebrow: "05 · FAQ",
+            eyebrow: "06 · FAQ",
             title: "Before you",
             em: "ask",
             lede: "The questions that come up most before a project like this starts. If yours isn't here, ask me directly.",
@@ -79,16 +88,7 @@ export default async function ServicePageRoute({
           items={service.faqs}
           askHref="/contact"
         />
-        <Services
-          head={{
-            eyebrow: "06 · More services",
-            title: "Often paired",
-            em: "with",
-            lede: "Most projects use several of these at once, which is the point of hiring one person for the whole stack.",
-          }}
-          exclude={[service.slug]}
-        />
-        <PageCta />
+        <PageCta from={service.slug} />
       </main>
       <Footer />
     </>

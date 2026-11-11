@@ -97,7 +97,7 @@ export default function About() {
             <Reveal delay={0.28}>
               <Link
                 href="/about"
-                className="link-sweep hero-quiet-link"
+                className="btn"
                 style={{ marginTop: "2rem" }}
               >
                 Read the full story <FiArrowRight />

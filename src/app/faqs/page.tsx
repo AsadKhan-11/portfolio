@@ -1,8 +1,8 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { FaqGroups } from "@/components/Faq";
+import { FaqExplorer } from "@/components/Faq";
+import { FaqVisual } from "@/components/page/HeroVisuals";
 import { PageCta, PageHero } from "@/components/page/PageParts";
-import { FAQ_GROUPS } from "@/lib/faqs";
 import { pageJsonLd } from "@/lib/pageJsonLd";
 import { pageMetadata } from "@/lib/seo";
 
@@ -35,21 +35,10 @@ export default function FaqsPage() {
           lead="Before you ask,"
           em="the answers."
           lede="The questions that come up on almost every first call, answered properly so you don't have to ask them. Each answer points to the page with the detail."
-        >
-          <nav aria-label="Topics" className="faq-topics">
-            <ul>
-              {FAQ_GROUPS.map((g) => (
-                <li key={g.id}>
-                  <a href={`#${g.id}`} className="tag">
-                    {g.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </PageHero>
+          aside={<FaqVisual />}
+        />
 
-        <FaqGroups />
+        <FaqExplorer />
 
         <PageCta copy="Something not covered here? Ask me directly. I reply within a day, with an answer or with a fixed quote once the scope is clear." />
       </main>

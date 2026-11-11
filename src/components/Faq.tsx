@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiPlus } from "react-icons/fi";
 import { Reveal } from "./animations";
+import { useScrollSpy } from "./useScrollSpy";
 import SectionHead, { type Head } from "./SectionHead";
 import { FAQ_GROUPS, HOME_FAQS, type FaqGroup, type FaqLink } from "@/lib/faqs";
 
@@ -256,5 +257,61 @@ export function FaqGroups({ groups = FAQ_GROUPS }: { groups?: FaqGroup[] }) {
         </section>
       ))}
     </>
+  );
+}
+
+/*
+  The FAQs page: the categories down a sticky list on the left, every
+  question grouped under its heading on the right, and the category being read
+  highlighted as the page scrolls. On a phone the categories are a row of
+  chips that stays under the header.
+*/
+export function FaqExplorer({ groups = FAQ_GROUPS }: { groups?: FaqGroup[] }) {
+  const every = groups.flatMap((g) => g.items);
+  const { open, toggle } = useOpen(every, { exclusive: false, openFirst: false });
+  const [active, setActive] = useScrollSpy(groups.map((g) => g.id));
+
+  return (
+    <section className="section faqx-section">
+      <div className="rule-top" />
+      <div className="shell faqx">
+        <aside className="faqx-side">
+          <p className="faqx-label mono-label">Categories</p>
+          <nav aria-label="FAQ categories">
+            <ul className="faqx-nav">
+              {groups.map((g) => (
+                <li key={g.id}>
+                  <a
+                    href={`#${g.id}`}
+                    className={`faqx-link${active === g.id ? " is-on" : ""}`}
+                    aria-current={active === g.id ? "true" : undefined}
+                    onClick={() => setActive(g.id)}
+                  >
+                    {g.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="faqx-help">
+            <p>Can&rsquo;t find your answer?</p>
+            <Link href="/contact" className="btn btn-solid" data-cursor="Talk">
+              <span>Contact me</span>
+            </Link>
+          </div>
+        </aside>
+
+        <div className="faqx-main">
+          {groups.map((g) => (
+            <section key={g.id} id={g.id} className="faqx-group" aria-labelledby={`${g.id}-title`}>
+              <h2 id={`${g.id}-title`} className="faqx-title">
+                {g.title}
+              </h2>
+              <FaqList entries={g.items} open={open} onToggle={toggle} />
+            </section>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

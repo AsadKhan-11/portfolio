@@ -5,7 +5,9 @@ import Footer from "@/components/Footer";
 import Band from "@/components/Band";
 import Faq from "@/components/Faq";
 import Packages, { PackageCompare } from "@/components/Packages";
-import { InfoCards, PageCta, PageHero } from "@/components/page/PageParts";
+import { IncludedList, PricingFlow } from "@/components/page/PackageSections";
+import { PackagesVisual } from "@/components/page/HeroVisuals";
+import { PageCta, PageHero } from "@/components/page/PageParts";
 import SectionHead from "@/components/SectionHead";
 import { getFaqs } from "@/lib/faqs";
 import { PACKAGES } from "@/lib/packages";
@@ -93,18 +95,19 @@ export default function PackagesPage() {
           lead="Fixed scope, fixed price,"
           em="a clear finish line."
           lede="Pick the package that matches where you're starting from, or use it as a starting point for a conversation. Each one says what's in it and how long it takes."
+          aside={<PackagesVisual />}
         >
           <Link href="/contact" className="btn btn-solid" data-cursor="Talk">
             <span>Get a fixed quote</span>
           </Link>
-          <Link href="/services" className="link-sweep hero-quiet-link">
+          <Link href="/services" className="btn">
             See the services <FiArrowRight />
           </Link>
         </PageHero>
 
         <Packages head={false} ctaHref="/contact" more={false} />
 
-        <section className="section bg-glow-tr">
+        <section className="section bg-ember tone-keep">
           <div className="rule-top" />
           <div className="shell">
             <SectionHead
@@ -128,7 +131,7 @@ export default function PackagesPage() {
               em="includes"
               lede="Whichever you pick, these come with it."
             />
-            <InfoCards items={INCLUDED} />
+            <IncludedList items={INCLUDED} />
           </div>
         </section>
 
@@ -141,7 +144,7 @@ export default function PackagesPage() {
               em="works"
               lede="No hourly meter, no surprises on the invoice."
             />
-            <InfoCards items={PRICING} columns={3} />
+            <PricingFlow items={PRICING} />
           </div>
         </section>
 

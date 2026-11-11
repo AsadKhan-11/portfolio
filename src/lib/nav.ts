@@ -12,10 +12,10 @@ export interface NavPage {
 }
 
 export const PAGES: NavPage[] = [
+  { label: "About", href: "/about" },
   { label: "Projects", href: "/work" },
   { label: "Services", href: "/services" },
   { label: "Packages", href: "/packages" },
-  { label: "About", href: "/about" },
   { label: "FAQs", href: "/faqs" },
   { label: "Contact", href: "/contact" },
 ];

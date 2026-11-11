@@ -2,9 +2,9 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
-import { FiArrowDownRight, FiCheck } from "react-icons/fi";
+import { FiCheck } from "react-icons/fi";
 import { Magnetic } from "./animations";
-import { MaskWords, ScrollCue, after } from "./heroMotion";
+import { MaskWords, after } from "./heroMotion";
 import { IdleHeroField } from "./LazyFields";
 
 /* The offer, in three short promises, so the first screen answers
@@ -26,7 +26,6 @@ const T = {
   lede: 0.4,
   cta: 0.5,
   proof: 0.7,
-  cue: 0.9,
 };
 
 export default function Hero() {
@@ -38,7 +37,6 @@ export default function Hero() {
   });
   const rawCopy = useTransform(scrollYProgress, [0, 1], [0, -70]);
   const copyY = useSpring(rawCopy, { stiffness: 90, damping: 26 });
-  const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
     <section ref={ref} id="home" className="hero">
@@ -46,72 +44,63 @@ export default function Hero() {
           says "we build things" before a word is read */}
       <IdleHeroField />
 
-      <div className="shell" style={{ position: "relative", zIndex: 2, width: "100%" }}>
-        {/* ── The pitch, centred and brief ── */}
-        <motion.div className="hero-center" style={{ y: copyY }}>
-          <p
-            className="hero-kicker mono-label hero-in hero-in-fade"
-            style={after(T.kicker)}
-          >
+      <div className="shell hero-wrap">
+        <div className="hero-grid">
+          {/* ── The pitch: the outcome, one line, one button ── */}
+          <motion.div className="hero-center" style={{ y: copyY }}>
+            {/*
+              Three fixed lines instead of one sentence left to wrap. Left to
+              wrap, the break depended on the window: on a short laptop screen
+              the first line took "Websites, portals, and web" and stranded
+              "apps" alone beneath it. Each phrase is its own block now, so it
+              can only ever break inside itself (see .hero-line). The literal
+              spaces keep the heading's text a single sentence for anything
+              that reads it without the layout.
+            */}
+            <h1 className="hero-headline">
+              <span className="hero-line">
+                <MaskWords text="Software that fixes" delay={T.head} />
+              </span>{" "}
+              <span className="hero-line">
+                <MaskWords text="your business problems" delay={T.head + 0.1} />
+              </span>{" "}
+              <span className="hero-line serif-em" style={{ color: "var(--flame)" }}>
+                <MaskWords text="and brings in clients." delay={T.head + 0.28} />
+              </span>
+            </h1>
+
+            <p className="hero-lede hero-in" style={after(T.lede)}>
+              Web and mobile apps, by one developer.
+            </p>
+
+            <div className="hero-cta-row hero-in" style={after(T.cta)}>
+              <Magnetic strength={0.3}>
+                <a href="#contact" className="btn btn-solid">
+                  <span>Start a project</span>
+                </a>
+              </Magnetic>
+            </div>
+          </motion.div>
+
+          {/* ── The proof: three of the platforms, stacked like open windows ── */}
+        </div>
+
+        {/* ── One strip of proof, along the bottom ── */}
+        <div className="hero-strip hero-in hero-in-fade" style={after(T.proof)}>
+          <ul className="hero-promises">
+            {TRUST.map((t) => (
+              <li key={t} className="hero-trust">
+                <FiCheck size={12} aria-hidden="true" />
+                {t}
+              </li>
+            ))}
+          </ul>
+          <p className="hero-status mono-label">
             <span className="hero-kicker-dot" aria-hidden="true" />
             Booking new builds · 2026
           </p>
-
-          {/*
-            Three fixed lines instead of one sentence left to wrap. Left to
-            wrap, the break depended on the window: on a short laptop screen
-            the first line took "Websites, portals, and web" and stranded
-            "apps" alone beneath it. Each phrase is its own block now, so it
-            can only ever break inside itself (see .hero-line). The literal
-            spaces keep the heading's text a single sentence for anything
-            that reads it without the layout.
-          */}
-          <h1 className="hero-headline">
-            <span className="hero-line">
-              <MaskWords text="Websites, portals," delay={T.head} />
-            </span>{" "}
-            <span className="hero-line">
-              <MaskWords text="and web apps" delay={T.head + 0.1} />
-            </span>{" "}
-            <span className="hero-line serif-em" style={{ color: "var(--flame)" }}>
-              <MaskWords text="that win you clients." delay={T.head + 0.28} />
-            </span>
-          </h1>
-
-          <p className="hero-lede hero-in" style={after(T.lede)}>
-            One developer for the whole job: design, build and launch. You deal
-            with the person doing the work, and the finished product is yours.
-          </p>
-
-          <div className="hero-cta-row hero-in" style={after(T.cta)}>
-            <Magnetic strength={0.3}>
-              <a href="#contact" className="btn btn-solid">
-                <span>Start a project</span>
-              </a>
-            </Magnetic>
-            <a href="#work" className="link-sweep hero-quiet-link" data-cursor="See work">
-              See the work <FiArrowDownRight />
-            </a>
-          </div>
-
-          {/* ── One quiet line of proof ── */}
-          <div className="hero-proofline hero-in hero-in-fade" style={after(T.proof)}>
-            {TRUST.map((t) => (
-              <span key={t} className="hero-trust">
-                <FiCheck size={12} aria-hidden="true" />
-                {t}
-              </span>
-            ))}
-          </div>
-        </motion.div>
+        </div>
       </div>
-
-      {/* Scroll cue — the outer box carries the scroll-driven fade, the shared
-          cue inside it the entrance, so the two opacities multiply instead of
-          overwriting. */}
-      <motion.div className="scroll-cue" style={{ opacity: fade }}>
-        <ScrollCue after={T.cue} />
-      </motion.div>
     </section>
   );
 }

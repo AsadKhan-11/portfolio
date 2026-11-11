@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Contact from "@/components/Contact";
 import Faq from "@/components/Faq";
+import { ContactVisual } from "@/components/page/HeroVisuals";
 import { PageHero, StepCards } from "@/components/page/PageParts";
 import SectionHead from "@/components/SectionHead";
 import { getFaqs } from "@/lib/faqs";
@@ -68,6 +69,7 @@ export default function ContactPage() {
           lead="Let’s build"
           em="something together."
           lede="Whether you have a spec ready or just the beginning of an idea, tell me about it. Email, phone or the form: I reply within a day."
+          aside={<ContactVisual />}
         />
 
         <Contact head={false} />

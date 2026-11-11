@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { FiArrowDownRight, FiArrowUpRight } from "react-icons/fi";
+import { FiArrowDownRight } from "react-icons/fi";
 import { Reveal } from "../animations";
 import { after } from "../heroMotion";
 import ImageSlot from "../ImageSlot";
 import { PageHero } from "../page/PageParts";
 import SectionHead from "../SectionHead";
 import { AVAILABILITY, PROFILE } from "@/lib/profile";
-import { CONTACT_EMAIL, SOCIAL_LINKS } from "@/lib/site";
 
 /*
   What is particular to the About page. The profile copy is the home page's
@@ -60,7 +59,7 @@ export function AboutHero() {
       <Link href="/contact" className="btn btn-solid" data-cursor="Talk">
         <span>Start a project</span>
       </Link>
-      <Link href="/work" className="link-sweep hero-quiet-link">
+      <Link href="/work" className="btn">
         See the projects <FiArrowDownRight />
       </Link>
     </PageHero>
@@ -94,79 +93,6 @@ export function AboutStory() {
             <p className="svc-story">{PROFILE.workingWithMe}</p>
           </Reveal>
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* Where to be found, and when: the basics a visitor to an About page looks for. */
-export function AboutLocation() {
-  return (
-    <section className="section bg-raised">
-      <div className="rule-top" />
-      <div className="shell">
-        <div className="svc-split">
-          <Reveal>
-            <p className="eyebrow">06 · Location</p>
-            <h2 className="svc-h2">From Lahore, for clients worldwide</h2>
-            <p className="svc-card-body" style={{ maxWidth: "52ch" }}>
-              Most of my clients are outside Pakistan. I&rsquo;m in Lahore (UTC+5), which
-              overlaps comfortably with Europe, the Middle East and Asia, and I keep early
-              evenings free for calls with the US. Async updates and a staging link mean
-              you&rsquo;re never waiting on a timezone to see progress.
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <div className="svc-pkg panel tick">
-              <p className="mono-label">Based in</p>
-              <p className="svc-price">
-                Lahore, Pakistan
-                <small>UTC+5</small>
-              </p>
-              <p className="svc-card-body">
-                I reply within a day. Tell me what you&rsquo;re building and I&rsquo;ll come
-                back with questions, or a fixed quote once the scope is clear.
-              </p>
-              <Link href="/contact" className="link-sweep svc-aside-link">
-                Get in touch
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function AboutElsewhere() {
-  return (
-    <section className="section bg-raised">
-      <div className="rule-top" />
-      <div className="shell">
-        <SectionHead
-          eyebrow="Elsewhere"
-          title="Find me"
-          em="online"
-          lede="The same name, the same work and the same email on every one of these, so what you read here is what you'll find there."
-        />
-
-        <Reveal>
-          <ul className="svc-links svc-links-lg">
-            <li>
-              <a href={`mailto:${CONTACT_EMAIL}`} className="link-sweep">
-                {CONTACT_EMAIL} <FiArrowUpRight size={14} aria-hidden="true" />
-              </a>
-            </li>
-            {SOCIAL_LINKS.map((s) => (
-              <li key={s.url}>
-                <a href={s.url} target="_blank" rel="noopener noreferrer" className="link-sweep">
-                  {s.label} <FiArrowUpRight size={14} aria-hidden="true" />
-                </a>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
       </div>
     </section>
   );

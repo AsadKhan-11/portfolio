@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { FiArrowUpRight } from "react-icons/fi";
 import { Reveal } from "../animations";
+import Contact from "../Contact";
 import { MaskWords, ScrollCue, after } from "../heroMotion";
 
 /*
@@ -170,38 +170,10 @@ export function StepCards({ steps }: { steps: { title: string; body: string }[] 
   );
 }
 
-/** The last thing on a page: one question and the two ways to answer it. */
-export function PageCta({ copy }: { copy?: string }) {
-  return (
-    <section className="section">
-      <div className="rule-top" />
-      <div className="shell case-outro">
-        <Reveal>
-          <p className="eyebrow" style={{ justifyContent: "center" }}>
-            Next step
-          </p>
-          <h2 className="case-outro-title">
-            Have a project
-            <br />
-            <span className="serif-em" style={{ color: "var(--flame)" }}>
-              in mind?
-            </span>
-          </h2>
-          <p className="lede svc-cta-copy">
-            {copy ??
-              "Tell me what you're building. I reply within a day, with questions or with a fixed quote once the scope is clear."}
-          </p>
-          <div className="case-outro-actions">
-            <Link href="/contact" className="btn btn-solid" data-cursor="Talk">
-              <span>Start a project</span>
-              <FiArrowUpRight />
-            </Link>
-            <Link href="/packages" className="btn">
-              <span>See the packages</span>
-            </Link>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
+/*
+  The last thing on a page: the same contact section the home page ends on
+  (the details beside the form), so every page closes the same way.
+*/
+export function PageCta({ copy, from }: { copy?: string; from?: string }) {
+  return <Contact eyebrow="Contact" lede={copy} from={from} />;
 }

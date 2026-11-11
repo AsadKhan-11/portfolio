@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useSyncExternalStore } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { FiArrowUpRight, FiCheck, FiX } from "react-icons/fi";
 import { Magnetic } from "./animations";
@@ -66,7 +67,7 @@ function validate(f: Fields): Partial<Record<keyof Fields, string>> {
   return e;
 }
 
-export default function ContactForm() {
+export default function ContactForm({ from }: { from?: string }) {
   const [f, setF] = useState<Fields>(EMPTY);
   const [types, setTypes] = useState<string[]>([]);
   const [errors, setErrors] = useState<Partial<Record<keyof Fields, string>>>({});
@@ -89,7 +90,9 @@ export default function ContactForm() {
     hook would push it behind a Suspense boundary for what is only ever a
     prefill.
   */
-  const refSlug = useSyncExternalStore(subscribeToUrl, readRef, noRefOnServer);
+  const queryRef = useSyncExternalStore(subscribeToUrl, readRef, noRefOnServer);
+  /* A page can name its own subject (a case study, a service) when the link carried none. */
+  const refSlug = queryRef ?? from ?? null;
   const source = useMemo(() => {
     if (refDropped || !refSlug) return null;
     const study = CASE_STUDIES.find((c) => c.slug === refSlug);
@@ -428,7 +431,17 @@ export default function ContactForm() {
           ) : waiting && !token ? (
             "One moment, checking you are not a bot. Press send again."
           ) : (
-            "Your details go straight to my inbox. Never shared, never added to a mailing list."
+            <>
+              By submitting, you agree to be contacted about your request. See our{" "}
+              <Link href="/terms" className="form-legal-link">
+                Terms
+              </Link>{" "}
+              &amp;{" "}
+              <Link href="/privacy" className="form-legal-link">
+                Privacy Policy
+              </Link>
+              .
+            </>
           )}
         </p>
         {/* Only ever present under `next dev`, where there is no server to send through. */}

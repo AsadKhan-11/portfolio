@@ -12,11 +12,11 @@ import {
   CaseJump,
   CaseMidCta,
   CaseMore,
-  CaseOutro,
   CasePhones,
   CaseReel,
   CaseStory,
 } from "@/components/case/CaseSections";
+import { PageCta } from "@/components/page/PageParts";
 import { CASE_STUDIES, getCaseStudy, typeInSentence, type CaseStudy } from "@/lib/caseStudies";
 import { caseStudyJsonLdString } from "@/lib/caseStudyJsonLd";
 
@@ -165,7 +165,7 @@ export default async function CaseStudyPage({
         <CasePhones study={study} />
         <CaseDecisions study={study} />
         <CaseMore study={study} />
-        <CaseOutro study={study} />
+        <PageCta from={study.slug} />
       </main>
       <Footer />
     </>

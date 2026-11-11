@@ -13,7 +13,7 @@ export const PROJECT_TYPES: string[] = [
   "CRM / automation",
   "Web app",
   "E-commerce",
-  "Design",
+  "Mobile app",
 ];
 
 export const BUDGETS: string[] = [

@@ -49,7 +49,7 @@ export default function NotFound() {
           <Link href="/" className="btn btn-solid" data-cursor="Home">
             <span>Back to the home page</span>
           </Link>
-          <Link href="/work" className="link-sweep hero-quiet-link">
+          <Link href="/work" className="btn">
             See the projects <FiArrowRight />
           </Link>
         </PageHero>

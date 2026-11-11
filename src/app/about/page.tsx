@@ -5,12 +5,7 @@ import Experience from "@/components/Experience";
 import Services from "@/components/Services";
 import Stats from "@/components/Stats";
 import Toolkit from "@/components/Toolkit";
-import {
-  AboutElsewhere,
-  AboutHero,
-  AboutLocation,
-  AboutStory,
-} from "@/components/about/AboutSections";
+import { AboutHero, AboutStory } from "@/components/about/AboutSections";
 import { PageCta } from "@/components/page/PageParts";
 import { ProjectsSection } from "@/components/Work";
 import { aboutJsonLd } from "@/lib/pageJsonLd";
@@ -77,8 +72,6 @@ export default function AboutPage() {
             lede: "Six things I get hired for, from AI features to the storefront underneath them. Most projects use several at once.",
           }}
         />
-        <AboutLocation />
-        <AboutElsewhere />
         <PageCta />
       </main>
       <Footer />

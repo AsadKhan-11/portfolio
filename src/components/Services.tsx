@@ -1,19 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import type { IconType } from "react-icons";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  FiArrowRight,
-  FiCpu,
-  FiLayers,
-  FiLayout,
-  FiMessageSquare,
-  FiRefreshCw,
-  FiShoppingBag,
-} from "react-icons/fi";
+import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Reveal, Stagger, StaggerItem } from "./animations";
 import SectionHead, { type Head } from "./SectionHead";
+import { getPackage } from "@/lib/packages";
+import { SERVICE_ICONS } from "@/lib/serviceIcons";
 import { SERVICES, serviceHref, type ServicePage } from "@/lib/services";
 
 /*
@@ -42,7 +37,7 @@ interface Cell {
 
 const CELLS: Record<string, Cell> = {
   "ai-integration": {
-    Icon: FiCpu,
+    Icon: SERVICE_ICONS["ai-integration"],
     col: [1, 7],
     row: [1, 2],
     hero: true,
@@ -50,11 +45,11 @@ const CELLS: Record<string, Cell> = {
     artAlt:
       "Friendly AI robot holding a holographic panel that links an AI chip to search and database icons",
   },
-  "chatbots-assistants": { Icon: FiMessageSquare, col: [8, 5], row: [1, 1] },
-  "crm-automation": { Icon: FiRefreshCw, col: [8, 5], row: [2, 1] },
-  "web-apps": { Icon: FiLayers, col: [1, 4], row: [3, 1] },
-  "ecommerce-payments": { Icon: FiShoppingBag, col: [5, 4], row: [3, 1] },
-  "ui-ux-design": { Icon: FiLayout, col: [9, 4], row: [3, 1] },
+  "chatbots-assistants": { Icon: SERVICE_ICONS["chatbots-assistants"], col: [8, 5], row: [1, 1] },
+  "crm-automation": { Icon: SERVICE_ICONS["crm-automation"], col: [8, 5], row: [2, 1] },
+  "mobile-apps": { Icon: SERVICE_ICONS["mobile-apps"], col: [1, 4], row: [3, 1] },
+  "web-apps": { Icon: SERVICE_ICONS["web-apps"], col: [5, 4], row: [3, 1] },
+  "ecommerce-payments": { Icon: SERVICE_ICONS["ecommerce-payments"], col: [9, 4], row: [3, 1] },
 };
 
 const HEAD: Head = {
@@ -191,30 +186,68 @@ export default function Services({
 
 /*
   "Which one do I need?" Each service names the situation it is for (the
-  first of its "good fit" lines); this lists them as sentences a visitor can
-  hold up against their own week, each pointing to its page.
+  first of its "good fit" lines). Hover, focus or tap a situation and the
+  service for it opens beside the list: what it covers, which package it
+  usually sits in, and the way through to its page. On a phone the open
+  service drops in directly under the situation you picked.
 */
 export function ServiceFit({ head }: { head: Head }) {
+  const [on, setOn] = useState(0);
+
   return (
     <section className="section">
       <div className="rule-top" />
       <div className="shell">
         <SectionHead {...head} />
 
-        <ul className="fit-list">
-          {SERVICES.map((s) => (
-            <li key={s.slug}>
-              <Reveal>
-                <Link href={serviceHref(s.slug)} className="fit-row" data-cursor="Read">
+        <ul className="pick">
+          {SERVICES.map((s, i) => {
+            const pkg = getPackage(s.pkg.name);
+            const open = i === on;
+            return (
+              <li key={s.slug}>
+                <button
+                  type="button"
+                  className={`pick-btn${open ? " is-on" : ""}`}
+                  aria-expanded={open}
+                  aria-controls={`pick-${s.slug}`}
+                  onPointerEnter={(e) => {
+                    if (e.pointerType === "mouse") setOn(i);
+                  }}
+                  onFocus={() => setOn(i)}
+                  onClick={() => setOn(i)}
+                >
                   <span className="svc-card-n">{s.n}</span>
-                  <span className="fit-text">{s.fit[0]}</span>
-                  <span className="fit-go">
-                    {s.name} <FiArrowRight size={14} aria-hidden="true" />
+                  <span>{s.fit[0]}</span>
+                </button>
+
+                <div id={`pick-${s.slug}`} className={`pick-detail${open ? " is-on" : ""}`}>
+                  <span className="service-ghost" aria-hidden="true">
+                    {s.n}
                   </span>
-                </Link>
-              </Reveal>
-            </li>
-          ))}
+                  <h3 className="pick-name">{s.name}</h3>
+                  <p className="pick-summary">{s.summary}</p>
+                  <ul className="pick-list">
+                    {s.included.slice(0, 4).map((item) => (
+                      <li key={item.title}>
+                        <FiCheck size={14} aria-hidden="true" />
+                        <span>{item.title}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="pick-foot">
+                    <span className="pick-from mono-label">
+                      Usually {pkg.name}, from ${pkg.price.toLocaleString("en-US")}
+                    </span>
+                    <Link href={serviceHref(s.slug)} className="btn btn-solid" data-cursor="Read">
+                      <span>About {s.name}</span>
+                      <FiArrowRight />
+                    </Link>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>

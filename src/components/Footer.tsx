@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FiArrowUp, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
@@ -11,8 +11,6 @@ import { SERVICES, serviceHref } from "@/lib/services";
 import { CASE_STUDIES } from "@/lib/caseStudies";
 import { CONTACT_EMAIL } from "@/lib/site";
 
-const WORDMARK = "WebForge Digital";
-
 const SOCIALS = [
   { I: FiGithub, href: "https://github.com/AsadKhan-11", l: "GitHub" },
   { I: FiLinkedin, href: "https://www.linkedin.com/in/asad-khan-011h/", l: "LinkedIn" },
@@ -22,21 +20,7 @@ const SOCIALS = [
 
 export default function Footer() {
   const [clock, setClock] = useState("");
-  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
-  const rippleId = useRef(0);
   const year = new Date().getFullYear();
-
-  /*
-    Material-style click ripple, centred on the click point. The
-    wordmark is already a "back to top" link, so this doubles as
-    press feedback for that action.
-  */
-  const addRipple = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const id = rippleId.current++;
-    setRipples((r) => [...r, { id, x: e.clientX - rect.left, y: e.clientY - rect.top }]);
-    setTimeout(() => setRipples((r) => r.filter((rp) => rp.id !== id)), 900);
-  };
 
   useEffect(() => {
     const tick = () =>
@@ -170,45 +154,15 @@ export default function Footer() {
           </nav>
         </div>
 
-        {/* Oversized outlined wordmark, centred, single line. Sits
-            still for 2s, then idles into a per-letter wave — a click
-            also sends out a ripple from the pointer. */}
-        <a
-          href="#home"
-          aria-label="Back to top"
-          className="footer-mark-link"
-          onClick={addRipple}
-        >
-          <p className="footer-mark">
-            {WORDMARK.split("").map((ch, i) => (
-              <span
-                key={i}
-                className="footer-mark-letter"
-                style={{ animationDelay: `${2 + i * 0.07}s` }}
-              >
-                {ch === " " ? " " : ch}
-              </span>
-            ))}
-          </p>
-          {ripples.map((r) => (
-            <span
-              key={r.id}
-              className="footer-ripple"
-              aria-hidden="true"
-              style={{ left: r.x, top: r.y }}
-            />
-          ))}
-        </a>
-
-        <div className="footer-bottom">
+        <div className="footer-legal">
           <span className="footer-copy mono-label">© {year} WebForge Digital</span>
           <span className="footer-loc mono-label" suppressHydrationWarning>
             Lahore, PK · {clock}
           </span>
-          <span className="footer-tech mono-label">Next.js · Three.js · Framer Motion</span>
-          {/* A plain wrapper to place on the phone grid: Magnetic moves its
-              own div around under the cursor, which is no place for a
-              grid-area. */}
+          <nav className="footer-legal-links" aria-label="Legal">
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/terms">Terms of Service</Link>
+          </nav>
           <div className="footer-up">
             <Magnetic strength={0.3}>
               <a href="#home" className="social" aria-label="Back to top">
@@ -218,6 +172,11 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      {/* The name, large and solid, cropped by the bottom edge of the page. */}
+      <a href="#home" aria-label="Back to top" className="footer-giant">
+        <span aria-hidden="true">WebForge Digital</span>
+      </a>
     </footer>
   );
 }

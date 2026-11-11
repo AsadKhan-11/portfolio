@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { CASE_STUDIES } from "@/lib/caseStudies";
 import { SITE_PAGES_UPDATED } from "@/lib/nav";
+import { LEGAL } from "@/lib/legal";
 import { ABOUT_UPDATED } from "@/lib/profile";
 import { SERVICES } from "@/lib/services";
 import { SITE_URL } from "@/lib/site";
@@ -72,5 +73,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.6,
     },
+    ...LEGAL.map((d) => ({
+      url: `${SITE_URL}/${d.slug}`,
+      lastModified: new Date(d.updated),
+      changeFrequency: "yearly" as const,
+      priority: 0.3,
+    })),
   ];
 }

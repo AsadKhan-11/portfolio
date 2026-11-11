@@ -58,7 +58,7 @@ export function ServiceHero({ s }: { s: ServicePage }) {
       <Link href={enquiryHref(s.slug)} className="btn btn-solid" data-cursor="Talk">
         <span>Get a fixed quote</span>
       </Link>
-      <a href="#included" className="link-sweep hero-quiet-link">
+      <a href="#included" className="btn">
         What&rsquo;s included <FiArrowDownRight />
       </a>
     </PageHero>

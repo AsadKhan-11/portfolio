@@ -12,7 +12,7 @@
   description, and SEO audits want 50 to 60 and 120 to 160. src/lib/seo.ts
   warns during the build when a page falls outside either range.
 */
-import type { PackageName } from "./packages";
+import { getPackage, type PackageName } from "./packages";
 
 export interface ServiceFaq {
   q: string;
@@ -319,8 +319,95 @@ export const SERVICES: ServicePage[] = [
     updated: "2026-11-11",
   },
   {
-    slug: "web-apps",
+    slug: "mobile-apps",
     n: "04",
+    name: "Mobile Apps",
+    short: "iOS and Android apps, each platform scoped and quoted on its own.",
+    summary:
+      "iOS and Android apps, each scoped and quoted on its own, with the back end behind them: accounts, your data and payments where the app needs them. Designed for thumbs, tested on real phones.",
+    title: "Mobile App Development · iOS & Android with React Native",
+    description:
+      "iOS and Android apps built by one developer: design, back end and launch from one person, with each platform quoted separately.",
+    h1: { lead: "Mobile apps for iOS and Android,", em: "built by one developer." },
+    lede: "Your customers already reach for their phone to order, book or check something with you. I design and build the app and the back end it talks to, so the two are made together. iOS and Android are scoped and priced separately, so you start with the platform most of your customers use and add the other when you are ready.",
+    fit: [
+      "Your customers would rather order, book or check in on their phone than on a website.",
+      "Your customers or your team would rather do this on their phone than at a desk.",
+      "You have a web product or a business system and want a mobile app that feels like part of it.",
+    ],
+    included: [
+      {
+        title: "iOS, Android, or both",
+        body: "Each platform is scoped and quoted separately, so you pay only for the one you need first and add the other later.",
+      },
+      {
+        title: "Screens designed for thumbs",
+        body: "Layouts and flows designed for a phone first, in Figma, and approved before any code is written.",
+      },
+      {
+        title: "A back end that fits the app",
+        body: "Accounts, an API and a database from the same stack as the rest of my work, so the app and the system behind it are built together.",
+      },
+      {
+        title: "What the phone is good at",
+        body: "Maps, camera, location and notifications where the app genuinely needs them, and left out where it doesn't.",
+      },
+      {
+        title: "Payments where they belong",
+        body: "In-app checkout and subscriptions through Stripe when the app takes money, with card details handled by Stripe, not stored by the app.",
+      },
+      {
+        title: "Tested on real devices",
+        body: "Checked on real phones, not just a simulator, and prepared for release to the App Store and Google Play.",
+      },
+    ],
+    steps: [
+      {
+        title: "Scope the app",
+        body: "What it does, who uses it and what the first version must include, agreed in a fixed quote.",
+      },
+      {
+        title: "Design the flows",
+        body: "The key screens and the paths between them, reviewed with you before anything is built.",
+      },
+      {
+        title: "Build and test",
+        body: "The app and its back end, built together and shared as test builds you can install and try on your own phone.",
+      },
+      {
+        title: "Launch and support",
+        body: "Release preparation, a handover, and 30 days of support after launch.",
+      },
+    ],
+    stack: ["React Native", "TypeScript", "Node.js", "MongoDB", "Stripe", "Figma"],
+    pkg: {
+      name: "Build",
+      note: "A mobile app for one platform, with accounts and a back end, sits inside the Build package. The second platform is quoted separately, and adding AI features or payments moves it into Scale.",
+    },
+    faqs: [
+      {
+        q: "Do I need both iPhone and Android?",
+        a: "Not necessarily. iOS and Android are scoped and priced separately, so you can launch on the platform most of your customers use and add the other later, or build both together. I will tell you which to start with once I know who the app is for.",
+      },
+      {
+        q: "Do I need a website as well?",
+        a: "Not always. Some apps stand alone. If your customers will also look for you on the web, I can build the site and the app from the same back end, so they share accounts and data.",
+      },
+      {
+        q: "Who owns the app and the store accounts?",
+        a: "You do. The code is yours once the final invoice is settled, and the App Store and Google Play developer accounts are set up in your name, so the app can never be held hostage.",
+      },
+      {
+        q: "How many revisions are included?",
+        a: "Unlimited revisions on every package, within the agreed scope. A new feature that was not in the quote is quoted separately before any work starts.",
+      },
+    ],
+    related: ["curbly", "ironside-gym", "vector-academy"],
+    updated: "2026-11-11",
+  },
+  {
+    slug: "web-apps",
+    n: "05",
     name: "Full-Stack Web Apps",
     short: "Client portals, dashboards and admin panels, built end to end.",
     summary:
@@ -387,7 +474,7 @@ export const SERVICES: ServicePage[] = [
     faqs: [
       {
         q: "What does a web app cost?",
-        a: "The Build package, for a custom full-stack application with user accounts and an admin dashboard, starts from $4,500. Bigger or more unusual scopes are quoted individually, and you get a fixed price before any work begins.",
+        a: `The Build package, for a custom full-stack application with user accounts and an admin dashboard, starts from $${getPackage("Build").price.toLocaleString("en-US")}. Bigger or more unusual scopes are quoted individually, and you get a fixed price before any work begins.`,
       },
       {
         q: "How long does it take?",
@@ -407,7 +494,7 @@ export const SERVICES: ServicePage[] = [
   },
   {
     slug: "ecommerce-payments",
-    n: "05",
+    n: "06",
     name: "E-Commerce & Payments",
     short: "Storefronts, subscriptions and checkout flows on Stripe.",
     summary:
@@ -490,93 +577,6 @@ export const SERVICES: ServicePage[] = [
       },
     ],
     related: ["curbly", "ironside-gym", "vector-academy"],
-    updated: "2026-11-11",
-  },
-  {
-    slug: "ui-ux-design",
-    n: "06",
-    name: "UI / UX & Design Systems",
-    short: "Wireframes to design systems in Figma, built as reusable components.",
-    summary:
-      "Wireframes through to pixel-level design systems in Figma, then built as reusable components. Interfaces designed around what users are actually trying to do.",
-    title: "UI/UX Design & Design Systems for Websites and Apps",
-    description:
-      "Wireframes through to pixel-level design systems in Figma, built as reusable components, with interfaces designed around what your users are trying to do.",
-    h1: { lead: "Interfaces designed around", em: "what people are trying to do." },
-    lede: "Good design isn't decoration. It's the difference between a visitor who finds what they need and one who leaves. I design in Figma and build what I design, so there's no gap between the mock-up you approved and the product that ships.",
-    fit: [
-      "Your site looks dated, or doesn't make the offer clear.",
-      "You're building a product and want the design and the code from one person.",
-      "You have several screens or products that should feel like one, and keep drifting apart.",
-    ],
-    included: [
-      {
-        title: "Research and structure",
-        body: "Who's using it, what they're trying to get done, and the shape of the pages or flows that gets them there.",
-      },
-      {
-        title: "Wireframes",
-        body: "Low-fidelity layouts first, so we settle structure while it's still cheap to change.",
-      },
-      {
-        title: "High-fidelity design in Figma",
-        body: "Pixel-level screens for desktop and phone, signed off before production code exists.",
-      },
-      {
-        title: "A design system",
-        body: "Colours, type, spacing and components defined once and reused everywhere, so new pages stay consistent.",
-      },
-      {
-        title: "Built, not handed over as a PDF",
-        body: "I build the components in React, so what ships matches what you approved, down to the details.",
-      },
-      {
-        title: "Accessibility and speed",
-        body: "Contrast, keyboard use, readable type and fast loading are part of the design, and checked before launch.",
-      },
-    ],
-    steps: [
-      {
-        title: "Discovery",
-        body: "Goals, audience and constraints, plus a look at what already exists.",
-      },
-      {
-        title: "Wireframes",
-        body: "Structure and flow, reviewed with you before any visual design.",
-      },
-      {
-        title: "Visual design",
-        body: "Type, colour and layout as high-fidelity screens, with a component library behind them.",
-      },
-      {
-        title: "Build and refine",
-        body: "The designs become reusable components, and anything that doesn't work on a real screen gets adjusted.",
-      },
-    ],
-    stack: ["Figma", "React", "Next.js", "Tailwind", "CSS"],
-    pkg: {
-      name: "Launch",
-      note: "A custom-designed site of up to five pages is the Launch package. Product design for a full application sits inside Build.",
-    },
-    faqs: [
-      {
-        q: "Can you design without building it?",
-        a: "I mostly do both, because a design is better for being built by the person who made it. If you only want design files for your own developers, tell me, and I'll be honest about whether I'm the right fit.",
-      },
-      {
-        q: "Do I need a design system?",
-        a: "A design system is a shared set of colours, type, spacing and components, so every page looks like part of the same product. A five-page site rarely needs a formal one. A product with many screens, or several products under one brand, usually does.",
-      },
-      {
-        q: "Do you work from our brand guidelines?",
-        a: "Yes. If you have a logo, colours and fonts, I design inside them. If you don't, we settle on a direction together as part of the work.",
-      },
-      {
-        q: "How many rounds of changes are included?",
-        a: "It depends on the package: two rounds of revisions on Launch, four on Build.",
-      },
-    ],
-    related: ["aurelle", "vanta-aesthetics", "veloura"],
     updated: "2026-11-11",
   },
 ];
