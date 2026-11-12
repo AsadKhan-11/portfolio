@@ -1,3 +1,4 @@
+import { POSTS } from "@/lib/blog";
 import { CASE_STUDIES } from "@/lib/caseStudies";
 import { SERVICES, serviceHref } from "@/lib/services";
 import { CONTACT_EMAIL, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
@@ -31,6 +32,8 @@ export function GET() {
       `- [${s.title}](${SITE_URL}/work/${s.slug}): ${s.type}, ${s.year} (${plain(s.status)}). ${s.pitch}`,
   );
 
+  const posts = POSTS.map((p) => `- [${p.title}](${SITE_URL}/blog/${p.slug}): ${p.description}`);
+
   const body = [
     "# WebForge Digital",
     "",
@@ -46,6 +49,7 @@ export function GET() {
     `- [Packages](${SITE_URL}/packages): Fixed-price packages, what each one includes, and how pricing works.`,
     `- [About](${SITE_URL}/about): Who is behind the studio: how Asad Khan works, what he builds with and where he has worked.`,
     `- [FAQs](${SITE_URL}/faqs): Answers on cost, timelines, working across time zones, code ownership and support after launch.`,
+    `- [Blog](${SITE_URL}/blog): Plain-spoken guides on pricing, apps, AI and hiring a developer.`,
     `- [Book a call](${SITE_URL}/book): Book a 15, 30 or 60 minute call on Google Meet.`,
     `- [Contact](${SITE_URL}/contact): Send a project enquiry.`,
     "",
@@ -56,6 +60,10 @@ export function GET() {
     "## Case studies",
     "",
     ...caseStudies,
+    "",
+    "## Blog",
+    "",
+    ...posts,
     "",
     "## Contact",
     "",

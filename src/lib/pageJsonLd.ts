@@ -10,6 +10,7 @@
   Deliberately not here: FAQPage. Google retired the FAQ rich result in May
   2026, so the markup no longer buys anything.
 */
+import type { Post } from "./blog";
 import type { ServicePage } from "./services";
 import { SITE_URL, SOCIALS } from "./site";
 
@@ -161,6 +162,49 @@ export function aboutJsonLd({ title, description }: { title: string; description
         "UI and UX design",
       ],
       sameAs: SOCIALS,
+    },
+  ]);
+}
+
+/*
+  A blog post: the breadcrumb trail, the page, and the article itself with its
+  author (the Person on the About page) and publisher (the studio). Every
+  field is something the post shows on the page.
+*/
+export function blogPostJsonLd(post: Post) {
+  const url = `${SITE_URL}/blog/${post.slug}`;
+  return toScript([
+    breadcrumbs(url, [
+      { name: "Home", item: SITE_URL },
+      { name: "Blog", item: `${SITE_URL}/blog` },
+      { name: post.title },
+    ]),
+    {
+      "@type": "BlogPosting",
+      "@id": `${url}#article`,
+      mainEntityOfPage: { "@type": "WebPage", "@id": `${url}#webpage` },
+      headline: post.title,
+      description: post.description,
+      url,
+      inLanguage: "en",
+      datePublished: post.published,
+      dateModified: post.published,
+      articleSection: post.category,
+      image: `${SITE_URL}/brand/og.jpg`,
+      author: ASAD,
+      publisher: STUDIO,
+      isPartOf: WEBSITE,
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${url}#webpage`,
+      url,
+      name: post.metaTitle,
+      description: post.description,
+      inLanguage: "en",
+      isPartOf: WEBSITE,
+      breadcrumb: { "@id": `${url}#breadcrumbs` },
+      mainEntity: { "@id": `${url}#article` },
     },
   ]);
 }

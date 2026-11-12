@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { POSTS } from "@/lib/blog";
 import { CASE_STUDIES } from "@/lib/caseStudies";
 import { SITE_PAGES_UPDATED } from "@/lib/nav";
 import { LEGAL } from "@/lib/legal";
@@ -21,7 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     newest of theirs. The home page lists and links to everything, so it
     carries the newest date on the site.
   */
-  const all = [...caseDates, ...serviceDates, ABOUT_UPDATED, SITE_PAGES_UPDATED];
+  const postDates = POSTS.map((p) => p.published);
+  const all = [...caseDates, ...serviceDates, ...postDates, ABOUT_UPDATED, SITE_PAGES_UPDATED];
 
   return [
     { url: SITE_URL, lastModified: new Date(newest(all)), changeFrequency: "monthly", priority: 1 },
@@ -79,6 +81,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.6,
     },
+    {
+      url: `${SITE_URL}/blog`,
+      lastModified: new Date(newest(postDates)),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    },
+    ...POSTS.map((p) => ({
+      url: `${SITE_URL}/blog/${p.slug}`,
+      lastModified: new Date(p.published),
+      changeFrequency: "yearly" as const,
+      priority: 0.7,
+    })),
     ...LEGAL.map((d) => ({
       url: `${SITE_URL}/${d.slug}`,
       lastModified: new Date(d.updated),

@@ -83,7 +83,7 @@ export default function Footer() {
           {/* Who this is, how to reach them, and the one action worth taking. */}
           <div className="footer-brand">
             <Link href="/" className="footer-logo" aria-label="WebForge Digital, home">
-              <Image src="/brand/mark-light.png" alt="" width={32} height={19} />
+              <Image src="/brand/mark-light.png" alt="WebForge Digital logo" width={32} height={19} />
               <span>
                 WebForge <span className="footer-logo-dim">Digital</span>
               </span>
