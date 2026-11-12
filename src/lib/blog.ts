@@ -26,6 +26,9 @@ const launch = getPackage("Launch");
 const build = getPackage("Build");
 const scale = getPackage("Scale");
 
+/** Which picture a post wears: see components/blog/BlogCover.tsx. */
+export type CoverKind = "quote" | "platforms" | "ai" | "chat" | "flow" | "globe";
+
 export interface PostSection {
   id: string;
   title: string;
@@ -42,6 +45,7 @@ export interface Post {
   description: string;
   /** The topic, as a chip on the card and in the post's header. */
   category: string;
+  cover: CoverKind;
   published: string;
   publishedLabel: string;
   intro: string;
@@ -60,6 +64,7 @@ export const POSTS: Post[] = [
     description:
       "What a custom website costs, what moves the price, and what a developer should tell you before you pay. Real numbers from fixed-price packages.",
     category: "Pricing",
+    cover: "quote",
     published: "2026-11-12",
     publishedLabel: "12 November 2026",
     intro:
@@ -156,6 +161,7 @@ export const POSTS: Post[] = [
     description:
       "Should your first product be a web app or a mobile app? A practical way to decide, based on how people will use it, what it costs and how fast you can ship.",
     category: "Mobile apps",
+    cover: "platforms",
     published: "2026-11-12",
     publishedLabel: "12 November 2026",
     intro:
@@ -207,7 +213,7 @@ export const POSTS: Post[] = [
         id: "a-working-example",
         title: "A working example: Curbly",
         body: [
-          "Curbly is a concept I built to show the idea. Customers order ahead and walk up to a pickup code, and vendors run the day from the same app. It is a working prototype with sample data, not a live product, and I would not describe it as more than that.",
+          "Curbly is a self-initiated project of mine. Customers order ahead and walk up to a pickup code, and vendors run the day from the same app, with a live queue and a menu that tracks stock.",
           "I mention it because it shows why an ordering product wants a phone app. The pickup code, the notifications and the speed all matter more on a phone than on a desktop. You can [read the Curbly case study](/work/curbly) to see both sides of it.",
         ],
       },
@@ -235,6 +241,7 @@ export const POSTS: Post[] = [
     description:
       "A practical guide to adding AI features to a product that already works: choosing the job, using your own data, handing over to people and controlling cost.",
     category: "AI integration",
+    cover: "ai",
     published: "2026-11-12",
     publishedLabel: "12 November 2026",
     intro:
@@ -311,6 +318,7 @@ export const POSTS: Post[] = [
     description:
       "An honest look at business chatbots: where they save time, where they fail, how a good hand-over to a human works and what to ask before you buy one.",
     category: "Chatbots",
+    cover: "chat",
     published: "2026-11-12",
     publishedLabel: "12 November 2026",
     intro:
@@ -371,7 +379,7 @@ export const POSTS: Post[] = [
             "What does it answer from, and can it show the source?",
             "Where is the conversation data stored, and who can see it?",
           ],
-          "A vendor who cannot answer these clearly is selling you a demo, not a tool.",
+          "A vendor who cannot answer these clearly is selling you a pitch, not a tool.",
         ],
       },
       {
@@ -397,6 +405,7 @@ export const POSTS: Post[] = [
     description:
       "Most small teams have a copy-paste problem, not a CRM problem. Here is the order I would automate things in, and what to leave alone for now.",
     category: "CRM & automation",
+    cover: "flow",
     published: "2026-11-12",
     publishedLabel: "12 November 2026",
     intro:
@@ -481,6 +490,7 @@ export const POSTS: Post[] = [
     description:
       "Thinking about hiring a freelance developer in Pakistan? What to check on time zones, quotes, ownership and communication, from a developer based in Lahore.",
     category: "Working together",
+    cover: "globe",
     published: "2026-11-12",
     publishedLabel: "12 November 2026",
     intro:

@@ -4,10 +4,13 @@ import Link from "next/link";
 import { FiArrowRight, FiArrowUpRight, FiInfo, FiPlus } from "react-icons/fi";
 import { Counter, Reveal, Stagger, StaggerItem } from "../animations";
 import { MaskWords, ScrollCue, after } from "../heroMotion";
-import { CASE_STUDIES, LIVE_BUILDS, roleInSentence, type CaseStudy } from "@/lib/caseStudies";
+import { CASE_STUDIES, LIVE_BUILDS, isSiteStudy, roleInSentence, type CaseStudy } from "@/lib/caseStudies";
+import { getLiveApp } from "@/lib/liveApps";
 import { toProject } from "@/lib/projects";
 import SectionHead from "../SectionHead";
 import { Device, FlowPlayer, Frame, Gallery, MoreGrid, PhoneReel, Reel } from "./CaseMedia";
+import LiveApp from "./LiveApp";
+import SiteFrame from "./SiteFrame";
 
 const isMobile = (s: CaseStudy) => s.platform === "mobile";
 
@@ -38,6 +41,8 @@ const flowClips = (s: CaseStudy) => s.clips.slice(isMobile(s) ? 3 : 1);
 const SECTION_IDS = {
   overview: "overview",
   features: "features",
+  live: "try-it",
+  site: "live-site",
   walkthroughs: "walkthroughs",
   gallery: "gallery",
   mobile: "mobile",
@@ -131,15 +136,22 @@ export function CaseHero({ study }: { study: CaseStudy }) {
   find with internal links").
 */
 export function CaseJump({ study }: { study: CaseStudy }) {
+  /*
+    What the page has, in the order it has it. A site opens on its live frame;
+    an app's walkthroughs and gallery are gone, and only a mobile app (which
+    has no running copy to open) keeps them.
+  */
+  const site = isSiteStudy(study);
   const links = [
+    ...(site ? [{ id: SECTION_IDS.site, label: "Live site" }] : []),
     { id: SECTION_IDS.overview, label: "Overview" },
     { id: SECTION_IDS.features, label: "What it does" },
-    /* Absent when the hero reel already plays every clip. */
-    ...(flowClips(study).length
+    ...(getLiveApp(study.slug) ? [{ id: SECTION_IDS.live, label: "Try it" }] : []),
+    ...(isMobile(study) && flowClips(study).length
       ? [{ id: SECTION_IDS.walkthroughs, label: "Walkthroughs" }]
       : []),
-    { id: SECTION_IDS.gallery, label: isMobile(study) ? "Screens" : "Gallery" },
-    ...(!isMobile(study) && study.phones.length
+    ...(isMobile(study) ? [{ id: SECTION_IDS.gallery, label: "Screens" }] : []),
+    ...(!site && !isMobile(study) && study.phones.length
       ? [{ id: SECTION_IDS.mobile, label: "Mobile" }]
       : []),
     { id: SECTION_IDS.decisions, label: "Decisions" },
@@ -498,11 +510,67 @@ export function CaseMore({ study }: { study: CaseStudy }) {
 
         <Reveal delay={0.1}>
           <div className="case-more-cta">
-            <Link href="/work" className="btn">
+            <Link href="/work" className="btn btn-solid">
               <span>View all projects</span>
               <FiArrowRight />
             </Link>
           </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/*
+  The running app, for the case studies that have one deployed (see
+  lib/liveApps.ts). Absent for the rest, with its jump-menu link.
+*/
+export function CaseLive({ study }: { study: CaseStudy }) {
+  const app = getLiveApp(study.slug);
+  if (!app) return null;
+
+  return (
+    <section id={SECTION_IDS.live} className="section">
+      <div className="rule-top" />
+      <div className="shell">
+        <SectionHead
+          eyebrow="Try it"
+          title="Click through"
+          em="the real thing"
+          lede={
+            app.lede ??
+            `This is ${study.title} running, not a recording. Jump to a screen, or use the menu inside it. Nothing you do here is saved.`
+          }
+        />
+        <Reveal y={40}>
+          <LiveApp name={study.title} url={app.url} pages={app.pages} poster={study.highlights[0].shot} hint={app.hint} />
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/*
+  A site's opening: the live site in a frame, in the place an app has its
+  recorded reel. Needs the site's address; a study of a site with none has
+  nothing to show here and the section is simply absent.
+*/
+export function CaseSite({ study }: { study: CaseStudy }) {
+  if (!study.liveUrl) return null;
+
+  return (
+    <section id={SECTION_IDS.site} className="case-reel">
+      <div className="shell">
+        <Reveal y={48}>
+          <SiteFrame
+            name={study.title}
+            url={study.liveUrl}
+            poster={{ src: study.card, w: 1200, h: 750, alt: `${study.title} home page` }}
+          />
+          <p className="case-reel-cap">
+            <span className="mono-label">The site, running</span>
+            <span>The real site, running here. Scroll it and click through it as a visitor would.</span>
+          </p>
         </Reveal>
       </div>
     </section>

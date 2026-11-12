@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[5105,[],""]
+3:I[9669,[],""]
+:HL["/live/vector-academy/_next/static/css/da93544b4adb45fe.css","style"]
+0:{"rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/live/vector-academy/_next/static/css/da93544b4adb45fe.css","precedence":"next"}]],["$","html",null,{"lang":"en","className":"__variable_cb0603 __variable_6eea94 h-full","children":["$","body",null,{"className":"min-h-full","children":["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"9d-Chw7t3vzKh5pfyxgZb"}

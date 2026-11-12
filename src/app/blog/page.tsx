@@ -1,8 +1,8 @@
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import PostCard from "@/components/blog/PostCard";
 import { PageCta, PageHero } from "@/components/page/PageParts";
-import { POSTS, readingMinutes } from "@/lib/blog";
+import { POSTS } from "@/lib/blog";
 import { pageJsonLd } from "@/lib/pageJsonLd";
 import { pageMetadata } from "@/lib/seo";
 
@@ -45,21 +45,10 @@ export default function BlogIndexPage() {
             <h2 id="posts-h" className="sr-only">
               All posts
             </h2>
-            <ul className="blog-list">
-              {sorted.map((p, i) => (
+            <ul className="pgrid">
+              {sorted.map((p) => (
                 <li key={p.slug}>
-                  <Link href={`/blog/${p.slug}`} className="blog-row">
-                    <span className="blog-row-n mono-label">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="blog-row-main">
-                      <span className="blog-card-cat mono-label">{p.category}</span>
-                      <span className="blog-row-title">{p.title}</span>
-                      <span className="blog-row-desc">{p.description}</span>
-                    </span>
-                    <span className="blog-row-meta mono-label">
-                      <time dateTime={p.published}>{p.publishedLabel}</time>
-                      <span>{readingMinutes(p)} min read</span>
-                    </span>
-                  </Link>
+                  <PostCard post={p} />
                 </li>
               ))}
             </ul>

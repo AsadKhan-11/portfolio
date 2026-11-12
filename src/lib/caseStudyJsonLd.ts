@@ -18,7 +18,7 @@
   Deliberately not here: FAQPage. Google retired the FAQ rich result in
   May 2026, so the markup no longer buys anything.
 */
-import { typeInSentence, type CaseStudy, type Clip } from "./caseStudies";
+import { shownClips, typeInSentence, type CaseStudy, type Clip } from "./caseStudies";
 import { SITE_URL, SOCIALS } from "./site";
 
 /** Lahore, where the work is done — uploadDate wants a timezone. */
@@ -121,7 +121,7 @@ export function caseStudyJsonLd(study: CaseStudy) {
         than a claim about the work.
       */
     },
-    ...study.clips.map((c) => videoNode(study, c, pageUrl)),
+    ...shownClips(study).map((c) => videoNode(study, c, pageUrl)),
   ];
 
   return { "@context": "https://schema.org", "@graph": graph };

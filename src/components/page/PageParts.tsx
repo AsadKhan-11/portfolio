@@ -48,6 +48,7 @@ export function PageHero({
   lede,
   kicker,
   aside,
+  asideOnMobile = false,
   children,
 }: {
   trail: { label: string; href?: string }[];
@@ -60,6 +61,8 @@ export function PageHero({
   /** A small line of status under the paragraph, such as "Booking new builds". */
   kicker?: string;
   aside?: ReactNode;
+  /** The picture is hidden below 960px, where it would stack under the words, unless this is set (About's portrait). */
+  asideOnMobile?: boolean;
   /** The buttons and links under the paragraph. */
   children?: ReactNode;
 }) {
@@ -108,7 +111,7 @@ export function PageHero({
         {aside ? (
           <div className="svc-hero-grid">
             {words}
-            {aside}
+            <div className={`svc-hero-aside${asideOnMobile ? " keep" : ""}`}>{aside}</div>
           </div>
         ) : (
           words

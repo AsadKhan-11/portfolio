@@ -48,8 +48,8 @@ export function ServiceHero({ s }: { s: ServicePage }) {
               {pkg.name}
               <small>from ${pkg.price.toLocaleString("en-US")}</small>
             </p>
-            <Link href="/packages" className="link-sweep svc-aside-link">
-              See the packages
+            <Link href="/packages" className="btn btn-solid btn-sm">
+              <span>See the packages</span>
             </Link>
           </div>
         </aside>
@@ -132,8 +132,8 @@ export function ServiceStack({ s }: { s: ServicePage }) {
               </p>
               <p className="svc-card-body">{pkg.audience}</p>
               <p className="svc-card-body">{s.pkg.note}</p>
-              <Link href="/packages" className="link-sweep svc-aside-link">
-                Compare all three packages
+              <Link href="/packages" className="btn btn-solid btn-sm">
+                <span>Compare all three packages</span>
               </Link>
             </div>
           </Reveal>

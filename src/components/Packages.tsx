@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { FiCheck, FiMinus, FiSliders } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiMinus, FiSliders } from "react-icons/fi";
 import { Reveal, Stagger, StaggerItem } from "./animations";
 import SectionHead, { type Head } from "./SectionHead";
 import { COMPARE, PACKAGES } from "@/lib/packages";
@@ -98,7 +98,7 @@ export function PackageCustom({ ctaHref = "#contact" }: { ctaHref?: string }) {
             once I know exactly what you need, not before.
           </p>
         </div>
-        <CtaLink href={ctaHref} className="btn pkg-custom-cta">
+        <CtaLink href={ctaHref} className="btn btn-solid pkg-custom-cta">
           <span>Discuss your project</span>
         </CtaLink>
       </div>
@@ -193,11 +193,12 @@ export default function Packages({
 
         {more && (
           <Reveal delay={0.15}>
-            <p className="sect-more">
-              <Link href="/packages" className="link-sweep">
-                Compare the packages, and see how pricing works
+            <div className="case-more-cta">
+              <Link href="/packages" className="btn btn-solid" data-cursor="See">
+                <span>Compare the packages</span>
+                <FiArrowRight />
               </Link>
-            </p>
+            </div>
           </Reveal>
         )}
       </div>

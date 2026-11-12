@@ -244,7 +244,7 @@ export default function ContactForm({ from }: { from?: string }) {
           </a>
           .
         </p>
-        <button type="button" onClick={reset} className="btn" style={{ marginTop: "1.75rem" }}>
+        <button type="button" onClick={reset} className="btn btn-solid" style={{ marginTop: "1.75rem" }}>
           <span>Write another</span>
         </button>
       </motion.div>

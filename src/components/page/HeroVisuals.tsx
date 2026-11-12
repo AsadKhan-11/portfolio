@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FiArrowUpRight, FiClock, FiMail, FiMapPin, FiVideo } from "react-icons/fi";
+import { getCaseStudy, type CaseStudy } from "@/lib/caseStudies";
 import { PACKAGES } from "@/lib/packages";
 import { SERVICES, serviceHref } from "@/lib/services";
 import { SERVICE_ICONS } from "@/lib/serviceIcons";
@@ -9,45 +10,46 @@ import { CONTACT_EMAIL } from "@/lib/site";
 /*
   The picture beside each page's first screen. Each says something the page
   is about, from the content the page already shows, instead of decoration:
-  the platforms for the projects page, the six services for services, the
+  three projects for the projects page, the six services for services, the
   prices for packages, a few real questions for the FAQs and the ways to
   reach me for contact. Plain server components; the motion is CSS.
 */
 
-/* Three platforms stacked like open windows. The home page's hero uses it too. */
-export function HeroWindows({
-  shots,
-  caption,
-  className = "",
-}: {
-  shots: { src: string; alt: string }[];
-  caption?: { href: string; label: string };
-  className?: string;
-}) {
+/*
+  Three projects fanned like a hand of cards, each a link to its case study.
+  The pictures and names come from the case-study data, so they can't drift
+  from the pages they open. The two confidential builds and the live product
+  lead, in the order the home page shows them.
+*/
+const FAN = ["ironside-gym", "vector-academy", "veloura"];
+
+export function ProjectsVisual() {
+  const items = FAN.map((slug) => getCaseStudy(slug)).filter((c): c is CaseStudy => Boolean(c));
   return (
-    <div className={`hero-stage ${className}`}>
-      {shots.map((f, i) => (
-        <figure key={f.src} className={`hero-frame hero-frame-${i + 1}`}>
-          <span className="hero-frame-bar" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </span>
+    <div className="hv hv-fan" aria-label="Selected projects">
+      {items.map((c, i) => (
+        <Link
+          key={c.slug}
+          href={`/work/${c.slug}`}
+          className={`hv-card hv-card-${i + 1}`}
+          style={{ animationDelay: `${0.3 + i * 0.18}s` }}
+          data-cursor="Read"
+        >
           <Image
-            src={f.src}
-            alt={f.alt}
-            width={960}
-            height={600}
-            sizes="(max-width: 999px) 70vw, 34vw"
+            src={c.card}
+            alt={`${c.title} case study`}
+            fill
+            sizes="(max-width: 959px) 0px, 30vw"
             priority={i === 0}
+            className="hv-card-img"
           />
-        </figure>
-      ))}
-      {caption && (
-        <Link href={caption.href} className="hero-stage-cap mono-label" data-cursor="See work">
-          {caption.label} <FiArrowUpRight size={13} aria-hidden="true" />
+          <span className="hv-card-shade" aria-hidden="true" />
+          <span className="hv-card-label">
+            <strong>{c.title}</strong>
+            <small className="mono-label">{c.type}</small>
+          </span>
         </Link>
-      )}
+      ))}
     </div>
   );
 }
@@ -77,23 +79,27 @@ export function ServicesVisual() {
   );
 }
 
-/* The three prices as bars that grow to their share of the largest. */
+/*
+  The three packages as steps, each taller than the last: more in the box as
+  you climb. The heights show scope, not price (the prices are the numbers on
+  them), and each step says how long it takes, from the same lists the
+  packages page reads.
+*/
+const STEP_HEIGHTS = [46, 73, 100];
+
 export function PackagesVisual() {
-  const top = Math.max(...PACKAGES.map((p) => p.price));
   return (
-    <div className="hv hv-prices" role="img" aria-label="The three packages and their starting prices">
+    <div className="hv hv-steps" role="img" aria-label="The three packages, from Launch to Scale, each with more included">
       {PACKAGES.map((p, i) => (
-        <div key={p.name} className={`hv-price${p.featured ? " is-featured" : ""}`}>
-          <span className="hv-price-top">
-            <span className="hv-price-name">{p.name}</span>
-            <span className="hv-price-num">from ${p.price.toLocaleString("en-US")}</span>
-          </span>
-          <span className="hv-price-track">
-            <span
-              className="hv-price-fill"
-              style={{ width: `${(p.price / top) * 100}%`, animationDelay: `${0.5 + i * 0.25}s` }}
-            />
-          </span>
+        <div
+          key={p.name}
+          className={`hv-step hv-step-${i + 1}`}
+          style={{ height: `${STEP_HEIGHTS[i]}%`, animationDelay: `${0.3 + i * 0.2}s` }}
+        >
+          <span className="hv-step-n mono-label">{p.n}</span>
+          <span className="hv-step-name">{p.name}</span>
+          <span className="hv-step-price">from ${p.price.toLocaleString("en-US")}</span>
+          <span className="hv-step-time mono-label">{p.features[p.features.length - 1]}</span>
         </div>
       ))}
     </div>
@@ -162,7 +168,7 @@ export function ContactVisual() {
         </span>
       </div>
 
-      <Link href="/book" className="btn hv-book" data-cursor="Book">
+      <Link href="/book" className="btn btn-solid hv-book" data-cursor="Book">
         <span>Prefer to talk? Book a call</span>
         <FiArrowUpRight />
       </Link>

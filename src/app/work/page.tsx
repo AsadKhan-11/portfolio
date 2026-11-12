@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { HeroWindows } from "@/components/page/HeroVisuals";
+import { ProjectsVisual } from "@/components/page/HeroVisuals";
 import { InfoCards, PageCta, PageHero } from "@/components/page/PageParts";
 import SectionHead from "@/components/SectionHead";
 import { ProjectShowcase } from "@/components/Work";
@@ -72,17 +72,8 @@ export default function ProjectsPage() {
           eyebrow="Projects"
           lead="Selected projects,"
           em="built end to end."
-          lede="Sites I have shipped, plus case studies of platforms built for confidential clients and rebuilt here with new names and data. Each one tells the whole story: what was built, and why."
-          aside={
-            <HeroWindows
-              className="hero-stage-aside"
-              shots={[
-                { src: "/work/cards/04-ironside.jpg", alt: "Ironside, a gym platform with an AI coach" },
-                { src: "/work/cards/05-vector-academy.jpg", alt: "Vector Academy, a flight-training platform" },
-                { src: "/work/cards/06-veloura.jpg", alt: "Veloura, a med-spa booking and client platform" },
-              ]}
-            />
-          }
+          lede="Sites I have shipped, plus case studies of platforms built for confidential clients, shown with names and data changed. Each one tells the whole story: what was built, and why."
+          aside={<ProjectsVisual />}
         >
           <Link href="/contact" className="btn btn-solid" data-cursor="Talk">
             <span>Start a project</span>
@@ -99,7 +90,7 @@ export default function ProjectsPage() {
               eyebrow="All projects"
               title="Everything"
               em="I have built"
-              lede="Client platforms, rebuilt here with new names and data where a client is confidential, and self-initiated concept builds, each labelled. Open one to read its story."
+              lede="Client platforms, shown with names and data changed where a client is confidential, and self-initiated projects, each labelled. Open one to read its story."
             />
             <ProjectShowcase platforms={platforms} concepts={concepts} />
           </div>

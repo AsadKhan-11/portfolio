@@ -6,10 +6,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
-import { FiArrowUpRight, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
+import { FiArrowUpRight, FiChevronDown, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
 import { FaXTwitter } from "react-icons/fa6";
 import { Magnetic } from "./animations";
-import { isCurrent, NAV_BREAKPOINT, PAGES } from "@/lib/nav";
+import { isCurrent, NAV_BREAKPOINT, PAGES, type NavPage } from "@/lib/nav";
 import { CONTACT_EMAIL as EMAIL, SOCIAL_LINKS } from "@/lib/site";
 
 const EASE = [0.76, 0, 0.24, 1] as const;
@@ -28,8 +28,31 @@ const SOCIAL_ICONS: Record<string, IconType> = {
 */
 const PRIMARY = PAGES.filter((p) => p.href !== "/contact");
 
-/* The menu lists every page, and the home page first. */
-const MENU = [{ label: "Home", href: "/" }, ...PAGES];
+/*
+  The menu lists the home page first, then every page, with the reading
+  pages (the blog and the FAQs) tucked under one "Resources" row so the whole
+  list fits a phone's screen without scrolling. The group sits where the
+  first of its pages would have.
+*/
+const RESOURCE_HREFS = ["/blog", "/faqs"];
+
+type MenuItem = NavPage | { label: string; children: NavPage[] };
+
+const MENU: MenuItem[] = (() => {
+  const items: MenuItem[] = [{ label: "Home", href: "/" }];
+  let placed = false;
+  for (const p of PAGES) {
+    if (RESOURCE_HREFS.includes(p.href)) {
+      if (!placed) {
+        items.push({ label: "Resources", children: PAGES.filter((x) => RESOURCE_HREFS.includes(x.href)) });
+        placed = true;
+      }
+      continue;
+    }
+    items.push(p);
+  }
+  return items;
+})();
 
 /* "#home" is an anchor on the home page itself; everything else is a page. */
 function NavLink({
@@ -67,6 +90,8 @@ export default function Navbar() {
   */
   const [openAt, setOpenAt] = useState<string | null>(null);
   const open = openAt === pathname;
+  /* "Resources" starts open when the visitor is already on one of its pages. */
+  const [resOpen, setResOpen] = useState(() => RESOURCE_HREFS.some((h) => isCurrent(pathname, h)));
   const burgerRef = useRef<HTMLButtonElement>(null);
   const { scrollYProgress } = useScroll();
 
@@ -200,7 +225,7 @@ export default function Navbar() {
             </NavLink>
           </Magnetic>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+          <div className="nav-right">
             <nav className="nav-links" aria-label="Primary">
               {PRIMARY.map((l) => (
                 <Link
@@ -282,6 +307,53 @@ export default function Navbar() {
                 <p className="mono-label menu-eyebrow">Menu</p>
                 <ul className="menu-list">
                   {MENU.map((item, i) => {
+                    if ("children" in item) {
+                      const inside = item.children.some((c) => isCurrent(pathname, c.href));
+                      return (
+                        <li
+                          key={item.label}
+                          className="menu-row-wrap"
+                          style={{ "--i": i } as CSSProperties}
+                        >
+                          <button
+                            type="button"
+                            className="menu-row menu-row-btn"
+                            aria-expanded={resOpen}
+                            aria-controls="menu-resources"
+                            aria-current={inside ? "true" : undefined}
+                            onClick={() => setResOpen((v) => !v)}
+                          >
+                            <span className="menu-index" aria-hidden="true">
+                              {String(i + 1).padStart(2, "0")}
+                            </span>
+                            <span className="menu-label">{item.label}</span>
+                            <FiChevronDown
+                              className="menu-arrow menu-chevron"
+                              data-open={resOpen}
+                              size={20}
+                              aria-hidden="true"
+                            />
+                          </button>
+                          <div id="menu-resources" className="menu-sub-wrap" data-open={resOpen}>
+                            <ul className="menu-sub" inert={!resOpen}>
+                              {item.children.map((c) => (
+                                <li key={c.href}>
+                                  <NavLink
+                                    href={c.href}
+                                    className="menu-subrow"
+                                    aria-current={isCurrent(pathname, c.href) ? "page" : undefined}
+                                    onClick={close}
+                                  >
+                                    <span>{c.label}</span>
+                                    <FiArrowUpRight size={16} aria-hidden="true" />
+                                  </NavLink>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </li>
+                      );
+                    }
                     const current =
                       item.href === "/" ? pathname === "/" : isCurrent(pathname, item.href);
                     return (

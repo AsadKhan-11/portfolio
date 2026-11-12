@@ -10,6 +10,8 @@ import {
   CaseHero,
   CaseHighlights,
   CaseJump,
+  CaseLive,
+  CaseSite,
   CaseMidCta,
   CaseMore,
   CasePhones,
@@ -17,7 +19,7 @@ import {
   CaseStory,
 } from "@/components/case/CaseSections";
 import { PageCta } from "@/components/page/PageParts";
-import { CASE_STUDIES, getCaseStudy, typeInSentence, type CaseStudy } from "@/lib/caseStudies";
+import { CASE_STUDIES, getCaseStudy, isSiteStudy, typeInSentence, type CaseStudy } from "@/lib/caseStudies";
 import { caseStudyJsonLdString } from "@/lib/caseStudyJsonLd";
 
 /* Every case study is prerendered at build time. */
@@ -143,6 +145,8 @@ export default async function CaseStudyPage({
   const { slug } = await params;
   const study = getCaseStudy(slug);
   if (!study) notFound();
+  const site = isSiteStudy(study);
+  const mobile = study.platform === "mobile";
 
   return (
     <>
@@ -155,14 +159,17 @@ export default async function CaseStudyPage({
       <Navbar />
       <main className="flex-1 relative" style={{ zIndex: 2 }}>
         <CaseHero study={study} />
-        <CaseReel study={study} />
+        {/* A site opens on its live frame; an app on its recorded reel. */}
+        {site ? <CaseSite study={study} /> : <CaseReel study={study} />}
         <CaseJump study={study} />
         <CaseStory study={study} />
         <CaseHighlights study={study} />
-        <CaseFlows study={study} />
+        <CaseLive study={study} />
+        {/* Walkthrough videos and the screen gallery stay only on a mobile app, which has no running copy. */}
+        {mobile && <CaseFlows study={study} />}
         <CaseMidCta study={study} />
-        <CaseGallery study={study} />
-        <CasePhones study={study} />
+        {mobile && <CaseGallery study={study} />}
+        {!site && <CasePhones study={study} />}
         <CaseDecisions study={study} />
         <CaseMore study={study} />
         <PageCta from={study.slug} />

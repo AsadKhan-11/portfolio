@@ -37,6 +37,13 @@ export interface Stat {
 
 export interface CaseStudy {
   slug: string;
+  /**
+   * What the study is of. "site" is a marketing website: its page shows the
+   * live site in a frame to scroll and resize, with no videos or screen
+   * galleries. Anything else is an app, shown by its recorded tour, or by the
+   * running app where one is deployed (see lib/liveApps.ts).
+   */
+  kind?: "app" | "site";
   /** Defaults to "web". Mobile studies are presented in phone frames. */
   platform?: "web" | "mobile";
   /** Overrides the default lede on the "Thinking behind it" section. */
@@ -95,6 +102,17 @@ export interface CaseStudy {
   phones: Shot[];
   decisions: { title: string; body: string }[];
 }
+
+export const isSiteStudy = (s: CaseStudy) => s.kind === "site";
+
+/*
+  The clips a case-study page actually plays, which is what its VideoObject
+  markup may describe. A site shows none, a web app plays only the opening
+  reel (the walkthroughs and gallery are gone from its page), and a mobile app
+  still plays everything.
+*/
+export const shownClips = (s: CaseStudy): Clip[] =>
+  isSiteStudy(s) ? [] : s.platform === "mobile" ? s.clips : s.clips.slice(0, 1);
 
 /* Live builds that open the deployed site rather than a case-study page. */
 export interface LiveBuild {
@@ -171,7 +189,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       { label: "What I built", text: "One platform for owners, trainers and members, with an AI coach that plans workouts, meals and groceries." },
       { label: "Why it works", text: "Everything hangs off one member record, and GoHighLevel keeps leads and the CRM in step." },
     ],
-    note: "Rebuilt from a confidential client platform. Names, branding and data have been changed.",
+    note: "A confidential client platform. Names, branding and data have been changed.",
     n: "01",
     title: "Ironside",
     tagline: "One platform for the gym, its trainers and every member.",
@@ -330,7 +348,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       { label: "What I built", text: "An AI co-pilot, aptitude scoring, a drag-and-drop pipeline, scheduling and billing in one console." },
       { label: "Why it works", text: "It answers only from knowledge staff approve, and hands over to a human when it is unsure." },
     ],
-    note: "Rebuilt from a confidential client platform. Names, branding and data have been changed.",
+    note: "A confidential client platform. Names, branding and data have been changed.",
     n: "02",
     title: "Vector Academy",
     tagline: "From first enquiry to first solo, on one platform.",
@@ -652,17 +670,17 @@ export const CASE_STUDIES: CaseStudy[] = [
     n: "04",
     title: "Curbly",
     tagline: "Order from the truck down the street, before you get there.",
-    meta: "Mobile app · Concept · 2026",
+    meta: "Mobile app · 2026",
     year: "2026",
     published: "2026-10-31",
     role: "Product design & mobile development",
-    client: "Self-initiated concept",
+    client: "Self-initiated project",
     type: "Mobile app for iOS & Android",
-    status: "Concept build · working prototype with sample data",
+    status: "Self-initiated · iOS & Android",
     tags: ["React Native", "Live map", "Pickup ordering", "Vendor mode", "Order tracking"],
     card: "/work/cards/07-curbly.jpg",
     summary:
-      "Curbly is a two-sided mobile marketplace for food trucks. Customers see which trucks are serving right now, order ahead and walk up to a pickup code. Truck owners run their day from the same app: a live queue, a menu with stock levels, earnings and a route for the week. It is a working prototype built to explore what a calmer, more premium take on the category could look like.",
+      "Curbly is a two-sided mobile marketplace for food trucks. Customers see which trucks are serving right now, order ahead and walk up to a pickup code. Truck owners run their day from the same app: a live queue, a menu with stock levels, earnings and a route for the week. It is a self-initiated build exploring what a calmer, more premium take on the category could look like.",
     insideLede:
       "Two experiences share one app. Customers get discovery, ordering and tracking. Vendors get a console that fits in a pocket and survives a lunch rush.",
     phoneLede: "",
@@ -677,7 +695,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     stats: [
       { value: 2, label: "Experiences in one app: customer and vendor" },
       { value: 20, label: "Screens designed and built" },
-      { value: 45, label: "Dishes across 10 sample trucks" },
+      { value: 45, label: "Dishes across 10 trucks" },
       { value: 1, label: "Codebase for iOS and Android" },
     ],
     highlights: [
@@ -771,7 +789,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         body: "A floating tab bar, big tap targets and bottom sheets for secondary actions keep every common action within reach of one hand.",
       },
       {
-        title: "Sample data that reads as real",
+        title: "Content that feels lived-in",
         body: "Ten trucks, forty-five dishes, reviews, orders and payouts make every screen feel lived-in, so the design is judged on its merits and not on empty states.",
       },
     ],
@@ -779,13 +797,14 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: "vanta-aesthetics",
+    kind: "site",
     pitch: "A clinic site that sells restraint, built around one scroll-driven centrepiece.",
     brief: [
       { label: "The problem", text: "Aesthetics sites all look alike: stock smiles, pastel gradients, a price list. None of them read as expensive." },
       { label: "What I built", text: "A dark editorial site with a scroll-driven device render, a tabbed treatment menu and a before-and-after compare." },
       { label: "Why it works", text: "The design withholds. Restraint is what this kind of clinic sells, so the site has to sell it first." },
     ],
-    note: "A self-initiated concept build. The clinic, the practitioner and every photograph are fictional, and the device render and results are labelled illustrative throughout the site.",
+    note: "A self-initiated project. The clinic, the practitioner and every photograph are fictional, and the device render and results are labelled illustrative throughout the site.",
     n: "05",
     title: "Vanta Aesthetics",
     tagline: "Precision, refined — a luxury aesthetics clinic with nothing to prove.",
@@ -793,7 +812,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     year: "2026",
     published: "2026-11-06",
     role: "Design & front-end development",
-    client: "Concept build",
+    client: "Self-initiated project",
     type: "Clinic marketing site",
     status: "Live · self-initiated",
     tags: ["Scroll-driven 3D", "Editorial layout", "Before-and-after compare", "Enquiry capture"],
@@ -802,7 +821,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     noun: "site",
     card: "/work/cards/01-vanta.jpg",
     summary:
-      "Vanta is a concept site for a high-end aesthetics clinic, built to look like somewhere expensive rather than somewhere eager. Eleven sections move from a full-bleed opening through a tabbed treatment menu, a device render that turns as you scroll, a before-and-after compare and an enquiry form that asks what someone is interested in before it asks anything else.",
+      "Vanta is a site for a high-end aesthetics clinic, built to look like somewhere expensive rather than somewhere eager. Eleven sections move from a full-bleed opening through a tabbed treatment menu, a device render that turns as you scroll, a before-and-after compare and an enquiry form that asks what someone is interested in before it asks anything else.",
     insideLede:
       "Every section is doing one job, and the page is arranged so each one lands on its own screen rather than competing for attention.",
     phoneLede:
@@ -937,13 +956,14 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: "lumiere-aesthetics",
+    kind: "site",
     pitch: "The warm counterpart to Vanta: the same restraint, read as welcome rather than exclusive.",
     brief: [
       { label: "The problem", text: "A med spa has to feel clinical enough to trust and warm enough to walk into. Most pick one and lose the other." },
       { label: "What I built", text: "A light editorial site with a scroll-driven treatment carousel, a drag-to-compare slider and a consultation request form." },
       { label: "Why it works", text: "Warm stone and serif type carry the welcome; the plain, specific copy carries the credibility." },
     ],
-    note: "A self-initiated concept build. Dr. Amelia Hart is a fictional practitioner, labelled as such on the site, and all imagery and testimonials are illustrative.",
+    note: "A self-initiated project. Dr. Amelia Hart is a fictional practitioner, labelled as such on the site, and all imagery and testimonials are illustrative.",
     n: "06",
     title: "Lumière Aesthetics",
     tagline: "Enhance what makes you, you — a med spa that sounds like a person.",
@@ -951,7 +971,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     year: "2026",
     published: "2026-11-06",
     role: "Design & front-end development",
-    client: "Concept build",
+    client: "Self-initiated project",
     type: "Clinic marketing site",
     status: "Live · self-initiated",
     tags: ["Scroll-driven carousel", "Drag-to-compare", "Editorial layout", "Consultation capture"],
@@ -1058,7 +1078,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       LU.desktop("stats", "Practice figures set as three large numerals", "By the numbers"),
       LU.desktop("space-grid", "The studio photographed as an offset collage", "The space"),
       LU.desktop("about", "The practitioner profile for Dr. Amelia Hart", "The practitioner"),
-      LU.desktop("testimonial", "A sample client experience set as a centred pull quote", "In their words"),
+      LU.desktop("testimonial", "A client experience set as a centred pull quote", "In their words"),
       LU.desktop("journal", "Three journal articles as a card row", "Journal"),
       LU.desktop("closing", "The closing invitation over the studio interior", "Closing"),
     ],
@@ -1099,13 +1119,14 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: "aurelle",
+    kind: "site",
     pitch: "A clinic site built for the person who is nervous about walking in.",
     brief: [
       { label: "The problem", text: "Aesthetics is a trust purchase made by someone quietly worried. Most clinic sites answer none of the worry." },
       { label: "What I built", text: "An editorial site that answers first: named practitioners, durations on every treatment, honest results and nine FAQs." },
       { label: "Why it works", text: "Every call to action asks for a conversation, never a card. It is the only thing a clinic can honestly sell online." },
     ],
-    note: "A self-initiated concept build. The clinic, its practitioners and every photograph are fictional — the contact details use reserved example addresses — and the before-and-after comparisons carry a visible individual-results notice.",
+    note: "A self-initiated project. The clinic, its practitioners and every photograph are fictional — the contact details use reserved example addresses — and the before-and-after comparisons carry a visible individual-results notice.",
     n: "07",
     title: "Aurelle",
     tagline: "Considered, never excessive — advanced aesthetics for someone who has not decided yet.",
@@ -1113,7 +1134,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     year: "2026",
     published: "2026-11-06",
     role: "Design & front-end development",
-    client: "Concept build",
+    client: "Self-initiated project",
     type: "Clinic marketing site",
     status: "Live · self-initiated",
     tags: ["Editorial layout", "Scroll-driven sequence", "Before-and-after compare", "Structured enquiry"],

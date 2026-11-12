@@ -147,7 +147,7 @@ export default function BookingStudio() {
             </div>
 
             {ready ? (
-              <div id="cal-host" ref={host} className="book-embed" />
+              <div id="cal-host" ref={host} className="book-embed" data-lenis-prevent />
             ) : (
               <div className="book-fallback">
                 <p className="book-fallback-title">Online booking opens very soon.</p>

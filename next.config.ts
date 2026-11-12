@@ -17,6 +17,30 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "export",
   images: { unoptimized: true },
+
+  /*
+    Only while developing. public/live/ holds two apps built as static sites
+    (see scripts/build-live-apps.sh), each page a folder with an index.html in
+    it. Cloudflare serves /live/ironside-gym/members/ from members/index.html
+    by itself; `next dev` does not, and answered with this site's 404 page.
+    These rewrites do what Cloudflare does. They apply only to paths with no
+    file behind them, so the apps' scripts and styles are served as they are,
+    and a static export cannot have rewrites at all, so the build never sees them.
+  */
+  ...(process.env.NODE_ENV === "development"
+    ? {
+        async rewrites() {
+          return {
+            beforeFiles: [],
+            afterFiles: [
+              { source: "/live/:app", destination: "/live/:app/index.html" },
+              { source: "/live/:app/:path*", destination: "/live/:app/:path*/index.html" },
+            ],
+            fallback: [],
+          };
+        },
+      }
+    : {}),
 };
 
 export default nextConfig;

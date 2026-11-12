@@ -6,7 +6,8 @@ export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/" },
+    /* /live/ holds the two apps shown in frames on the case pages: not pages to rank. */
+    rules: { userAgent: "*", allow: "/", disallow: "/live/" },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

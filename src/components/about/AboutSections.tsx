@@ -49,6 +49,7 @@ export function AboutHero() {
       em="a full stack developer in Lahore."
       lede={PROFILE.statement}
       kicker={`${AVAILABILITY} · Lahore, Pakistan`}
+      asideOnMobile
       aside={
         <figure className="svc-about-photo svc-about-photo-hero hero-in" style={after(0.3)}>
           <Portrait />

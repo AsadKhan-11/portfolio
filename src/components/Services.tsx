@@ -172,7 +172,7 @@ export default function Services({
         {more && (
           <Reveal delay={0.1}>
             <div className="case-more-cta">
-              <Link href="/services" className="btn">
+              <Link href="/services" className="btn btn-solid">
                 <span>All services</span>
                 <FiArrowRight />
               </Link>

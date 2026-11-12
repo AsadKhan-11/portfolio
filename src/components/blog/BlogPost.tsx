@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useScrollSpy } from "../useScrollSpy";
+import BlogCover from "./BlogCover";
+import PostCard from "./PostCard";
 import RichText from "./RichText";
 import { otherPosts, readingMinutes, type Post } from "@/lib/blog";
 
@@ -19,26 +21,31 @@ export default function BlogPost({ post }: { post: Post }) {
   return (
     <>
       <header className="legal-head blog-head">
-        <div className="shell">
-          <nav aria-label="Breadcrumb" className="svc-crumbs">
-            <ol>
-              <li>
-                <Link href="/">Home</Link>
-              </li>
-              <li>
-                <Link href="/blog">Blog</Link>
-              </li>
-              <li>
-                <span aria-current="page">{post.category}</span>
-              </li>
-            </ol>
-          </nav>
-          <p className="eyebrow">{post.category}</p>
-          <h1 className="legal-title blog-title">{post.title}</h1>
-          <p className="legal-meta mono-label">
-            By Asad Khan · <time dateTime={post.published}>{post.publishedLabel}</time> ·{" "}
-            {readingMinutes(post)} min read
-          </p>
+        <div className="shell blog-head-grid">
+          <div>
+            <nav aria-label="Breadcrumb" className="svc-crumbs">
+              <ol>
+                <li>
+                  <Link href="/">Home</Link>
+                </li>
+                <li>
+                  <Link href="/blog">Blog</Link>
+                </li>
+                <li>
+                  <span aria-current="page">{post.category}</span>
+                </li>
+              </ol>
+            </nav>
+            <p className="eyebrow">{post.category}</p>
+            <h1 className="legal-title blog-title">{post.title}</h1>
+            <p className="legal-meta mono-label">
+              By Asad Khan · <time dateTime={post.published}>{post.publishedLabel}</time> ·{" "}
+              {readingMinutes(post)} min read
+            </p>
+          </div>
+          <div className="blog-head-cover">
+            <BlogCover kind={post.cover} />
+          </div>
         </div>
       </header>
 
@@ -107,16 +114,10 @@ export default function BlogPost({ post }: { post: Post }) {
           <h2 id="more-h" className="blog-more-title">
             More from the <span className="serif-em" style={{ color: "var(--flame)" }}>blog</span>
           </h2>
-          <ul className="blog-grid">
+          <ul className="pgrid">
             {more.map((p) => (
               <li key={p.slug}>
-                <Link href={`/blog/${p.slug}`} className="blog-card">
-                  <span className="blog-card-cat mono-label">{p.category}</span>
-                  <span className="blog-card-title">{p.title}</span>
-                  <span className="blog-card-meta mono-label">
-                    {readingMinutes(p)} min read
-                  </span>
-                </Link>
+                <PostCard post={p} />
               </li>
             ))}
           </ul>

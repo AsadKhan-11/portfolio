@@ -10,6 +10,7 @@ import Work from "@/components/Work";
 import Experience from "@/components/Experience";
 import Process from "@/components/Process";
 import Faq from "@/components/Faq";
+import HomeBlog from "@/components/HomeBlog";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
@@ -29,6 +30,7 @@ export default function Home() {
         <Experience />
         <Process />
         <Faq />
+        <HomeBlog />
         <Contact />
       </main>
       <Footer />

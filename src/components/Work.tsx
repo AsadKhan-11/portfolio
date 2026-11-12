@@ -170,7 +170,7 @@ export function ProjectsSection({
         {more && (
           <Reveal delay={0.1}>
             <div className="case-more-cta">
-              <Link href="/work" className="btn">
+              <Link href="/work" className="btn btn-solid">
                 <span>View all projects</span>
                 <FiArrowRight />
               </Link>
@@ -208,7 +208,7 @@ export function ProjectShowcase({
 
   const all: Array<{ p: Project; label: string }> = [
     ...(kind !== "concept" ? platforms.map((p) => ({ p, label: "Client platform" })) : []),
-    ...(kind !== "platform" ? concepts.map((p) => ({ p, label: "Concept build" })) : []),
+    ...(kind !== "platform" ? concepts.map((p) => ({ p, label: "Self-initiated" })) : []),
   ];
   /*
     Only a handful of panels fit before the collapsed ones turn to slivers, so
@@ -226,7 +226,7 @@ export function ProjectShowcase({
   const chips: Array<[Kind, string, number]> = [
     ["all", "All", platforms.length + concepts.length],
     ["platform", "Client platforms", platforms.length],
-    ["concept", "Concept builds", concepts.length],
+    ["concept", "Self-initiated", concepts.length],
   ];
 
   return (
@@ -401,7 +401,7 @@ const HEAD: Head = {
   eyebrow: "01 · Work",
   title: "Selected",
   em: "projects",
-  lede: "Four projects, each with the full story behind it. The platforms were built for confidential clients and are rebuilt here with new names and data.",
+  lede: "Four projects, each with the full story behind it. The platforms were built for confidential clients and are shown with names and data changed.",
 };
 
 /* The home page's section: four stacked project cards, and the way through to all of them. */

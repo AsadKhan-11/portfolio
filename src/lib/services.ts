@@ -72,7 +72,7 @@ export const SERVICES: ServicePage[] = [
     fit: [
       "You have a product, portal or internal tool, and one slow, repetitive job inside it is eating hours.",
       "Your knowledge sits in documents, tickets or a database, and people can't find it fast enough.",
-      "You want AI that cites its sources and hands over to a person when it isn't sure, not a demo that guesses.",
+      "You want AI that cites its sources and hands over to a person when it isn't sure, not a bot that guesses.",
     ],
     included: [
       {

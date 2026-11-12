@@ -44,7 +44,7 @@ export function GET() {
     "## Key pages",
     "",
     `- [Home](${SITE_URL}/): What the studio does and how to start a project.`,
-    `- [Projects](${SITE_URL}/work): Case studies of the platforms and sites built, from client work to concept builds.`,
+    `- [Projects](${SITE_URL}/work): Case studies of the platforms and sites built, from client work to self-initiated projects.`,
     `- [Services](${SITE_URL}/services): The six services, each with its own page, and how a project runs.`,
     `- [Packages](${SITE_URL}/packages): Fixed-price packages, what each one includes, and how pricing works.`,
     `- [About](${SITE_URL}/about): Who is behind the studio: how Asad Khan works, what he builds with and where he has worked.`,
