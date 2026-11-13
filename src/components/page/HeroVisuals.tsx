@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FiArrowUpRight, FiClock, FiMail, FiMapPin, FiVideo } from "react-icons/fi";
+import BlogCover from "../blog/BlogCover";
+import { latestPosts, readingMinutes } from "@/lib/blog";
 import { getCaseStudy, type CaseStudy } from "@/lib/caseStudies";
 import { PACKAGES } from "@/lib/packages";
 import { SERVICES, serviceHref } from "@/lib/services";
@@ -47,6 +49,37 @@ export function ProjectsVisual() {
           <span className="hv-card-label">
             <strong>{c.title}</strong>
             <small className="mono-label">{c.type}</small>
+          </span>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+/*
+  The blog: the three newest posts fanned the same way, each card the post's
+  own drawn cover and a link to it. The covers and the topics come from the
+  post list, so a new post turns up here by itself.
+*/
+export function BlogVisual() {
+  return (
+    <div className="hv hv-fan hv-fan-blog" aria-label="The newest posts">
+      {latestPosts(3).map((p, i) => (
+        <Link
+          key={p.slug}
+          href={`/blog/${p.slug}`}
+          className={`hv-card hv-card-${i + 1}`}
+          style={{ animationDelay: `${0.3 + i * 0.18}s` }}
+          aria-label={p.title}
+          data-cursor="Read"
+        >
+          <span className="hv-card-cover">
+            <BlogCover kind={p.cover} />
+          </span>
+          <span className="hv-card-shade" aria-hidden="true" />
+          <span className="hv-card-label">
+            <strong>{p.category}</strong>
+            <small className="mono-label">{readingMinutes(p)} min read</small>
           </span>
         </Link>
       ))}

@@ -7836,6 +7836,24 @@ a.hv-mini-value {
   object-position: left top;
 }
 
+/* Blog: the cover is drawn art, not a screenshot, so it fills the card as it
+   is. The shade over it is a dark band behind the label and fades out below,
+   so the topic reads and the drawing is left alone. */
+.hv-card-cover {
+  position: absolute;
+  inset: 0;
+}
+
+.hv-fan-blog .hv-card-shade {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 8, 10, 0.94),
+    rgba(8, 8, 10, 0.9) 24%,
+    rgba(8, 8, 10, 0.4) 40%,
+    transparent 58%
+  );
+}
+
 /* The name sits along the top: the next card covers the bottom of this one. */
 .hv-card-shade {
   position: absolute;

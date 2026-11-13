@@ -572,6 +572,10 @@ export const readingMinutes = (post: Post) => {
   return Math.max(1, Math.round(words / 220));
 };
 
+/** The newest posts, newest first: the home page's blog section and the blog page's picture show these. */
+export const latestPosts = (count = 3) =>
+  [...POSTS].sort((a, b) => b.published.localeCompare(a.published)).slice(0, count);
+
 /** The other posts, newest first, for the "keep reading" row under a post. */
 export const otherPosts = (slug: string, count = 3) =>
   POSTS.filter((p) => p.slug !== slug)

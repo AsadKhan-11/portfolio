@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PostCard from "@/components/blog/PostCard";
+import { BlogVisual } from "@/components/page/HeroVisuals";
 import { PageCta, PageHero } from "@/components/page/PageParts";
 import { POSTS } from "@/lib/blog";
 import { pageJsonLd } from "@/lib/pageJsonLd";
@@ -38,6 +39,7 @@ export default function BlogIndexPage() {
           lead="Straight answers"
           em="for people who build."
           lede="What a website costs, when an app beats a site, how to add AI without breaking what works. Written from the projects I build, in plain words, with no filler."
+          aside={<BlogVisual />}
         />
 
         <section className="section" aria-labelledby="posts-h">

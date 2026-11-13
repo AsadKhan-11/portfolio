@@ -3,7 +3,7 @@ import { FiArrowRight } from "react-icons/fi";
 import { Reveal } from "./animations";
 import PostCard from "./blog/PostCard";
 import SectionHead from "./SectionHead";
-import { POSTS } from "@/lib/blog";
+import { latestPosts } from "@/lib/blog";
 
 /*
   The home page's blog section: the three newest posts as cards and the way
@@ -11,7 +11,7 @@ import { POSTS } from "@/lib/blog";
   posts come from the same list as the blog page, so a new post turns up
   here by itself.
 */
-const LATEST = [...POSTS].sort((a, b) => b.published.localeCompare(a.published)).slice(0, 3);
+const LATEST = latestPosts(3);
 
 export default function HomeBlog() {
   return (
