@@ -6,7 +6,16 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Reveal, SplitText } from "./animations";
 import { ROLES, type Role } from "@/lib/profile";
 
-/* The roles themselves live in lib/profile.ts, shared with the About page. */
+/*
+  The "Path" section: a timeline of the roles in lib/profile.ts.
+
+  HIDDEN: no page renders it. It was taken off the home page and the About
+  page on 2026-11-14 at the owner's request, and the Person markup on About no
+  longer names MyntorX (pageJsonLd.ts), because markup must match what the page
+  shows. To bring it back, render <Experience eyebrow="..."/> on the home page
+  (after About) and on the About page (after the toolkit), renumber the
+  sections after it, and restore `worksFor` in aboutJsonLd.
+*/
 const ICONS = { briefcase: FiBriefcase, code: FiCode, monitor: FiMonitor } as const;
 
 /*
@@ -77,8 +86,7 @@ function PathRow({ role }: { role: Role }) {
   );
 }
 
-/* `eyebrow` is the numbered label: "05 · Path" on the home page, where it is the
-   fifth section, and whatever fits on another page that shows it. */
+/* `eyebrow` is the numbered label, such as "05 · Path": whatever number the page that shows it gives it. */
 export default function Experience({ eyebrow = "05 · Path" }: { eyebrow?: string }) {
   const timelineRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({

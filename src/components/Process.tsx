@@ -83,9 +83,9 @@ function Step({ step, index }: { step: (typeof STEPS)[number]; index: number }) 
   );
 }
 
-/* `eyebrow` is the numbered label: "06 · Process" on the home page, where it is
-   the sixth section, and whatever fits on another page that shows it. */
-export default function Process({ eyebrow = "06 · Process" }: { eyebrow?: string }) {
+/* `eyebrow` is the numbered label: "05 · Process" on the home page, where it is
+   the fifth section, and whatever fits on another page that shows it. */
+export default function Process({ eyebrow = "05 · Process" }: { eyebrow?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,

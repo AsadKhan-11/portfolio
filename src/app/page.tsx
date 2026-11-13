@@ -7,7 +7,6 @@ import Services from "@/components/Services";
 import Packages from "@/components/Packages";
 import Band from "@/components/Band";
 import Work from "@/components/Work";
-import Experience from "@/components/Experience";
 import Process from "@/components/Process";
 import Faq from "@/components/Faq";
 import HomeBlog from "@/components/HomeBlog";
@@ -27,7 +26,6 @@ export default function Home() {
         <Packages />
         <Band />
         <About />
-        <Experience />
         <Process />
         <Faq />
         <HomeBlog />

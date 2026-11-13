@@ -100,7 +100,7 @@ export function ContactPanel({ from }: { from?: string }) {
 */
 export default function Contact({
   head = true,
-  eyebrow = "08 · Contact",
+  eyebrow = "07 · Contact",
   lede,
   from,
 }: {

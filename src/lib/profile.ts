@@ -18,8 +18,9 @@ export const AVAILABILITY = "Booking new builds · 2026";
 export const ABOUT_UPDATED = "2026-11-11";
 
 /*
-  Where Asad has worked, in one place: the home page's "Path" section and the
-  About page both read this, so the two can't tell different stories.
+  Where Asad has worked, in one place, for the "Path" section
+  (components/Experience.tsx). That section is hidden at the moment (see the
+  note there); the data stays so it can come back without being rewritten.
 */
 export type Role = {
   year: string;

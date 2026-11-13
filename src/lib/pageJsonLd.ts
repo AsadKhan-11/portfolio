@@ -151,7 +151,7 @@ export function aboutJsonLd({ title, description }: { title: string; description
       description:
         "Full stack developer in Lahore, Pakistan, building websites, portals and web apps for clients worldwide.",
       address: { "@type": "PostalAddress", addressLocality: "Lahore", addressCountry: "PK" },
-      worksFor: [STUDIO, { "@type": "Organization", name: "MyntorX" }],
+      worksFor: STUDIO,
       knowsAbout: [
         "Full stack web development",
         "React",

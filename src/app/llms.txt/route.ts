@@ -47,7 +47,7 @@ export function GET() {
     `- [Projects](${SITE_URL}/work): Case studies of the platforms and sites built, from client work to self-initiated projects.`,
     `- [Services](${SITE_URL}/services): The six services, each with its own page, and how a project runs.`,
     `- [Packages](${SITE_URL}/packages): Fixed-price packages, what each one includes, and how pricing works.`,
-    `- [About](${SITE_URL}/about): Who is behind the studio: how Asad Khan works, what he builds with and where he has worked.`,
+    `- [About](${SITE_URL}/about): Who is behind the studio: how Asad Khan works and what he builds with.`,
     `- [FAQs](${SITE_URL}/faqs): Answers on cost, timelines, working across time zones, code ownership and support after launch.`,
     `- [Blog](${SITE_URL}/blog): Plain-spoken guides on pricing, apps, AI and hiring a developer.`,
     `- [Book a call](${SITE_URL}/book): Book a 15, 30 or 60 minute call on Google Meet.`,

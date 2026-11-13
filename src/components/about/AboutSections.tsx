@@ -10,8 +10,8 @@ import { AVAILABILITY, PROFILE } from "@/lib/profile";
 /*
   What is particular to the About page. The profile copy is the home page's
   (lib/profile.ts), and the rest of the page (the figures, the "why me"
-  comparison, the toolkit, the career, the projects, the services, the closing
-  call to action) is the same component the home page and the other pages use.
+  comparison, the toolkit, the projects, the services, the closing call to
+  action) is the same component the home page and the other pages use.
 
   The first screen carries the name, the one-line statement and the portrait
   and nothing longer: it fills the screen, and two paragraphs on top of the

@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Band from "@/components/Band";
-import Experience from "@/components/Experience";
 import Services from "@/components/Services";
 import Stats from "@/components/Stats";
 import Toolkit from "@/components/Toolkit";
@@ -27,8 +26,8 @@ export const metadata = pageMetadata({
   do, how do they work, and how do I reach them. The first screen says who
   (a name, a photo, a line about the work) and the story under it says it at
   length, the figures and the comparison say why to trust it, then the
-  toolkit, the career, the projects and the services say what, and the
-  location and the closing call to action say how.
+  toolkit, the projects and the services say what, and the closing call to
+  action says how to reach me.
   Every section is the component the home page and the other pages use for
   the same thing.
 */
@@ -54,11 +53,10 @@ export default function AboutPage() {
             lede: "The MERN stack (MongoDB, Express, React and Node.js) is the backbone of most projects, plus whatever else the job needs.",
           }}
         />
-        <Experience eyebrow="03 · Path" />
         <ProjectsSection
           projects={projectsFor(["ironside-gym", "vector-academy", "veloura"])}
           head={{
-            eyebrow: "04 · Work",
+            eyebrow: "03 · Work",
             title: "Selected",
             em: "work",
             lede: "A few of the platforms and sites I've built. Each has a full case study: what was built, and why.",
@@ -66,7 +64,7 @@ export default function AboutPage() {
         />
         <Services
           head={{
-            eyebrow: "05 · Services",
+            eyebrow: "04 · Services",
             title: "What I",
             em: "do",
             lede: "Six things I get hired for, from AI features to the storefront underneath them. Most projects use several at once.",
