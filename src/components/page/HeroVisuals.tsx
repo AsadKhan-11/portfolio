@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FiArrowUpRight, FiClock, FiMail, FiMapPin, FiVideo } from "react-icons/fi";
-import BlogCover from "../blog/BlogCover";
 import { latestPosts, readingMinutes } from "@/lib/blog";
 import { getCaseStudy, type CaseStudy } from "@/lib/caseStudies";
 import { PACKAGES } from "@/lib/packages";
@@ -57,32 +56,37 @@ export function ProjectsVisual() {
 }
 
 /*
-  The blog: the three newest posts fanned the same way, each card the post's
-  own drawn cover and a link to it. The covers and the topics come from the
-  post list, so a new post turns up here by itself.
+  The blog: a photograph of a builder's desk, with the newest guide laid over
+  it as a card that links to the post. The photo is the studio's own (two
+  screens of code beside a sketchbook of wireframes), so the blog looks written
+  from the work. The card is read from the post list, so a new post replaces it
+  by itself. Not a fan of cards like the projects page's: each page's picture is
+  a different kind of thing.
 */
 export function BlogVisual() {
+  const [post] = latestPosts(1);
   return (
-    <div className="hv hv-fan hv-fan-blog" aria-label="The newest posts">
-      {latestPosts(3).map((p, i) => (
-        <Link
-          key={p.slug}
-          href={`/blog/${p.slug}`}
-          className={`hv-card hv-card-${i + 1}`}
-          style={{ animationDelay: `${0.3 + i * 0.18}s` }}
-          aria-label={p.title}
-          data-cursor="Read"
-        >
-          <span className="hv-card-cover">
-            <BlogCover kind={p.cover} />
-          </span>
-          <span className="hv-card-shade" aria-hidden="true" />
-          <span className="hv-card-label">
-            <strong>{p.category}</strong>
-            <small className="mono-label">{readingMinutes(p)} min read</small>
-          </span>
-        </Link>
-      ))}
+    <div className="hv hv-desk">
+      <div className="hv-desk-frame">
+        <Image
+          src="/blog/desk.webp"
+          alt="A desk at night with two screens of code, a sketchbook of wireframes and a lamp"
+          fill
+          sizes="(max-width: 959px) 0px, 36vw"
+          className="hv-desk-img"
+        />
+      </div>
+
+      <Link href={`/blog/${post.slug}`} className="hv-latest" data-cursor="Read">
+        <span className="hv-latest-top mono-label">
+          <span>Latest guide</span>
+          <span>{readingMinutes(post)} min read</span>
+        </span>
+        <span className="hv-latest-title">{post.title}</span>
+        <span className="hv-latest-go mono-label">
+          {post.category} <FiArrowUpRight aria-hidden="true" />
+        </span>
+      </Link>
     </div>
   );
 }

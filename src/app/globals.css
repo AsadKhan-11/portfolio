@@ -7909,24 +7909,6 @@ a.hv-mini-value {
   object-position: left top;
 }
 
-/* Blog: the cover is drawn art, not a screenshot, so it fills the card as it
-   is. The shade over it is a dark band behind the label and fades out below,
-   so the topic reads and the drawing is left alone. */
-.hv-card-cover {
-  position: absolute;
-  inset: 0;
-}
-
-.hv-fan-blog .hv-card-shade {
-  background: linear-gradient(
-    180deg,
-    rgba(8, 8, 10, 0.94),
-    rgba(8, 8, 10, 0.9) 24%,
-    rgba(8, 8, 10, 0.4) 40%,
-    transparent 58%
-  );
-}
-
 /* The name sits along the top: the next card covers the bottom of this one. */
 .hv-card-shade {
   position: absolute;
@@ -7982,6 +7964,114 @@ a.hv-mini-value {
 @media (prefers-reduced-motion: reduce) {
   .hv-step,
   .hv-card {
+    animation: none;
+  }
+}
+
+/*
+  Blog: a photograph of a builder's desk, the newest guide laid over its lower
+  right corner, which leaves the sketchbook in the lower left showing. The frame keeps the photo's own proportions (5 by 4) and the card
+  hangs a little past the frame, so the two read as layers. The entrances
+  fill backwards only, not forwards: a forwards fill would hold the card's
+  position for good and the hover lift below could never move it.
+*/
+.hv-desk {
+  width: min(100%, 500px);
+  animation: hv-rise 1s var(--ease-out-expo) 0.2s backwards;
+}
+
+.hv-desk-frame {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  border: 1px solid var(--rule-strong);
+  border-radius: 20px;
+  background: var(--ink-raised);
+  box-shadow: 0 34px 60px -26px rgba(0, 0, 0, 0.85);
+}
+
+.hv-desk-img {
+  object-fit: cover;
+}
+
+/* The foot of the photo darkens a little where the card sits, so it reads on it */
+.hv-desk-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(8, 8, 10, 0.6));
+  pointer-events: none;
+}
+
+.hv-latest {
+  position: absolute;
+  right: -1.25rem;
+  bottom: -1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  width: min(78%, 19rem);
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 16px;
+  background: rgba(14, 14, 18, 0.78);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
+  box-shadow: 0 24px 40px -20px rgba(0, 0, 0, 0.8);
+  color: inherit;
+  text-decoration: none;
+  transition: translate 0.6s var(--ease-out-expo), border-color 0.4s var(--ease-out-expo);
+  animation: hv-rise 1s var(--ease-out-expo) 0.55s backwards;
+}
+
+.hv-latest-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.hv-latest-top span:first-child {
+  color: var(--flame);
+}
+
+.hv-latest-title {
+  font-family: var(--f-display), sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--bone);
+}
+
+.hv-latest-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--bone-45);
+}
+
+@media (hover: hover) {
+  .hv-latest:hover,
+  .hv-latest:focus-visible {
+    translate: 0 -4px;
+    border-color: var(--flame-line);
+  }
+}
+
+@keyframes hv-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hv-desk,
+  .hv-latest {
     animation: none;
   }
 }
