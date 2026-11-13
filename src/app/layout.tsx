@@ -40,14 +40,15 @@ const jetbrains = JetBrains_Mono({
 
 /*
   Search shows about 60 characters of a title and about 160 of a description,
-  and SEO audits flag anything outside 50–60 and 120–160. The old title was 40
-  characters (room left unused) and the old description 173 (cut mid-sentence).
-  The title also leads with the terms people search for, "web development" and
-  "design", rather than the studio's own label for itself.
+  and SEO audits flag anything outside 50–60 and 120–160 (Google itself has no
+  length rule). The shape is the brand, a bar and the three things the studio
+  is hired for; then a sentence on what it does and who is behind it. Several
+  businesses are called WebForge or Forge Digital, so a search for the name has
+  to land on a result that says which one this is: Asad Khan, in Lahore.
 */
-const TITLE = "WebForge Digital · Full Stack Web Development & Design";
+const TITLE = "WebForge Digital | Web Apps, Mobile Apps & AI Integration";
 const DESCRIPTION =
-  "WebForge Digital is the full stack web studio of Asad Khan. Websites, portals and web apps, designed and built under one roof with React, Next.js and Node.js.";
+  "WebForge Digital builds software that brings in clients. Asad Khan, a full stack developer in Lahore, specializes in web apps, mobile apps and AI integration.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -121,7 +122,9 @@ const JSON_LD = JSON.stringify({
       "@id": `${SITE_URL}/#website`,
       url: SITE_URL,
       name: "WebForge Digital",
-      alternateName: "WebForge",
+      /* The one-word spelling is the domain's and what people type; Google reads
+         alternate names when it picks the name shown above a result. */
+      alternateName: ["WebForge", "WebForgeDigital"],
       inLanguage: "en",
       publisher: { "@id": `${SITE_URL}/#webforge` },
     },
