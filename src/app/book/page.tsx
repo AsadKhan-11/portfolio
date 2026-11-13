@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiCalendar, FiMessageCircle, FiVideo } from "react-icons/fi";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Faq from "@/components/Faq";
@@ -60,7 +60,7 @@ export default function BookPage() {
               em="no friction"
               lede="Booking takes a minute, and there is nothing to prepare."
             />
-            <StepCards steps={BOOK_STEPS} />
+            <StepCards steps={BOOK_STEPS} icons={[FiCalendar, FiVideo, FiMessageCircle]} />
           </div>
         </section>
 

@@ -59,14 +59,17 @@ export const BOOK_STEPS = [
   {
     title: "Pick a time",
     body: "The calendar shows when I am free, in your own time zone. Choose the length of call that suits, then a slot.",
+    tags: ["15, 30 or 60 minutes", "Your time zone"],
   },
   {
     title: "Get the link",
     body: "You receive a confirmation with a Google Meet link and a calendar invite, and a link to reschedule if plans change.",
+    tags: ["Google Meet", "Calendar invite", "Reschedule link"],
   },
   {
     title: "We talk it through",
     body: "I will have read what you wrote. Bring the problem, or just a rough idea. No slides needed.",
+    tags: ["A rough idea is fine", "No slides"],
   },
 ];
 

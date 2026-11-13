@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { IconType } from "react-icons";
 import Link from "next/link";
 import { Reveal } from "../animations";
 import Contact from "../Contact";
@@ -152,23 +153,52 @@ export function InfoCards({
   );
 }
 
-/** Numbered steps: how a project runs, what happens after an enquiry. */
-export function StepCards({ steps }: { steps: { title: string; body: string }[] }) {
+export interface Step {
+  title: string;
+  body: string;
+  /** Short facts about the step, shown as chips at the foot of its card. */
+  tags?: string[];
+}
+
+/*
+  Numbered steps: how a project runs, what happens after an enquiry, how a
+  booking goes. Each card has a tile (the step's icon when `icons` is given,
+  otherwise its number), the title, the text and, if it has any, a row of chips.
+  Side by side, an arrow joins each card to the next. The row has as many
+  columns as there are steps, up to four, so three steps fill the width.
+*/
+export function StepCards({ steps, icons }: { steps: Step[]; icons?: IconType[] }) {
   return (
-    <ol className="svc-steps">
-      {steps.map((step, i) => (
-        <li key={step.title} className="svc-cell">
-          <Reveal className="svc-cell" delay={i * 0.06}>
-            <div className="svc-step panel">
-              <span className="svc-step-n" aria-hidden="true">
-                {i + 1}
-              </span>
-              <h3 className="svc-card-title">{step.title}</h3>
-              <p className="svc-card-body">{step.body}</p>
-            </div>
-          </Reveal>
-        </li>
-      ))}
+    <ol className={`svc-steps svc-steps-${steps.length}`}>
+      {steps.map((step, i) => {
+        const Icon = icons?.[i];
+        const n = String(i + 1).padStart(2, "0");
+        return (
+          <li key={step.title} className="svc-cell">
+            <Reveal className="svc-cell" delay={i * 0.06}>
+              <div className="svc-step panel">
+                <div className="svc-step-top" aria-hidden="true">
+                  <span className={`svc-step-tile${Icon ? "" : " is-num"}`}>
+                    {Icon ? <Icon size={20} /> : i + 1}
+                  </span>
+                  {Icon && <span className="svc-step-n">Step {n}</span>}
+                </div>
+                <h3 className="svc-card-title">{step.title}</h3>
+                <p className="svc-card-body">{step.body}</p>
+                {step.tags && (
+                  <ul className="svc-step-tags">
+                    {step.tags.map((t) => (
+                      <li key={t} className="tag">
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </Reveal>
+          </li>
+        );
+      })}
     </ol>
   );
 }

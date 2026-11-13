@@ -5467,14 +5467,41 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
   margin-top: 1rem;
 }
 
-/* How it runs: numbered steps */
+/*
+  How it runs: numbered steps. As many columns as there are steps, up to four,
+  from the width where they fit, so three steps fill the row instead of leaving
+  a fourth column empty. Side by side, a small arrow chip sits in the gap after
+  each card, level with its tile.
+*/
 .svc-steps {
+  --gap: clamp(1rem, 2vw, 1.5rem);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: clamp(1rem, 2vw, 1.5rem);
+  gap: var(--gap);
   margin: clamp(2.5rem, 6vh, 4rem) 0 0;
   padding: 0;
   list-style: none;
+}
+
+.svc-steps > li {
+  position: relative;
+}
+
+.svc-steps > li::after {
+  content: "";
+  display: none;
+  position: absolute;
+  top: calc(clamp(1.5rem, 2.6vw, 2rem) + 22px - 13px);
+  right: calc(var(--gap) / -2 - 13px);
+  z-index: 2;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
+  background: var(--ink)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ff5c35' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E")
+    center / 12px no-repeat;
+  pointer-events: none;
 }
 
 @media (min-width: 760px) {
@@ -5483,38 +5510,84 @@ html[data-intro="pending"] :is(.hero-in, .mask-word-inner, .nav-bar) {
   }
 }
 
+@media (min-width: 900px) {
+  .svc-steps-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .svc-steps-3 > li:not(:last-child)::after {
+    display: block;
+  }
+}
+
 @media (min-width: 1100px) {
   .svc-steps {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .svc-steps-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .svc-steps-4 > li:not(:last-child)::after {
+    display: block;
   }
 }
 
 .svc-step {
   position: relative;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   padding: clamp(1.5rem, 2.6vw, 2rem);
 }
 
-.svc-step-n {
-  position: absolute;
-  top: -0.2em;
-  right: 0.2em;
+.svc-step-top {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+/* The tile: the step's icon, or its number when it has no icon */
+.svc-step-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--flame-line);
+  border-radius: 12px;
+  background: var(--flame-soft);
+  color: var(--flame);
+}
+
+.svc-step-tile.is-num {
   font-family: var(--f-display), sans-serif;
   font-weight: 800;
-  font-size: 5.5rem;
-  line-height: 1;
-  color: var(--bone-08);
-  pointer-events: none;
+  font-size: 1.1rem;
+}
+
+.svc-step-n {
+  font-family: var(--f-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bone-45);
 }
 
 .svc-step .svc-card-title {
-  position: relative;
-  margin-top: 0;
-  padding-right: 2.5rem;
+  margin-top: 1.25rem;
 }
 
-.svc-step .svc-card-body {
-  position: relative;
+/* Short facts about the step, pinned to the foot so a row of cards lines up */
+.svc-step-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: auto 0 0;
+  padding: 1.25rem 0 0;
+  list-style: none;
 }
 
 /* Two columns: built-with beside the package, or text beside a panel */
