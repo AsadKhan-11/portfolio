@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
-import { FiArrowUpRight, FiChevronDown, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
+import { FiArrowUpRight, FiCalendar, FiChevronDown, FiGithub, FiInstagram, FiLinkedin } from "react-icons/fi";
 import { FaXTwitter } from "react-icons/fa6";
 import { Magnetic } from "./animations";
 import { isCurrent, NAV_BREAKPOINT, PAGES, type NavPage } from "@/lib/nav";
@@ -22,11 +22,13 @@ const SOCIAL_ICONS: Record<string, IconType> = {
 };
 
 /*
-  The row of links in the bar, from the nav breakpoint up. Contact is not in
-  it: the "Start a project" button beside the row is the Contact page, and a
-  second link to the same place would only crowd the bar.
+  The row of links in the bar, from the nav breakpoint up. Contact and Book a
+  call are not in it: they are the two buttons beside the row ("Start a
+  project" is the Contact page), and a second link to the same place would
+  only crowd the bar.
 */
-const PRIMARY = PAGES.filter((p) => p.href !== "/contact");
+const BUTTON_HREFS = ["/contact", "/book"];
+const PRIMARY = PAGES.filter((p) => !BUTTON_HREFS.includes(p.href));
 
 /*
   The menu lists the home page first, then every page, with the reading
@@ -239,17 +241,30 @@ export default function Navbar() {
               ))}
             </nav>
 
-            {/* Shown only where the row of links is (see .nav-cta). Below that
-                width the menu button is all the bar has, and the menu carries
-                this same button, so the bar never shows both. */}
-            <Link
-              href="/contact"
-              className="nav-cta"
-              data-cursor="Talk"
-              aria-current={isCurrent(pathname, "/contact") ? "page" : undefined}
-            >
-              Start a project
-            </Link>
+            {/* The two ways to start, beside the row of links: a call, or a
+                written enquiry. Shown only where the row is (see
+                .nav-actions). Below that width the menu button is all the bar
+                has, and the menu lists both, so the bar never shows the two
+                side by side. */}
+            <div className="nav-actions">
+              <Link
+                href="/book"
+                className="nav-btn"
+                data-cursor="Book"
+                aria-current={isCurrent(pathname, "/book") ? "page" : undefined}
+              >
+                <FiCalendar size={13} aria-hidden="true" />
+                Book a call
+              </Link>
+              <Link
+                href="/contact"
+                className="nav-cta"
+                data-cursor="Talk"
+                aria-current={isCurrent(pathname, "/contact") ? "page" : undefined}
+              >
+                Start a project
+              </Link>
+            </div>
 
             {/*
               A plain wrapper carries the hide, for two reasons: hiding

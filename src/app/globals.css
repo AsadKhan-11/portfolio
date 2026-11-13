@@ -677,9 +677,9 @@ body {
   display: none;
 }
 
-/* nav breakpoint: 1040px. The row of links, the "Start a project" button and
-   the menu button all switch here (see NAV_BREAKPOINT in lib/nav.ts). */
-@media (min-width: 1040px) {
+/* nav breakpoint: 1240px. The row of links, the two buttons and the menu
+   button all switch together here (see NAV_BREAKPOINT in lib/nav.ts). */
+@media (min-width: 1240px) {
   .nav-links {
     display: flex;
     align-items: center;
@@ -723,24 +723,38 @@ body {
   transform: scaleX(1);
 }
 
-/* The button is the Contact page. It is shown exactly where the row of links
-   is (nav breakpoint, 1040px) and nowhere else: below that the bar is the
-   logo and the menu button, and the menu carries its own copy of this
-   button, so the bar never shows the two side by side. */
+/* The two buttons: "Book a call" (outlined) and "Start a project", the Contact
+   page (solid). They are shown exactly where the row of links is (nav
+   breakpoint, 1240px) and nowhere else: below that the bar is the logo and the
+   menu button, and the menu lists both, so the bar never shows the two side
+   by side. */
 .nav-right {
   display: flex;
   align-items: center;
   gap: clamp(0.6rem, 2.4vw, 1.5rem);
 }
 
-.nav-cta {
+.nav-actions {
   display: none;
   align-items: center;
+  gap: 0.6rem;
+}
+
+@media (min-width: 1240px) {
+  .nav-actions {
+    display: flex;
+  }
+}
+
+.nav-btn,
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   flex-shrink: 0;
   padding: 0.7rem 1.25rem;
+  border: 1px solid transparent;
   border-radius: 99px;
-  background: var(--flame);
-  color: var(--ink);
   font-family: var(--f-mono), monospace;
   font-size: 0.68rem;
   font-weight: 500;
@@ -748,16 +762,45 @@ body {
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.3s;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.nav-cta {
+  background: var(--flame);
+  border-color: var(--flame);
+  color: var(--ink);
 }
 
 .nav-cta:hover {
   background: var(--bone);
+  border-color: var(--bone);
 }
 
-@media (min-width: 1040px) {
-  .nav-cta {
-    display: inline-flex;
+/* Book a call is outlined, so "Start a project" stays the one solid button. */
+.nav-btn {
+  background: rgba(244, 241, 234, 0.06);
+  border-color: var(--rule-strong);
+  color: var(--bone);
+}
+
+.nav-btn svg {
+  color: var(--flame);
+  transition: color 0.3s;
+}
+
+.nav-btn[aria-current="page"] {
+  border-color: var(--flame-line);
+}
+
+@media (hover: hover) {
+  .nav-btn:hover {
+    background: var(--bone);
+    border-color: var(--bone);
+    color: var(--ink);
+  }
+
+  .nav-btn:hover svg {
+    color: var(--ink);
   }
 }
 
@@ -1020,8 +1063,8 @@ body {
 }
 
 /*
-  Hidden from 1040px (the nav breakpoint) — the same width where .nav-links
-  and .nav-cta appear, so there is exactly one way to navigate at every
+  Hidden from 1240px (the nav breakpoint) — the same width where .nav-links
+  and .nav-actions appear, so there is exactly one way to navigate at every
   width and never two. The menu it opens only duplicated the links already
   on screen.
 
@@ -1036,7 +1079,7 @@ body {
   align-items: center;
 }
 
-@media (min-width: 1040px) {
+@media (min-width: 1240px) {
   .burger-wrap {
     display: none;
   }

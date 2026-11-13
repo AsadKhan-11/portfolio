@@ -27,11 +27,15 @@ export const SITE_PAGES_UPDATED = "2026-11-11";
 
 /*
   The width at which the header swaps the menu button for the full row of
-  links and the "Start a project" button. Below it there is the menu button
-  and nothing else. Keep it in step with the media queries marked
-  "nav breakpoint" in globals.css.
+  links and the two buttons ("Book a call" and "Start a project"). Below it
+  there is the menu button and nothing else. Keep it in step with the media
+  queries marked "nav breakpoint" in globals.css.
+
+  It is the narrowest window the whole row fits in, measured: with the logo,
+  six links and both buttons the bar needs about 1190px, and 1240px leaves a
+  little room. When a link or a button is added, measure again.
 */
-export const NAV_BREAKPOINT = 1040;
+export const NAV_BREAKPOINT = 1240;
 
 /** A page is current on its own address and on anything beneath it: /work/aurelle is under /work. */
 export const isCurrent = (pathname: string, href: string) =>
