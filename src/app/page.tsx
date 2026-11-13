@@ -27,9 +27,9 @@ export default function Home() {
         <Band />
         <About />
         <Process />
+        <Contact />
         <Faq />
         <HomeBlog />
-        <Contact />
       </main>
       <Footer />
     </>

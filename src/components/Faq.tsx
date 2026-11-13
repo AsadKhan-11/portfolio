@@ -27,7 +27,7 @@ export interface Entry {
 }
 
 const HEAD: Head = {
-  eyebrow: "06 · FAQ",
+  eyebrow: "07 · FAQ",
   title: "Before you",
   em: "ask",
   lede: "The questions that come up on almost every first call, answered properly so you don't have to ask them.",
