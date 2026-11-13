@@ -2,12 +2,11 @@ import Link from "next/link";
 import { FiArrowRight, FiCalendar, FiMessageCircle, FiVideo } from "react-icons/fi";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Faq from "@/components/Faq";
 import BookingStudio from "@/components/booking/BookingStudio";
 import { BookVisual } from "@/components/page/HeroVisuals";
 import { PageCta, PageHero, StepCards } from "@/components/page/PageParts";
 import SectionHead from "@/components/SectionHead";
-import { BOOK_FAQS, BOOK_STEPS } from "@/lib/booking";
+import { BOOK_STEPS } from "@/lib/booking";
 import { pageJsonLd } from "@/lib/pageJsonLd";
 import { pageMetadata } from "@/lib/seo";
 
@@ -63,18 +62,6 @@ export default function BookPage() {
             <StepCards steps={BOOK_STEPS} icons={[FiCalendar, FiVideo, FiMessageCircle]} />
           </div>
         </section>
-
-        <Faq
-          head={{
-            eyebrow: "03 · Questions",
-            title: "About the",
-            em: "call",
-            lede: "The practical bits, answered before you ask.",
-          }}
-          items={BOOK_FAQS}
-          askHref="/contact"
-          all={false}
-        />
 
         <PageCta copy="Would rather write it down? Send me the details and I will reply within a day, with questions or with a fixed quote once the scope is clear." />
       </main>

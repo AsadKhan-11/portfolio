@@ -72,22 +72,3 @@ export const BOOK_STEPS = [
     tags: ["A rough idea is fine", "No slides"],
   },
 ];
-
-export const BOOK_FAQS = [
-  {
-    q: "Which time zone are the times in?",
-    a: "Yours. The calendar detects your time zone and shows every slot in it, so there is no converting.",
-  },
-  {
-    q: "What if I need to reschedule or cancel?",
-    a: "The confirmation email has a link to move or cancel the call. There is nothing to explain and no penalty.",
-  },
-  {
-    q: "Do I need to prepare anything?",
-    a: "No. A sentence or two about what you are trying to do, added when you book, is enough. If you have a website or a reference you like, link it.",
-  },
-  {
-    q: "I cannot see a time that works.",
-    a: "Send me a message and I will find one. Email or the contact form both reach me, and I reply within a day.",
-  },
-];
